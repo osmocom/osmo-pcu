@@ -147,10 +147,10 @@ void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch);
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
-int tbf_update(struct gprs_rlcmac_tbf *tbf);
 struct gprs_rlcmac_pdch *tbf_get_first_ts(struct gprs_rlcmac_tbf *tbf);
 const struct gprs_rlcmac_pdch *tbf_get_first_ts_const(const struct gprs_rlcmac_tbf *tbf);
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf);
+void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf);
 void tbf_stop_timers(struct gprs_rlcmac_tbf *tbf, const char *reason);
 #ifdef __cplusplus
 }
@@ -183,7 +183,6 @@ struct gprs_rlcmac_tbf {
 	bool n_inc(enum tbf_counters n);
 	void n_reset(enum tbf_counters n);
 
-	int update();
 	void handle_timeout();
 	void stop_timers(const char *reason);
 	bool timers_pending(enum tbf_timers t);

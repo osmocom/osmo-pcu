@@ -7146,7 +7146,7 @@ MS(TA-220:MSCLS-11-11) Attaching DL TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
 TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) setting EGPRS DL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
 DL TBF slots: 0x10, N: 1, WS: 192
-********** DL-TBF update **********
+TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) Upgrade to multislot
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 [DL] algo B <multi> (suggested TRX: -1): Alloc start
 Found first unallocated TRX=0 TFI=0

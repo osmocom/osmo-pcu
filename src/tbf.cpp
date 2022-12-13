@@ -206,7 +206,7 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		ms_attach_tbf(m_ms, this);
 }
 
-static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
+void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	int ts;
 
@@ -275,33 +275,6 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts, uint8_t slots)
 
 	return OSMO_MIN((num_pdch != 1) ? (128 * num_pdch) : 192,
 			OSMO_MAX(64, (the_pcu->vty.ws_base + num_pdch * the_pcu->vty.ws_pdch) / 32 * 32));
-}
-
-int gprs_rlcmac_tbf::update()
-{
-	int rc;
-
-	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
-	OSMO_ASSERT(direction == GPRS_RLCMAC_DL_TBF);
-
-	tbf_unlink_pdch(this);
-	rc = the_pcu->alloc_algorithm(bts, this, false, -1);
-	/* if no resource */
-	if (rc < 0) {
-		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
-		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
-		return rc;
-	}
-
-	if (is_egprs_enabled()) {
-		gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(this);
-		if (dl_tbf)
-			dl_tbf->set_window_size();
-	}
-
-	tbf_update_state_fsm_name(this);
-
-	return 0;
 }
 
 void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
@@ -885,12 +858,6 @@ bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->upgrade_to_multislot;
 }
-
-int tbf_update(struct gprs_rlcmac_tbf *tbf)
-{
-	return tbf->update();
-}
-
 /* first TS used by TBF */
 struct gprs_rlcmac_pdch *tbf_get_first_ts(struct gprs_rlcmac_tbf *tbf)
 {

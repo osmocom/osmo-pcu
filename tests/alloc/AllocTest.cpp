@@ -283,8 +283,8 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	dump_assignment(ul_tbf, "UL", verbose);
 
-	/* now update the dl_tbf */
-	dl_tbf->update();
+	/* now upgrade the dl_tbf */
+	OSMO_ASSERT(dl_tbf_upgrade_to_multislot(dl_tbf) == 0);
 	dump_assignment(dl_tbf, "DL", verbose);
 
 	check_tfi_usage(bts);

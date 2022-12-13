@@ -321,29 +321,35 @@ static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	int rc;
 
-	if (fi->state == TBF_ST_ASSIGN) {
-		tbf_assign_control_ts(ctx->tbf);
-
-		if (!tbf_can_upgrade_to_multislot(ctx->tbf)) {
-			/* change state to FLOW, so scheduler
-			 * will start transmission */
-			osmo_fsm_inst_dispatch(fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
-			return;
-		}
-
-		/* This tbf can be upgraded to use multiple DL
-		 * timeslots and now that there is already one
-		 * slot assigned send another DL assignment via
-		 * PDCH. */
-
-		/* keep to flags */
-		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-
-		tbf_update(ctx->tbf);
-		dl_tbf_trigger_ass_on_pacch(ctx->dl_tbf, ctx->tbf);
-	} else
+	if (fi->state != TBF_ST_ASSIGN) {
 		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
+		return;
+	}
+
+	/* state TBF_ST_ASSIGN: */
+	tbf_assign_control_ts(ctx->tbf);
+
+	if (!tbf_can_upgrade_to_multislot(ctx->tbf)) {
+		/* change state to FLOW, so scheduler will start transmission */
+		osmo_fsm_inst_dispatch(fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
+		return;
+	}
+
+	/* This tbf can be upgraded to use multiple DL timeslots and now that there is already
+	 * one slot assigned send another DL assignment via PDCH.
+	 */
+
+	/* keep TO flags */
+	ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+
+	rc = dl_tbf_upgrade_to_multislot(ctx->dl_tbf);
+	if (rc < 0) {
+		tbf_free(ctx->tbf);
+		return;
+	}
+	dl_tbf_trigger_ass_on_pacch(ctx->dl_tbf, ctx->tbf);
 }
 
 static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)

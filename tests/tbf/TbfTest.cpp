@@ -2408,7 +2408,7 @@ static void test_tbf_update_ws(void)
 
 	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false);
 
-	dl_tbf->update();
+	OSMO_ASSERT(dl_tbf_upgrade_to_multislot(dl_tbf) == 0);
 
 	/* window size should be 384 */
 	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true);
