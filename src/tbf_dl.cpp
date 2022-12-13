@@ -467,6 +467,8 @@ int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *tbf)
 		tbf->set_window_size();
 	tbf_update_state_fsm_name(tbf);
 
+	/* Now trigger the assignment using the pre-existing TBF: */
+	dl_tbf_trigger_ass_on_pacch(tbf, dl_tbf_as_tbf(tbf));
 	return 0;
 }
 

@@ -345,11 +345,8 @@ static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 	ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 
 	rc = dl_tbf_upgrade_to_multislot(ctx->dl_tbf);
-	if (rc < 0) {
+	if (rc < 0)
 		tbf_free(ctx->tbf);
-		return;
-	}
-	dl_tbf_trigger_ass_on_pacch(ctx->dl_tbf, ctx->tbf);
 }
 
 static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)

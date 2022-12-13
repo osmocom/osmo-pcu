@@ -7162,18 +7162,25 @@ PDCH(bts=0,trx=0,ts=4) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs
 PDCH(bts=0,trx=0,ts=5) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) setting EGPRS DL window size to 384, base(128) slots(4) ws_pdch(64)
 ws(384)
+TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) Send downlink assignment on PACCH, because TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) exists
+DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: state_chg to SEND_ASS
+DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
+DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: state_chg to ASSIGN
+TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 DL TBF slots: 0x3c, N: 4, WS: 384
-TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) free
-PDCH(bts=0,trx=0,ts=2) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(bts=0,trx=0,ts=3) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(bts=0,trx=0,ts=5) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-MS(TA-220:MSCLS-11-11) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
+TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS) free
+PDCH(bts=0,trx=0,ts=2) Detaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=3) Detaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+MS(TA-220:MSCLS-11-11) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS)
 MS(TA-220:MSCLS-11-11) Destroying MS object
 ********** DL-TBF ends here **********
-DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: Deallocated
+DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){ASSIGN}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
-DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
+DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
