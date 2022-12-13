@@ -424,7 +424,7 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req,
 	struct gprs_rlcmac_tbf *tbf;
 	struct llist_head *tmp;
 	const struct osmo_mobile_identity *mi;
-	uint8_t slot_mask[8];
+	uint8_t slot_mask[ARRAY_SIZE(bts->trx)];
 	int8_t first_ts; /* must be signed */
 
 	/* First, build the MI used to page on PDCH from available subscriber info: */
