@@ -350,6 +350,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	const char *mask_reason = NULL;
 	struct GprsMs *ms = tbf->ms();
 	gprs_rlcmac_trx *trx = ms_current_trx(ms);
+	struct gprs_rlcmac_pdch *first_common_ts = ms_first_common_ts(ms);
 
 	LOGPAL(tbf, "A", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
@@ -365,11 +366,9 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	dl_slots = ms_reserved_dl_slots(ms);
 	ul_slots = ms_reserved_ul_slots(ms);
 
-	ts = ms_first_common_ts(ms);
-
-	if (ts >= 0) {
+	if (first_common_ts) {
 		mask_reason = "need to reuse TS";
-		mask = 1 << ts;
+		mask = 1 << first_common_ts->ts_no;
 	} else if (dl_slots || ul_slots) {
 		mask_reason = "need to use a reserved common TS";
 		mask = dl_slots & ul_slots;
@@ -412,7 +411,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	tbf->trx = trx;
 	/* the only one TS is the common TS */
 	ms_set_reserved_slots(ms, trx, 1 << ts, 1 << ts);
-	ms_set_first_common_ts(ms, ts);
+	ms_set_first_common_ts(ms, pdch);
 
 	tbf->upgrade_to_multislot = false;
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_A);
@@ -861,7 +860,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	uint8_t ul_slots;
 	uint8_t reserved_dl_slots;
 	uint8_t reserved_ul_slots;
-	int8_t first_common_ts;
+	int8_t first_common_tn;
 	uint8_t slotcount = 0;
 	uint8_t reserve_count = 0, trx_no;
 	int first_ts;
@@ -870,6 +869,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	int tfi;
 	struct GprsMs *ms = tbf->ms();
 	gprs_rlcmac_trx *trx;
+	struct gprs_rlcmac_pdch *first_common_ts = ms_first_common_ts(ms);
 
 	LOGPAL(tbf, "B", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
@@ -877,7 +877,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 
 	reserved_dl_slots = ms_reserved_dl_slots(ms);
 	reserved_ul_slots = ms_reserved_ul_slots(ms);
-	first_common_ts = ms_first_common_ts(ms);
+	first_common_tn = first_common_ts ? first_common_ts->ts_no : -1;
 
 	/* Step 2a: Find usable TRX and TFI */
 	tfi = tfi_find_free(bts, ms, tbf->direction, use_trx, &trx_no);
@@ -899,7 +899,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 
 	/* Step 3a: Derive the slot set for the current TBF */
 	rc = tbf_select_slot_set(tbf, trx, single, ul_slots, dl_slots, reserved_ul_slots, reserved_dl_slots,
-				 first_common_ts);
+				 first_common_tn);
 	if (rc < 0)
 		return -EINVAL;
 
@@ -924,11 +924,12 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 		return -EINVAL;
 	}
 
-	first_common_ts = ffs(dl_slots & ul_slots) - 1;
-	if (first_common_ts < 0) {
+	first_common_tn = ffs(dl_slots & ul_slots) - 1;
+	if (first_common_tn < 0) {
 		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first common slot unavailable\n");
 		return -EINVAL;
 	}
+	first_common_ts = &trx->pdch[first_common_tn];
 
 	if (single && slotcount) {
 		tbf->upgrade_to_multislot = (reserve_count > slotcount);

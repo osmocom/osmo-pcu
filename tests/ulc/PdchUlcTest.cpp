@@ -169,6 +169,7 @@ int _alloc_algorithm_dummy(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *
 			   bool single, int8_t use_tbf)
 {
 	tbf->trx = &bts->trx[0];
+	ms_set_first_common_ts(tbf_ms(tbf), &tbf->trx->pdch[0]);
 	return 0;
 }
 

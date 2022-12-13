@@ -279,14 +279,15 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts, uint8_t slots)
 
 void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
-	int8_t first_common_ts = ms_first_common_ts(tbf_ms(tbf));
+	struct gprs_rlcmac_pdch *first_common = ms_first_common_ts(tbf_ms(tbf));
+	OSMO_ASSERT(first_common);
 	if (tbf->control_ts == TBF_TS_UNSET)
 		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
-			first_common_ts);
-	else if (tbf->control_ts != first_common_ts)
+			first_common->ts_no);
+	else if (tbf->control_ts != first_common->ts_no)
 		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d -> %d\n",
-			tbf->control_ts, first_common_ts);
-	tbf->control_ts = first_common_ts;
+			tbf->control_ts, first_common->ts_no);
+	tbf->control_ts = first_common->ts_no;
 }
 
 void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
@@ -706,13 +707,14 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 {
 	uint8_t slots = 0;
 	size_t i;
+	struct gprs_rlcmac_pdch *first_common;
 
 	if (direction == GPRS_RLCMAC_DL_TBF) {
 		if (control_ts < 8)
 			slots |= 1 << control_ts;
-		int8_t first_common_ts = ms_first_common_ts(tbf_ms(this));
-		if (first_common_ts != TBF_TS_UNSET)
-			slots |= 1 << first_common_ts;
+		first_common = ms_first_common_ts(tbf_ms(this));
+		if (first_common)
+			slots |= 1 << first_common->ts_no;
 
 		return slots;
 	}

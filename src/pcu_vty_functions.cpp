@@ -55,6 +55,7 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(tbf);
 	uint32_t state_flags = tbf_state_flags(tbf);
 	struct GprsMs *ms = tbf_ms(tbf);
+	const struct gprs_rlcmac_pdch *first_common_ts = ms_first_common_ts(ms);
 
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) TA=%u DIR=%s IMSI=%s%s", tbf->tfi(),
 		tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
@@ -66,7 +67,8 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		state_flags,
 		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
 		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
-		ms_first_common_ts(ms), tbf->control_ts,
+		first_common_ts ? first_common_ts->ts_no : -1,
+		tbf->control_ts,
 		tbf->ms_class(),
 		ms_egprs_ms_class(ms),
 		VTY_NEWLINE);

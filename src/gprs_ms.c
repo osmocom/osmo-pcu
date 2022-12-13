@@ -120,7 +120,6 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 	ms->current_cs_ul = UNKNOWN;
 	ms->current_cs_dl = UNKNOWN;
 	ms->is_idle = true;
-	ms->first_common_ts = TBF_TS_UNSET;
 	INIT_LLIST_HEAD(&ms->list);
 	INIT_LLIST_HEAD(&ms->old_tbfs);
 
@@ -384,7 +383,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 
 	if (!ms->dl_tbf && !ms->ul_tbf) {
 		ms_set_reserved_slots(ms, NULL, 0, 0);
-		ms->first_common_ts = TBF_TS_UNSET;
+		ms->first_common_ts = NULL;
 
 		if (ms_tlli(ms) != 0)
 			ms_release_timer_start(ms);
@@ -920,15 +919,15 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mc
 	return cs;
 }
 
-int8_t ms_first_common_ts(const struct GprsMs *ms)
+struct gprs_rlcmac_pdch *ms_first_common_ts(const struct GprsMs *ms)
 {
 	return ms->first_common_ts;
 }
 
-void ms_set_first_common_ts(struct GprsMs *ms, uint8_t first_common_ts)
+void ms_set_first_common_ts(struct GprsMs *ms, struct gprs_rlcmac_pdch *pdch)
 {
-	OSMO_ASSERT(first_common_ts < 8);
-	ms->first_common_ts = first_common_ts;
+	OSMO_ASSERT(pdch);
+	ms->first_common_ts = pdch;
 }
 
 uint8_t ms_dl_slots(const struct GprsMs *ms)

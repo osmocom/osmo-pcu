@@ -177,12 +177,13 @@ static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir, bool v
 	if (!verbose)
 		return;
 	const struct GprsMs *ms = tbf_ms(tbf);
+	const struct gprs_rlcmac_pdch *first_common = ms_first_common_ts(ms);
 
 	for (size_t i = 0; i < ARRAY_SIZE(tbf->pdch); ++i)
 		if (tbf->pdch[i])
 			printf("PDCH[%zu] is used for %s\n", i, dir);
 	printf("PDCH[%d] is control_ts for %s\n", tbf->control_ts, dir);
-	printf("PDCH[%d] is first common for %s\n", ms_first_common_ts(ms), dir);
+	printf("PDCH[%d] is first common for %s\n", first_common ? first_common->ts_no : -1, dir);
 }
 
 #define ENABLE_PDCH(ts_no, enable_flag, trx)	\
@@ -569,13 +570,13 @@ static unsigned alloc_many_tbfs(struct gprs_rlcmac_bts *bts, unsigned min_class,
 		trx = ms_current_trx(ms);
 
 		OSMO_ASSERT(ul_tbf || dl_tbf);
-		OSMO_ASSERT(ms_first_common_ts(ms) != TBF_TS_UNSET);
+		OSMO_ASSERT(ms_first_common_ts(ms) != NULL);
 		if (ul_tbf) {
-			ul_slots = 1 << (uint8_t)ms_first_common_ts(ms);
+			ul_slots = 1 << (uint8_t)ms_first_common_ts(ms)->ts_no;
 			tfi = ul_tbf->tfi();
 			dir = GPRS_RLCMAC_UL_TBF;
 		} else {
-			ul_slots = 1 << (uint8_t)ms_first_common_ts(ms);
+			ul_slots = 1 << (uint8_t)ms_first_common_ts(ms)->ts_no;
 			tfi = dl_tbf->tfi();
 			dir = GPRS_RLCMAC_DL_TBF;
 		}
