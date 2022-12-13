@@ -1160,6 +1160,22 @@ struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms)
 	return ul_tbf;
 }
 
+/* Create a temporary dummy TBF to Tx a ImmAssReject if allocating a new one during
+ * packet resource Request failed. This is similar as ul_tbf_alloc() but without
+ * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources
+ * from Packet Resource Request we received. See TS 44.060 sec 7.1.3.2.1  */
+struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_rejected_pacch(struct GprsMs *ms, struct gprs_rlcmac_pdch *pdch)
+{
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	ul_tbf = ul_tbf_alloc_rejected(ms->bts, ms, pdch);
+	if (!ul_tbf)
+		return NULL;
+	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_PACCH, NULL);
+	osmo_fsm_inst_dispatch(tbf_ul_ass_fi(ul_tbf_as_tbf(ul_tbf)), TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
+
+	return ul_tbf;
+}
+
 /* A new DL-TBF is allocated and assigned through PACCH using "tbf".
  * "tbf" may be either a UL-TBF or a DL-TBF.
  * Note: This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass().

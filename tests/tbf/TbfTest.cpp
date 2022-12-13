@@ -3240,7 +3240,7 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 
 	ms = bts_alloc_ms(bts, 0, 0);
 	ms_set_tlli(ms, tlli);
-	ul_tbf = handle_tbf_reject(bts, ms, trx_no, ts_no);
+	ul_tbf = ms_new_ul_tbf_rejected_pacch(ms, &bts->trx[trx_no].pdch[ts_no]);
 
 	OSMO_ASSERT(ul_tbf != 0);
 

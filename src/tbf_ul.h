@@ -123,8 +123,6 @@ inline uint16_t gprs_rlcmac_ul_tbf::window_size() const
 	return m_window.ws();
 }
 
-struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, uint8_t trx_no, uint8_t ts_no);
 
 #else /* ifdef __cplusplus */
 struct gprs_rlcmac_ul_tbf;
@@ -135,6 +133,8 @@ struct gprs_rlcmac_ul_tbf;
 extern "C" {
 #endif
 struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot);
+struct gprs_rlcmac_ul_tbf *ul_tbf_alloc_rejected(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
+						 struct gprs_rlcmac_pdch *pdch);
 void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf);

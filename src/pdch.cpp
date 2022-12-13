@@ -825,7 +825,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 	new_ul_tbf = ms_new_ul_tbf_assigned_pacch(ms, trx_no());
 	if (!new_ul_tbf) {
-		handle_tbf_reject(bts, ms, trx_no(), ts_no);
+		ms_new_ul_tbf_rejected_pacch(ms, this);
 		goto return_unref;
 	}
 

@@ -151,11 +151,11 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
  * packet resource Request failed. This is similar as tbf_alloc_ul() but without
  * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources
  * from Packet Resource Request we received. See TS 44.060 sec 7.1.3.2.1  */
-struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
-			GprsMs *ms, uint8_t trx_no, uint8_t ts)
+struct gprs_rlcmac_ul_tbf *ul_tbf_alloc_rejected(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
+						 struct gprs_rlcmac_pdch *pdch)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
+	struct gprs_rlcmac_trx *trx = pdch->trx;
 	OSMO_ASSERT(ms);
 
 	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
@@ -166,7 +166,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 
 	ul_tbf->trx = trx;
 	/* The only one TS is the common, control TS */
-	ms_set_first_common_ts(ms, ts);
+	ms_set_first_common_ts(ms, pdch->ts_no);
 	tbf_assign_control_ts(ul_tbf);
 	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
 	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
@@ -176,17 +176,15 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 						      &tbf_ul_gprs_ctrg_desc,
 						      ul_tbf->m_ctrs->idx);
 	if (!ul_tbf->m_ctrs || !ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
-		LOGPTBF(ul_tbf, LOGL_ERROR, "Cound not allocate TBF UL rate counters\n");
+		LOGPTBF(ul_tbf, LOGL_ERROR, "Could not allocate TBF UL rate counters\n");
 		talloc_free(ul_tbf);
 		return NULL;
 	}
 	tbf_update_state_fsm_name(ul_tbf);
 
 	ms_attach_tbf(ms, ul_tbf);
-	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);
+	llist_add(tbf_trx_list(ul_tbf), &trx->ul_tbfs);
 	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
-	osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-	osmo_fsm_inst_dispatch(ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 
 	return ul_tbf;
 }
