@@ -36,6 +36,7 @@
 #include "llc.h"
 #include "gprs_rlcmac.h"
 #include "bts_pch_timer.h"
+#include "alloc_algo.h"
 
 /* Tuning parameters for BSSGP flow control */
 #define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */

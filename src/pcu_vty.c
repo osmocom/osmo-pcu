@@ -23,6 +23,7 @@
 #include "bts.h"
 #include "tbf.h"
 #include "pcu_vty_functions.h"
+#include "alloc_algo.h"
 
 #define X(x) (1 << x)
 

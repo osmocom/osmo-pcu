@@ -46,7 +46,7 @@ Files:     src/tbf.cpp
            src/encoding.cpp
            src/encoding.h
            src/gprs_rlcmac.cpp
-           src/gprs_rlcmac_ts_alloc.cpp
+           src/ts_alloc.cpp
 Copyright: 2012 Ivan Klyuchnikov
            2012 Andreas Eversberg <jolly@eversberg.eu>
            2013 by Holger Hans Peter Freyther
@@ -56,9 +56,11 @@ License:   GPL-2.0+
 Files:     src/gprs_rlcmac.h
            src/gprs_bssgp_pcu.cpp
            src/gprs_bssgp_pcu.h
+           src/ts_alloc.h
            src/bts.h
 Copyright: 2012 Ivan Klyuchnikov
            2013 by Holger Hans Peter Freyther
+           2022 by by Sysmocom s.f.m.c. GmbH
 License:   GPL-2.0+
 
 Files:     src/rlc.h

@@ -1,8 +1,9 @@
-/* gprs_rlcmac.cpp
+/* alloc_algo.cpp
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2022 by sysmocom - s.m.f.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +30,7 @@
 
 extern "C" {
 #include "mslot_class.h"
+#include "alloc_algo.h"
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>

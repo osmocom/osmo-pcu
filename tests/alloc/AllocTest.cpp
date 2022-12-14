@@ -27,6 +27,7 @@
 
 extern "C" {
 #include "mslot_class.h"
+#include "alloc_algo.h"
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>

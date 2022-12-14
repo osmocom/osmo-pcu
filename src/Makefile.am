@@ -39,6 +39,7 @@ AM_LDFLAGS = -lrt
 noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
+	alloc_algo.cpp \
 	gprs_debug.c \
 	csn1.c \
 	csn1_dec.c \
@@ -49,7 +50,6 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac.cpp \
 	gprs_rlcmac_sched.cpp \
 	gprs_rlcmac_meas.cpp \
-	gprs_rlcmac_ts_alloc.cpp \
 	gprs_ms.c \
 	gprs_ms_storage.cpp \
 	gprs_pcu.c \
@@ -89,6 +89,7 @@ bin_PROGRAMS = \
 noinst_PROGRAMS =
 
 noinst_HEADERS = \
+	alloc_algo.h \
 	gprs_debug.h \
 	csn1.h \
 	gsm_rlcmac.h \

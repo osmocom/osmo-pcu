@@ -28,6 +28,7 @@
 #include <bts.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include "gprs_bssgp_pcu.h"
+#include "alloc_algo.h"
 
 extern "C" {
 #include "pcu_vty.h"

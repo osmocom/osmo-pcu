@@ -30,6 +30,7 @@
 #include "decoding.h"
 #include "gprs_rlcmac.h"
 #include "egprs_rlc_compression.h"
+#include "alloc_algo.h"
 
 extern "C" {
 #include <osmocom/core/application.h>

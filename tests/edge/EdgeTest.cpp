@@ -31,6 +31,7 @@
 extern "C" {
 #include "pcu_vty.h"
 #include "coding_scheme.h"
+#include "alloc_algo.h"
 
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>

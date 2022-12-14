@@ -24,6 +24,8 @@ extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/application.h>
+
+#include "alloc_algo.h"
 }
 
 using namespace std;
