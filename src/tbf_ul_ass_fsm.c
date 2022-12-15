@@ -128,7 +128,7 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
 	bts_do_rate_ctr_inc(ms->bts, CTR_PKT_UL_ASSIGNMENT);
 
-	tbf_set_polling(ctx->tbf, new_poll_fn, d->pdch->ts_no, PDCH_ULC_POLL_UL_ASS);
+	tbf_set_polling(ctx->tbf, d->pdch, new_poll_fn, PDCH_ULC_POLL_UL_ASS);
 	LOGPTBF(ctx->tbf, LOGL_INFO, "Scheduled UL Assignment polling on PACCH (FN=%d, TS=%d)\n",
 		  new_poll_fn, d->pdch->ts_no);
 

@@ -458,14 +458,6 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	osmo_timer_schedule(&Tarr[t], sec, microsec);
 }
 
-void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason reason)
-{
-	/* schedule polling */
-	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0)
-		LOGPTBF(this, LOGL_ERROR, "Failed scheduling poll on PACCH (FN=%d, TS=%d)\n",
-			  new_poll_fn, ts);
-}
-
 void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf;
@@ -843,9 +835,12 @@ int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcma
 	return 0;
 }
 
-void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t)
+void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch, uint32_t new_poll_fn, enum pdch_ulc_tbf_poll_reason t)
 {
-	return tbf->set_polling(new_poll_fn, ts, t);
+	/* schedule polling */
+	if (pdch_ulc_reserve_tbf_poll(pdch->ulc, new_poll_fn, tbf, t) < 0)
+		LOGPTBF(tbf, LOGL_ERROR, "FN=%u Failed scheduling poll on PACCH %s\n",
+			  new_poll_fn, pdch_name(pdch));
 }
 
 void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)

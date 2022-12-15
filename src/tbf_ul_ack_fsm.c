@@ -93,7 +93,7 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 		osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ctx->tbf)), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
 
 	if (final) {
-		tbf_set_polling(ul_tbf_as_tbf(tbf), new_poll_fn, d->pdch->ts_no, PDCH_ULC_POLL_UL_ACK);
+		tbf_set_polling(ul_tbf_as_tbf(tbf), d->pdch, new_poll_fn, PDCH_ULC_POLL_UL_ACK);
 		LOGPTBFUL(tbf, LOGL_DEBUG,
 			"Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
 			new_poll_fn, d->pdch->ts_no);

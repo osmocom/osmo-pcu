@@ -202,7 +202,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Cell Change Continue -------------------------\n");
 	rate_ctr_inc(rate_ctr_group_get_ctr(bts_rate_counters(ms->bts), CTR_PKT_CELL_CHG_CONTINUE));
 	talloc_free(mac_control_block);
-	tbf_set_polling(tbf, *new_poll_fn, data->pdch->ts_no, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
+	tbf_set_polling(tbf, data->pdch, *new_poll_fn, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
 	LOGPTBF(tbf, LOGL_DEBUG,
 	     "Scheduled 'Packet Cell Change Continue' polling on PACCH (FN=%d, TS=%d)\n",
 	     *new_poll_fn, data->pdch->ts_no);

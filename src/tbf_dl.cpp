@@ -805,7 +805,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 		rc = tbf_check_polling(this, pdch, fn, &new_poll_fn, &rrbp);
 		if (rc >= 0) {
-			set_polling(new_poll_fn, pdch->ts_no, PDCH_ULC_POLL_DL_ACK);
+			tbf_set_polling(this, pdch, new_poll_fn, PDCH_ULC_POLL_DL_ACK);
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduled DL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
 				  new_poll_fn, pdch->ts_no);
