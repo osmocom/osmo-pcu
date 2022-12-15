@@ -646,7 +646,7 @@ const char *gprs_rlcmac_tbf::name(bool enclousure) const
 		OSMO_STRBUF_PRINTF(sb, "TBF(");
 	OSMO_STRBUF_PRINTF(sb, "%s", direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL");
 	if (this->trx) { /* This may not be available during TBF alloc func time */
-		int8_t tfi = (m_tfi == TBF_TS_UNSET) ? -1 : m_tfi;
+		int8_t tfi = (m_tfi == TBF_TFI_UNSET) ? -1 : m_tfi;
 		OSMO_STRBUF_PRINTF(sb, ":TFI-%u-%u-%d",
 				   this->trx->bts->nr, this->trx->trx_no, tfi);
 	}
