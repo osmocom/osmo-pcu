@@ -83,7 +83,7 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
 
-	rc = tbf_check_polling(ctx->tbf, d->fn, d->pdch->ts_no, &new_poll_fn, &rrbp);
+	rc = tbf_check_polling(ctx->tbf, d->pdch, d->fn, &new_poll_fn, &rrbp);
 	if (rc < 0)
 		return NULL;
 

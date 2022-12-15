@@ -803,7 +803,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				  POLL_ACK_AFTER_FRAMES);
 		}
 
-		rc = check_polling(fn, pdch->ts_no, &new_poll_fn, &rrbp);
+		rc = tbf_check_polling(this, pdch, fn, &new_poll_fn, &rrbp);
 		if (rc >= 0) {
 			set_polling(new_poll_fn, pdch->ts_no, PDCH_ULC_POLL_DL_ACK);
 			LOGPTBFDL(this, LOGL_DEBUG,

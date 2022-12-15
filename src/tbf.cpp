@@ -458,27 +458,6 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	osmo_timer_schedule(&Tarr[t], sec, microsec);
 }
 
-int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
-	uint32_t *poll_fn_, unsigned int *rrbp_) const
-{
-	int rc;
-	if (!tbf_is_control_ts(this, &this->trx->pdch[ts])) {
-		LOGPTBF(this, LOGL_DEBUG, "Polling cannot be "
-			"scheduled in this TS %d (control TS %s)\n",
-			ts, pdch_name(control_ts));
-		return -EINVAL;
-	}
-
-	if ((rc = pdch_ulc_get_next_free_rrbp_fn(trx->pdch[ts].ulc, fn, poll_fn_, rrbp_)) < 0) {
-		LOGPTBF(this, LOGL_NOTICE,
-			"(bts=%u,trx=%u,ts=%u) FN=%u No suitable free RRBP offset found!\n",
-			trx->bts->nr, trx->trx_no, ts, fn);
-		return rc;
-	}
-
-	return 0;
-}
-
 void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason reason)
 {
 	/* schedule polling */
@@ -839,9 +818,29 @@ bool tbf_is_egprs_enabled(const struct gprs_rlcmac_tbf *tbf)
 	return tbf->is_egprs_enabled();
 }
 
-int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp)
+int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch,
+		      uint32_t fn, uint32_t *poll_fn, unsigned int *rrbp)
 {
-	return tbf->check_polling(fn, ts, poll_fn, rrbp);
+	int rc;
+	OSMO_ASSERT(pdch);
+
+	if (!tbf_is_control_ts(tbf, pdch)) {
+		char buf[128];
+		LOGPTBF(tbf, LOGL_DEBUG, "Polling cannot be "
+			"scheduled in this TS %s (control TS %s)\n",
+			pdch_name(pdch),
+			tbf->control_ts ? pdch_name_buf(tbf->control_ts, buf, sizeof(buf)) : "none");
+		return -EINVAL;
+	}
+
+	if ((rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, fn, poll_fn, rrbp)) < 0) {
+		LOGPTBF(tbf, LOGL_NOTICE,
+			"FN=%u No suitable free RRBP offset found on %s!\n",
+			fn, pdch_name(pdch));
+		return rc;
+	}
+
+	return 0;
 }
 
 void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t)

@@ -59,7 +59,7 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	struct GprsMs *ms = tbf_ms(ul_tbf_as_tbf(tbf));
 
 	if (final) {
-		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->fn, d->pdch->ts_no, &new_poll_fn, &rrbp);
+		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->pdch, d->fn, &new_poll_fn, &rrbp);
 		if (rc < 0)
 			return NULL;
 	}

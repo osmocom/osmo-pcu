@@ -61,7 +61,7 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	/* We only use this function in control TS (PACCH) so that MS can always answer the poll */
 	OSMO_ASSERT(tbf_is_control_ts(ctx->tbf, d->pdch));
 
-	rc = tbf_check_polling(ctx->tbf, d->fn, d->pdch->ts_no, &new_poll_fn, &rrbp);
+	rc = tbf_check_polling(ctx->tbf, d->pdch, d->fn, &new_poll_fn, &rrbp);
 	if (rc < 0)
 		return NULL;
 

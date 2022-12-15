@@ -168,7 +168,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	struct GprsMs *ms = tbf_ms(tbf);
 	unsigned int rrbp;
 
-	rc = tbf_check_polling(tbf, data->fn, data->pdch->ts_no, new_poll_fn, &rrbp);
+	rc = tbf_check_polling(tbf, data->pdch, data->fn, new_poll_fn, &rrbp);
 	if (rc < 0) {
 		LOGP(DTBF, LOGL_ERROR, "Failed registering poll for Pkt Cell Chg Continue (%d)\n", rc);
 		return NULL;
