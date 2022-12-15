@@ -1336,3 +1336,17 @@ bool pdch_is_full(const struct gprs_rlcmac_pdch *pdch)
 	       pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) == NO_FREE_TFI ||
 	       find_free_usf(pdch->assigned_usf()) < 0;
 }
+
+const char *pdch_name(const struct gprs_rlcmac_pdch *pdch)
+{
+	static char _pdch_name_buf[128];
+	return pdch_name_buf(pdch, _pdch_name_buf, sizeof(_pdch_name_buf));
+}
+
+char *pdch_name_buf(const struct gprs_rlcmac_pdch *pdch, char *buf, size_t buf_size)
+{
+	struct osmo_strbuf sb = { .buf = buf, .len = buf_size };
+	OSMO_STRBUF_PRINTF(sb, "PDCH(bts=%" PRIu8 ",trx=%" PRIu8 ",ts=%" PRIu8 ")",
+			   pdch->trx->bts->nr, pdch->trx->trx_no, pdch->ts_no);
+	return buf;
+}

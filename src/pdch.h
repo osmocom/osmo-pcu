@@ -191,11 +191,11 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
 void pdch_disable(struct gprs_rlcmac_pdch *pdch);
 bool pdch_is_enabled(const struct gprs_rlcmac_pdch *pdch);
 bool pdch_is_full(const struct gprs_rlcmac_pdch *pdch);
+const char *pdch_name(const struct gprs_rlcmac_pdch *pdch);
+char *pdch_name_buf(const struct gprs_rlcmac_pdch *pdch, char *buf, size_t buf_size);
 #ifdef __cplusplus
 }
 #endif
 
 #define LOGPDCH(pdch, category, level, fmt, args...) \
-	LOGP(category, level, "PDCH(bts=%" PRIu8 ",trx=%" PRIu8 ",ts=%" PRIu8 ") " fmt, \
-	     (pdch)->trx->bts->nr, (pdch)->trx->trx_no, (pdch)->ts_no, \
-	     ## args)
+	LOGP(category, level, "%s " fmt, pdch_name(pdch), ## args)
