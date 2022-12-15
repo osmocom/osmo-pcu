@@ -90,7 +90,7 @@ gprs_rlcmac_tbf::Meas::Meas() :
 gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
 	direction(dir),
 	trx(NULL),
-	control_ts(TBF_TS_UNSET),
+	control_ts(NULL),
 	fT(0),
 	num_fT_exp(0),
 	upgrade_to_multislot(false),
@@ -217,8 +217,8 @@ void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 	 * confirmation from the MS and goes through the FLOW state. Hence, we
 	 * may have ULC pollings ongoing and we need to make sure we drop all
 	 * reserved nodes there: */
-	if (tbf->control_ts != TBF_TS_UNSET && !tbf->pdch[tbf->control_ts])
-		pdch_ulc_release_tbf(tbf->trx->pdch[tbf->control_ts].ulc, tbf);
+	if (tbf->control_ts)
+		pdch_ulc_release_tbf(tbf->control_ts->ulc, tbf);
 
 	/* Now simply detach from all attached PDCHs */
 	for (ts = 0; ts < 8; ts++) {
@@ -279,15 +279,18 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts, uint8_t slots)
 
 void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
+	char buf[128];
 	struct gprs_rlcmac_pdch *first_common = ms_first_common_ts(tbf_ms(tbf));
 	OSMO_ASSERT(first_common);
-	if (tbf->control_ts == TBF_TS_UNSET)
-		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
-			first_common->ts_no);
-	else if (tbf->control_ts != first_common->ts_no)
-		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d -> %d\n",
-			tbf->control_ts, first_common->ts_no);
-	tbf->control_ts = first_common->ts_no;
+
+	if (!tbf->control_ts)
+		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %s\n",
+			pdch_name(first_common));
+	else if (tbf->control_ts != first_common)
+		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %s -> %s\n",
+			pdch_name_buf(tbf->control_ts, buf, sizeof(buf)),
+			pdch_name(first_common));
+	tbf->control_ts = first_common;
 }
 
 void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
@@ -461,8 +464,8 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	int rc;
 	if (!tbf_is_control_ts(this, &this->trx->pdch[ts])) {
 		LOGPTBF(this, LOGL_DEBUG, "Polling cannot be "
-			"scheduled in this TS %d (first control TS %d)\n",
-			ts, control_ts);
+			"scheduled in this TS %d (control TS %s)\n",
+			ts, pdch_name(control_ts));
 		return -EINVAL;
 	}
 
@@ -710,8 +713,8 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 	struct gprs_rlcmac_pdch *first_common;
 
 	if (direction == GPRS_RLCMAC_DL_TBF) {
-		if (control_ts < 8)
-			slots |= 1 << control_ts;
+		if (control_ts)
+			slots |= 1 << control_ts->ts_no;
 		first_common = ms_first_common_ts(tbf_ms(this));
 		if (first_common)
 			slots |= 1 << first_common->ts_no;
@@ -853,7 +856,7 @@ void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch
 
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch)
 {
-	return tbf->control_ts == pdch->ts_no;
+	return tbf->control_ts == pdch;
 }
 
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf)

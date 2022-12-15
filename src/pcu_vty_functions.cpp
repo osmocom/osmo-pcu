@@ -68,7 +68,7 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
 		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
 		first_common_ts ? first_common_ts->ts_no : -1,
-		tbf->control_ts,
+		tbf->control_ts ? tbf->control_ts->ts_no : -1,
 		tbf->ms_class(),
 		ms_egprs_ms_class(ms),
 		VTY_NEWLINE);

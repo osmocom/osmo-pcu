@@ -836,10 +836,11 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	 * sent to tbf_fsm which will call tbf_assign_control_ts(),
 	 * effectively setting back control_ts to tbf->initial_common_ts.
 	 */
-	LOGPTBF(new_ul_tbf, LOGL_INFO, "change control TS %d -> %d until assignment is complete.\n",
-		new_ul_tbf->control_ts, ts_no);
+	LOGPTBF(new_ul_tbf, LOGL_INFO, "Change control TS %s -> %s until assignment is complete.\n",
+		new_ul_tbf->control_ts ? pdch_name_buf(new_ul_tbf->control_ts, buf, sizeof(buf)) : "(none)",
+		pdch_name(this));
 
-	new_ul_tbf->control_ts = ts_no;
+	new_ul_tbf->control_ts = this;
 	/* schedule uplink assignment */
 	osmo_fsm_inst_dispatch(new_ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
 return_unref:
@@ -1312,7 +1313,7 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 	 * Get rid of them too: */
 	llist_for_each_entry_safe(pos, pos2, &pdch->trx->ul_tbfs, list) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
-		if (ul_tbf->control_ts == pdch->ts_no)
+		if (ul_tbf->control_ts == pdch)
 			tbf_free(ul_tbf);
 	}
 }

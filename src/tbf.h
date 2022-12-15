@@ -112,7 +112,6 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_TO_DL_ACK	3 /* DL TBF: Failed to receive last polled DL ACK/NACK */
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-#define TBF_TS_UNSET 0xff
 #define TBF_TFI_UNSET 0xff
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
@@ -219,7 +218,7 @@ struct gprs_rlcmac_tbf {
 
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
-	uint8_t control_ts; /* timeslot control messages and polling */
+	struct gprs_rlcmac_pdch *control_ts; /* timeslot control messages and polling */
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 
 	gprs_llc m_llc;
