@@ -535,6 +535,7 @@ static void test_tbf_dl_llc_loss()
 {
 	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ts_no = 4;
 	uint8_t ms_class = 45;
 	int rc = 0;
@@ -554,6 +555,7 @@ static void test_tbf_dl_llc_loss()
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
 	setup_bts(bts, ts_no);
+	pdch = &bts->trx[0].pdch[ts_no];
 	/* keep the MS object 10 seconds */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 10, OSMO_TDEF_S) == 0);
 
@@ -612,7 +614,7 @@ static void test_tbf_dl_llc_loss()
 	};
 
 	while (ms_dl_tbf(ms)->have_data()) {
-		msg = ms_dl_tbf(ms)->create_dl_acked_block(fn += 4, ts_no);
+		msg = ms_dl_tbf(ms)->create_dl_acked_block(fn += 4, pdch);
 		fprintf(stderr, "MSG = %s\n", msgb_hexdump(msg));
 		if (!msgb_eq_data_print(msg, exp[expected_data - 1], GSM_MACBLOCK_LEN))
 			fprintf(stderr, "%s failed at %u\n", __func__, expected_data);
@@ -2865,7 +2867,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 	} while(0)
 
 #define MAKE_ACKED(m, tbf, fn, cs, check_unacked) do {			\
-		m = tbf->create_dl_acked_block(fn, tbf->control_ts->ts_no);	\
+		m = tbf->create_dl_acked_block(fn, tbf->control_ts);	\
 		OSMO_ASSERT(m);						\
 		if (check_unacked)					\
 			CHECK_UNACKED(tbf, cs, 0);			\
@@ -2940,7 +2942,7 @@ static void egprs_spb_to_normal_validation(struct gprs_rlcmac_bts *bts,
 
 	NACK(dl_tbf, 0);
 
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts->ts_no);
+	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
 	egprs2 = (struct gprs_rlc_dl_header_egprs_2 *) msg->data;
 
 	/* Table 10.4.8a.3.1 of 44.060 */

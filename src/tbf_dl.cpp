@@ -391,7 +391,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
  * Create DL data block
  * The messages are fragmented and forwarded as data blocks.
  */
-struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind)
+struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, const struct gprs_rlcmac_pdch *pdch, enum mcs_kind req_mcs_kind)
 {
 	int bsn, bsn2 = -1;
 	bool may_combine;
@@ -406,7 +406,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts, 
 	if (may_combine)
 		bsn2 = take_next_bsn(fn, bsn, req_mcs_kind, &may_combine);
 
-	return create_dl_acked_block(fn, ts, bsn, bsn2);
+	return create_dl_acked_block(fn, pdch, bsn, bsn2);
 }
 
 /* old_tbf (UL TBF or DL TBF) will send a Pkt Dl Ass on PACCH to assign tbf.
@@ -621,7 +621,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
-				const uint32_t fn, const uint8_t ts,
+				const uint32_t fn, const struct gprs_rlcmac_pdch *pdch,
 				int index, int index2)
 {
 	uint8_t *msg_data;
@@ -803,12 +803,12 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				  POLL_ACK_AFTER_FRAMES);
 		}
 
-		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		rc = check_polling(fn, pdch->ts_no, &new_poll_fn, &rrbp);
 		if (rc >= 0) {
-			set_polling(new_poll_fn, ts, PDCH_ULC_POLL_DL_ACK);
+			set_polling(new_poll_fn, pdch->ts_no, PDCH_ULC_POLL_DL_ACK);
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduled DL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
-				  new_poll_fn, ts);
+				  new_poll_fn, pdch->ts_no);
 
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
@@ -828,7 +828,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 			LOGPTBFDL(this, LOGL_INFO,
 				  "Scheduled Ack/Nack polling on FN=%d, TS=%d\n",
-				  new_poll_fn, ts);
+				  new_poll_fn, pdch->ts_no);
 		}
 	}
 

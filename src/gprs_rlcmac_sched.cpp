@@ -278,7 +278,6 @@ static struct msgb *sched_select_dl_data_msg(struct gprs_rlcmac_bts *bts, struct
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
 	enum tbf_dl_prio prio, max_prio = DL_PRIO_NONE;
-	uint8_t ts = pdch->ts_no;
 
 	uint8_t i, tfi, prio_tfi;
 	int age;
@@ -334,7 +333,7 @@ static struct msgb *sched_select_dl_data_msg(struct gprs_rlcmac_bts *bts, struct
 		/* next TBF to handle resource is the next one */
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
-		msg = prio_tbf->create_dl_acked_block(fn, ts, req_mcs_kind);
+		msg = prio_tbf->create_dl_acked_block(fn, pdch, req_mcs_kind);
 		*is_egprs = prio_tbf->is_egprs_enabled();
 	}
 

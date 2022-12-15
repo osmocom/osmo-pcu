@@ -48,7 +48,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlc_window *window();
 
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
-	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
+	struct msgb *create_dl_acked_block(uint32_t fn, const gprs_rlcmac_pdch *pdch,
+					   enum mcs_kind req_mcs_kind = EGPRS);
 
 	void request_dl_ack();
 	bool need_poll_for_dl_ack_nack() const;
@@ -100,8 +101,8 @@ protected:
 			  bool *may_combine);
 	bool restart_bsn_cycle();
 	int create_new_bsn(const uint32_t fn, enum CodingScheme cs);
-	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					int index, int index2 = -1);
+	struct msgb *create_dl_acked_block(const uint32_t fn, const struct gprs_rlcmac_pdch *pdch,
+					   int index, int index2 = -1);
 	int update_window(unsigned first_bsn, const struct bitvec *rbb);
 	int rcvd_dl_final_ack();
 	bool dl_window_stalled() const;
