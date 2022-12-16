@@ -2406,6 +2406,106 @@ static void test_tbf_update_ws(void)
 	TALLOC_FREE(the_pcu);
 }
 
+/* Test DL-TBF first assigned over CCCH ImmAss, then after X2002 timeout, when MS
+is available to receive from TBF on PACCH, upgrade it to multislot. In the
+middle the MS would request a new UL-TBF and PCU ends up creating 2 MS objects on
+different TRX, which are eventually merged.
+Hence, new multislot DL-TBF allocation (assigned over PACCH) happens on a different TRX
+than the one which was assigned over CCCH and where the PktDlAss is sent. SYS#6231 */
+static void test_ms_merge_dl_tbf_different_trx(void)
+{
+	the_pcu = prepare_pcu();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	GprsMs *first_ms, *second_ms;
+	uint8_t ts_no = 1;
+	uint8_t ms_class = 11;
+	struct gprs_rlcmac_trx *trx0 = &bts->trx[0];
+	struct gprs_rlcmac_trx *trx1 = &bts->trx[1];
+	uint32_t old_tlli = 0xa3c2f953;
+	uint32_t new_tlli = 0xecc1f953;
+	const char *imsi = "001001000000001";
+	uint8_t llc_buf[19];
+	int rc;
+	unsigned delay_csec = 1000;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	uint32_t fn = 0;
+
+	fprintf(stderr, "=== start %s ===\n", __func__);
+
+	bts->pcu->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->pcu->nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
+
+	setup_bts(bts, ts_no);
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
+	/* trx0->pdch[ts_no].enable(); Already enabled during setup_bts()) */
+	trx0->pdch[ts_no].disable();
+	trx1->pdch[4].enable();
+	trx1->pdch[5].enable();
+	trx1->pdch[6].enable();
+	gprs_bssgp_init(bts, 5234, 5234, 1, 1, false, 0, 0, 0);
+
+	/* Handle LLC frame 1. This will create the TBF we want in TRX1 and
+	 * we'll have it upgrade to multislot on TRX0 later. */
+	memset(llc_buf, 1, sizeof(llc_buf));
+	rc = dl_tbf_handle(bts, old_tlli, 0, imsi, ms_class, 0,
+			   delay_csec, llc_buf, sizeof(llc_buf));
+	OSMO_ASSERT(rc >= 0);
+
+	first_ms = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
+	OSMO_ASSERT(first_ms);
+	dl_tbf = ms_dl_tbf(first_ms);
+	OSMO_ASSERT(dl_tbf);
+	OSMO_ASSERT(tbf_get_trx(dl_tbf) == trx1);
+	OSMO_ASSERT(dl_tbf->control_ts->trx == trx1);
+	struct gprs_rlcmac_pdch *old_dl_control_ts = dl_tbf->control_ts;
+
+	/* Enable PDCHs on TRX0 so that second_ms is allocated on TRX0: */
+	trx0->pdch[1].enable();
+	trx0->pdch[2].enable();
+	trx0->pdch[3].enable();
+
+	second_ms = bts_alloc_ms(bts, 0, 0);
+	ms_set_tlli(second_ms, new_tlli);
+	ul_tbf = ul_tbf_alloc(bts, second_ms, 0, true);
+	OSMO_ASSERT(ul_tbf != NULL);
+	ms_update_announced_tlli(second_ms, new_tlli);
+
+	/* Here PCU gets to know the MS are the same and they get merged. */
+	rc = dl_tbf_handle(bts, new_tlli, old_tlli, imsi, ms_class, 0,
+			   delay_csec, llc_buf, sizeof(llc_buf));
+	OSMO_ASSERT(rc >= 0);
+	/* Here we assert DL-TBF is currently moved to the new MS, which is wrong! */
+	OSMO_ASSERT(dl_tbf == ms_dl_tbf(second_ms));
+
+	/* Here BTS would answer with data_cnf and trigger
+	 * bts_rcv_imm_ass_cnf(), which would trigger TBF_EV_ASSIGN_PCUIF_CNF.
+	 * That in turn would set up timer X2002. Finally, X2002 timeout
+	 * moves it to ASSIGN state for multislot upgrade. We set X2002 timeout to 0 here to get
+	 * immediate trigger through osmo_select_main() */
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2002, 0, OSMO_TDEF_MS) == 0);
+	osmo_fsm_inst_dispatch(ms_dl_tbf(second_ms)->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
+	osmo_select_main(0);
+	OSMO_ASSERT(dl_tbf == ms_dl_tbf(second_ms));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_ASSIGN));
+	/* Here we validate DL-TBF was intially allocated in TRX1 but moved to TRX0 during multislot upgrade: */
+	OSMO_ASSERT(tbf_get_trx(dl_tbf) == trx0);
+	OSMO_ASSERT(old_dl_control_ts != dl_tbf->control_ts);
+
+	/* dl_tbf is still in the list of trx1 so that the PktDlAss on the old
+	 * TRX/TS can be scheduled to assign the new TRX/TS allocation: */
+	OSMO_ASSERT(dl_tbf == llist_first_entry_or_null(&trx1->dl_tbfs, struct llist_item, list)->entry);
+
+	/* get the PACCH PktDlAss for the DL-TBF: */
+	request_dl_rlc_block(dl_tbf->bts, dl_tbf->control_ts, &fn);
+
+	fprintf(stderr, "=== end %s ===\n", __func__);
+	TALLOC_FREE(the_pcu);
+}
+
 static void test_tbf_puan_urbb_len(void)
 {
 	the_pcu = prepare_pcu();
@@ -3409,6 +3509,7 @@ int main(int argc, char **argv)
 	test_packet_access_rej_epdan();
 	test_packet_access_rej_prr();
 	test_packet_access_rej_prr_no_other_tbfs();
+	test_ms_merge_dl_tbf_different_trx();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

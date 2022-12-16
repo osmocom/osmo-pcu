@@ -9429,3 +9429,109 @@ UL_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddcc){ASSIGN}: Deallocated
 UL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddcc){NONE}: Deallocated
 DL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddcc){NONE}: Deallocated
 === end test_packet_access_rej_prr_no_other_tbfs ===
+=== start test_ms_merge_dl_tbf_different_trx ===
+PDCH(bts=0,trx=0,ts=1) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=1) PDCH state: enabled => disabled
+PDCH(bts=0,trx=1,ts=4) PDCH state: disabled => enabled
+PDCH(bts=0,trx=1,ts=5) PDCH state: disabled => enabled
+PDCH(bts=0,trx=1,ts=6) PDCH state: disabled => enabled
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
+The MS object cannot fully confirm an unexpected TLLI: 0xa3c2f953, partly confirmed
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) appending 19 bytes to DL LLC queue
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) ********** DL-TBF starts here **********
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) Allocating DL TBF
+UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
+DL_TBF{NEW}: Allocated
+[DL] algo B <single> (suggested TRX: -1): Alloc start
+Found first unallocated TRX=1 TFI=0
+Slot Allocation (Algorithm B) for class 11
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 7, because not enabled
+- Possible DL/UL slots: (TS=0)"....CCC."(TS=7)
+Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
+- Skipping TS 6, because num TBFs 0 >= 0
+Selected DL slots: (TS=0)".ddd.D.."(TS=7), single
+[DL] algo B <single> (suggested TRX: -1): using single slot at TS 5
+- Reserved DL/UL slots: (TS=0)"..D..CU."(TS=7)
+- Assigning DL TS 5
+PDCH(bts=0,trx=1,ts=5) Attaching TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) Setting Control TS PDCH(bts=0,trx=1,ts=5)
+TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) Allocated: trx = 1, ul_slots = 20, dl_slots = 20
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) Attaching DL TBF: TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953)
+TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) [DOWNLINK] START (PCH)
+TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) Send downlink assignment on PCH, no TBF exist (IMSI=001001000000001)
+DL_TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953){NEW}: Received Event ASSIGN_ADD_CCCH
+TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) set ass. type CCCH [prev CCCH:0, PACCH:0]
+DL_TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953){NEW}: state_chg to ASSIGN
+TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) TX: START Immediate Assignment Downlink (PCH)
+ - TRX=1 (0) TS=5 TA=220
+PDCH(bts=0,trx=0,ts=1) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=3) PDCH state: disabled => enabled
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, UL TLLI: 0xffffffff -> 0xecc1f953, not yet confirmed
+MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
+MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) Allocating UL TBF
+UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
+UL_TBF{NEW}: Allocated
+UL_ACK_TBF{NONE}: Allocated
+[UL] algo B <single> (suggested TRX: 0): Alloc start
+Found first unallocated TRX=0 TFI=0
+- Skipping TS 0, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Possible DL/UL slots: (TS=0)".CCC...."(TS=7)
+Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
+- Skipping TS 3, because num TBFs 0 >= 0
+Selected UL slots: (TS=0)"..U.uu.."(TS=7), single
+[UL] algo B <single> (suggested TRX: 0): using single slot at TS 2
+- Reserved DL/UL slots: (TS=0)"..C.DDD."(TS=7)
+- Assigning UL TS 2
+PDCH(bts=0,trx=0,ts=2) Attaching TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953) Setting Control TS PDCH(bts=0,trx=0,ts=2)
+TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953) Allocated: trx = 0, ul_slots = 04, dl_slots = 00
+MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953)
+There is a new MS object for the same MS: (0xa3c2f953, '001001000000001') -> (0xecc1f953, '')
+MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0:UL) Merge MS: MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0:DL)
+Modifying MS object, TLLI = 0xecc1f953, MS class 0 -> 11
+TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) Merge MS: Move DL TBF: MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0:DL) => MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL)
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) Detaching TBF: TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953)
+MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL) Attaching DL TBF: TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953)
+MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) Clearing MS object
+MS(TA-220:MSCLS-11-0) Destroying MS object
+Modifying MS object, TLLI: 0xecc1f953 confirmed
+MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL:DL) appending 19 bytes to DL LLC queue
+DL_TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}: Received Event ASSIGN_PCUIF_CNF
+TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
+DL_TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}: Timeout of X2002
+TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) Changing Control TS PDCH(bts=0,trx=1,ts=5) -> PDCH(bts=0,trx=0,ts=2)
+TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) Upgrade to multislot
+PDCH(bts=0,trx=1,ts=5) Detaching TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953), 1 TBFs, USFs = 00, TFIs = 00000001.
+[DL] algo B <multi> (suggested TRX: -1): Alloc start
+Found first unallocated TRX=0 TFI=0
+Selected DL slots: (TS=0)".DDDddd."(TS=7), multi
+[DL] algo B <multi> (suggested TRX: -1): using 3 slots
+- Assigning DL TS 1
+PDCH(bts=0,trx=0,ts=1) Attaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 2
+PDCH(bts=0,trx=0,ts=2) Attaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953), 1 TBFs, USFs = 01, TFIs = 00000001.
+- Assigning DL TS 3
+PDCH(bts=0,trx=0,ts=3) Attaching TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) Send downlink assignment on PACCH, because TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) exists
+DL_ASS_TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){NONE}: state_chg to SEND_ASS
+DL_TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}: Received Event ASSIGN_ADD_PACCH
+TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) set ass. type PACCH [prev CCCH:0, PACCH:0]
+=== end test_ms_merge_dl_tbf_different_trx ===
+MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL:DL) Destroying MS object
+MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:DL) Detaching TBF: TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953)
+MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953)
