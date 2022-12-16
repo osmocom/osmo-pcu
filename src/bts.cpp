@@ -632,7 +632,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 	unsigned int best_cnt = 0;
 	uint8_t best_first_tfi = 0;
 
-	if (use_trx >= 0 && use_trx < 8)
+	if (use_trx >= 0 && use_trx < (int8_t)ARRAY_SIZE(bts->trx))
 		trx_from = trx_to = use_trx;
 	else {
 		trx_from = 0;
