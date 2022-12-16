@@ -2449,7 +2449,9 @@ static void test_ms_merge_dl_tbf_different_trx(void)
 	gprs_bssgp_init(bts, 5234, 5234, 1, 1, false, 0, 0, 0);
 
 	/* Handle LLC frame 1. This will create the TBF we want in TRX1 and
-	 * we'll have it upgrade to multislot on TRX0 later. */
+	 * we'll have it upgrade to multislot on TRX0 later. This will trigger a
+	 * CCCH Dl ImAss towards BTS PCUIF. The confirmation from BTS is
+	 * injected further below (TBF_EV_ASSIGN_PCUIF_CNF). */
 	memset(llc_buf, 1, sizeof(llc_buf));
 	rc = dl_tbf_handle(bts, old_tlli, 0, imsi, ms_class, 0,
 			   delay_csec, llc_buf, sizeof(llc_buf));
@@ -2478,28 +2480,21 @@ static void test_ms_merge_dl_tbf_different_trx(void)
 	rc = dl_tbf_handle(bts, new_tlli, old_tlli, imsi, ms_class, 0,
 			   delay_csec, llc_buf, sizeof(llc_buf));
 	OSMO_ASSERT(rc >= 0);
-	/* Here we assert DL-TBF is currently moved to the new MS, which is wrong! */
-	OSMO_ASSERT(dl_tbf == ms_dl_tbf(second_ms));
+	/* Here we assert a new DL-TBF is created in the new MS (hence old from TRX1 is deleted and new one is in TRX0): */
+	dl_tbf = ms_dl_tbf(second_ms);
+	OSMO_ASSERT(tbf_get_trx(dl_tbf) == trx0);
+	OSMO_ASSERT(dl_tbf->control_ts != old_dl_control_ts);
+	OSMO_ASSERT(dl_tbf == llist_first_entry_or_null(&trx0->dl_tbfs, struct llist_item, list)->entry);
+	OSMO_ASSERT(NULL == llist_first_entry_or_null(&trx1->dl_tbfs, struct llist_item, list));
 
 	/* Here BTS would answer with data_cnf and trigger
 	 * bts_rcv_imm_ass_cnf(), which would trigger TBF_EV_ASSIGN_PCUIF_CNF.
-	 * That in turn would set up timer X2002. Finally, X2002 timeout
-	 * moves it to ASSIGN state for multislot upgrade. We set X2002 timeout to 0 here to get
-	 * immediate trigger through osmo_select_main() */
+	 * Since that's for an older DL-TBF assignment which no longer exists, it is ignored. */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2002, 0, OSMO_TDEF_MS) == 0);
 	osmo_fsm_inst_dispatch(ms_dl_tbf(second_ms)->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 	osmo_select_main(0);
-	OSMO_ASSERT(dl_tbf == ms_dl_tbf(second_ms));
-	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_ASSIGN));
-	/* Here we validate DL-TBF was intially allocated in TRX1 but moved to TRX0 during multislot upgrade: */
-	OSMO_ASSERT(tbf_get_trx(dl_tbf) == trx0);
-	OSMO_ASSERT(old_dl_control_ts != dl_tbf->control_ts);
 
-	/* dl_tbf is still in the list of trx1 so that the PktDlAss on the old
-	 * TRX/TS can be scheduled to assign the new TRX/TS allocation: */
-	OSMO_ASSERT(dl_tbf == llist_first_entry_or_null(&trx1->dl_tbfs, struct llist_item, list)->entry);
-
-	/* get the PACCH PktDlAss for the DL-TBF: */
+	/* get the PACCH PktDlAss for the DL-TBF, allocated one the UL-TBF from the new MS obj: */
 	request_dl_rlc_block(dl_tbf->bts, dl_tbf->control_ts, &fn);
 
 	fprintf(stderr, "=== end %s ===\n", __func__);

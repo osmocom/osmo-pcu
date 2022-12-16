@@ -163,7 +163,19 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * listening on PDCH) in order to move to FLOW state and start
 		 * transmitting data to it. When X2002 triggers (see cb timer
 		 * end of the file) it will send  TBF_EV_ASSIGN_READY_CCCH back
-		 * to us here. */
+		 * to us here.
+		 */
+		if (!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+			/* This can happen if we initiated a CCCH DlAss from an
+			 * older TBF object (same TLLI) towards BTS, and the DL-TBF
+			 * was recreated and is now trying to be assigned throguh
+			 * PACCH.
+			 */
+			LOGPTBFDL(ctx->dl_tbf, LOGL_INFO,
+				  "Ignoring event ASSIGN_PCUIF_CNF from BTS "
+				  "(CCCH was not requested on current assignment)\n");
+			break;
+		}
 		fi->T = -2002;
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
