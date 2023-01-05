@@ -1923,7 +1923,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654167 Scheduling control message at RTS for TBF(UL:T
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-0-0:UL) appending 4 bytes to DL LLC queue
-Detected FN jump! 2654167 -> 2654184 (expected 2654171)
+Detected FN jump! 2654167 -> 2654184 (expected 2654171, delta 17)
 PDCH(bts=0,trx=0,ts=7) FN=2654184 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654184 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) FN=2654184 Rx Packet Control Ack (reason=UL_ACK)
@@ -1974,7 +1974,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2016,7 +2016,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -2025,7 +2025,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: Received Even
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2077,7 +2077,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2119,7 +2119,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -2128,7 +2128,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: Received Even
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2178,7 +2178,7 @@ TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet D
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
-Detected FN jump! 2654275 -> 2654288 (expected 2654279)
+Detected FN jump! 2654275 -> 2654288 (expected 2654279, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
@@ -2242,7 +2242,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654348 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=1
-Detected FN jump! 2654292 -> 2654348 (expected 2654296)
+Detected FN jump! 2654292 -> 2654348 (expected 2654296, delta 56)
 PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2294,7 +2294,7 @@ TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788) Scheduled UL Assignment polling on PACCH (FN=2654361, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-1:STATE-NEW:GPRS:TLLI-0xf5667788){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling control message at RTS for TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788)
-Detected FN jump! 2654348 -> 2654361 (expected 2654353)
+Detected FN jump! 2654348 -> 2654361 (expected 2654353, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788) FN=2654361 Rx Packet Control Ack (reason=UL_ASS)
@@ -2306,7 +2306,7 @@ UL_TBF(UL:TFI-0-0-1:STATE-NEW:GPRS:TLLI-0xf5667788){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654361 but previous FN=2654353 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654353): TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) N3101 3 => 4 (< MAX 10)
-Detected FN jump! 2654361 -> 2654353 (expected 2654366)
+Detected FN jump! 2654361 -> 2654353 (expected 2654366, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654353 Rx UL DATA from unexpected TBF(UL:TFI-0-0-1:STATE-FLOW:GPRS:TLLI-0xf5667788)
 TBF(UL:TFI-0-0-1:STATE-FLOW:GPRS:TLLI-0xf5667788) UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
@@ -2370,7 +2370,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2413,7 +2413,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -2422,7 +2422,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: Received Even
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2478,7 +2478,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654275 -> 2654327 (expected 2654279)
+Detected FN jump! 2654275 -> 2654327 (expected 2654279, delta 52)
 PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
 PDCH(bts=0,trx=0,ts=7) FN=2654327 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
@@ -2524,7 +2524,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654340, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344)
-Detected FN jump! 2654327 -> 2654340 (expected 2654331)
+Detected FN jump! 2654327 -> 2654340 (expected 2654331, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) FN=2654340 Rx Packet Control Ack (reason=UL_ASS)
@@ -2559,7 +2559,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){NEW}: Receiv
 TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344) set ass. type PACCH [prev CCCH:0, PACCH:0]
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-Detected FN jump! 2654340 -> 2654331 (expected 2654344)
+Detected FN jump! 2654340 -> 2654331 (expected 2654344, delta 9)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654331 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2581,7 +2581,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2624,7 +2624,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -2633,7 +2633,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: Received Even
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2758,7 +2758,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2801,7 +2801,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignme
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -2810,7 +2810,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: Received Even
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2900,7 +2900,7 @@ TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet D
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
-Detected FN jump! 2654275 -> 2654288 (expected 2654279)
+Detected FN jump! 2654275 -> 2654288 (expected 2654279, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
@@ -3461,7 +3461,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 21 bytes to D
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 21 bytes to DL LLC queue
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 21 bytes to DL LLC queue
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 21 bytes to DL LLC queue
-Detected FN jump! 2654288 -> 2654379 (expected 2654292)
+Detected FN jump! 2654288 -> 2654379 (expected 2654292, delta 91)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) N3101 1 => 2 (< MAX 10)
@@ -3536,7 +3536,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) poll timeo
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
-Detected FN jump! 2654379 -> 2654409 (expected 2654383)
+Detected FN jump! 2654379 -> 2654409 (expected 2654383, delta 30)
 PDCH(bts=0,trx=0,ts=7) FN=2654409 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654409 ------------------------- RX : Uplink Control Block -------------------------
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) RX: [PCU <- BTS] Packet Downlink Ack/Nack
@@ -3946,7 +3946,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -3993,7 +3993,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignm
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -4002,7 +4002,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: Received Eve
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -4057,7 +4057,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -4104,7 +4104,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignm
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -4113,7 +4113,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: Received Eve
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -4349,7 +4349,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-1): 0f 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 2654167 -> 8 (expected 2654171)
+Detected FN jump! 2654167 -> 8 (expected 2654171, delta 61489)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4558,7 +4558,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 108 + 13 = 121
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=121, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=121, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 24, MCS-1): 0f 00 06 16 18 fe 03 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 8 -> 112 (expected 13)
+Detected FN jump! 8 -> 112 (expected 13, delta 104)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 112)
@@ -4656,7 +4656,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-2): 0f 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 112 -> 8 (expected 117)
+Detected FN jump! 112 -> 8 (expected 117, delta 104)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4820,7 +4820,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 86 + 13 = 99
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=99, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=99, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 19, MCS-2): 0f c0 04 12 20 fe 03 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 8 -> 91 (expected 13)
+Detected FN jump! 8 -> 91 (expected 13, delta 83)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 91)
@@ -4913,7 +4913,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-3): 0f 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 91 -> 8 (expected 95)
+Detected FN jump! 91 -> 8 (expected 95, delta 83)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5037,7 +5037,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 65 + 13 = 78
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=78, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=78, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 14, MCS-3): 0f 80 03 06 7c fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 00 
-Detected FN jump! 8 -> 69 (expected 13)
+Detected FN jump! 8 -> 69 (expected 13, delta 61)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 69)
@@ -5130,7 +5130,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-4): 0f 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 69 -> 8 (expected 73)
+Detected FN jump! 69 -> 8 (expected 73, delta 61)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5238,7 +5238,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 56 + 13 = 69
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=69, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=69, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 12, MCS-4): 0f 00 03 00 70 fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 8 -> 60 (expected 13)
+Detected FN jump! 8 -> 60 (expected 13, delta 52)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 60)
@@ -5331,7 +5331,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 60 -> 8 (expected 65)
+Detected FN jump! 60 -> 8 (expected 65, delta 52)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5423,7 +5423,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 47 + 13 = 60
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=60, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=60, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 8 -> 52 (expected 13)
+Detected FN jump! 8 -> 52 (expected 13, delta 44)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 52)
@@ -5516,7 +5516,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 52 -> 8 (expected 56)
+Detected FN jump! 52 -> 8 (expected 56, delta 44)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5584,7 +5584,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 34 + 13 = 47
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=47, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=47, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 7, MCS-6): 0f c0 01 00 e2 7f 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 ca ca ca 0a 
-Detected FN jump! 8 -> 39 (expected 13)
+Detected FN jump! 8 -> 39 (expected 13, delta 31)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 39)
@@ -5678,7 +5678,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 39 -> 8 (expected 43)
+Detected FN jump! 39 -> 8 (expected 43, delta 31)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5754,7 +5754,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 30 + 13 = 43
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=43, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=43, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 8 -> 34 (expected 13)
+Detected FN jump! 8 -> 34 (expected 13, delta 26)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 34)
@@ -5849,7 +5849,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-8): 0f 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
-Detected FN jump! 34 -> 8 (expected 39)
+Detected FN jump! 34 -> 8 (expected 39, delta 26)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5915,7 +5915,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 26 + 13 = 39
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=39, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=39, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 8, MCS-8): 0f 00 02 00 60 20 fd 07 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 f4 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
-Detected FN jump! 8 -> 30 (expected 13)
+Detected FN jump! 8 -> 30 (expected 13, delta 22)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 30)
@@ -6009,7 +6009,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 30 -> 8 (expected 34)
+Detected FN jump! 30 -> 8 (expected 34, delta 22)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -6065,7 +6065,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 21 + 13 = 34
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=34, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=34, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 6, MCS-9): 0f 80 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 80 f8 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 02 
-Detected FN jump! 8 -> 26 (expected 13)
+Detected FN jump! 8 -> 26 (expected 13, delta 18)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=13, TS=4 (curr FN 26)
@@ -6152,7 +6152,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) need_padding 0 spb_status 0 s
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
-Detected FN jump! 2654167 -> 58 (expected 2654171)
+Detected FN jump! 2654167 -> 58 (expected 2654171, delta 61539)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) downlink acknowledge
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
@@ -6380,7 +6380,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 2 RLC blocks, 2 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 1)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-7): 07 00 00 02 c0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 f5 8f 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
-Detected FN jump! 58 -> 63 (expected 60)
+Detected FN jump! 58 -> 63 (expected 60, delta 5)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21, reason=DL_ACK): TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) poll timeout for FN=21, TS=4 (curr FN 63)
@@ -7008,7 +7008,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -7055,7 +7055,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignm
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -7064,7 +7064,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: Received Eve
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -7212,7 +7212,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -7259,7 +7259,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignm
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -7268,7 +7268,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: Received Eve
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -7637,7 +7637,7 @@ MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654167 -> 2654270 (expected 2654171)
+Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -7684,7 +7684,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignm
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
-Detected FN jump! 2654270 -> 2654283 (expected 2654275)
+Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
@@ -7693,7 +7693,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: Received Eve
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288)
+Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -8978,7 +8978,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x77 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=82 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Detected FN jump! 2654167 -> 52 (expected 2654171)
+Detected FN jump! 2654167 -> 52 (expected 2654171, delta 61533)
 PDCH(bts=0,trx=0,ts=7) FN=52 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=52 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
