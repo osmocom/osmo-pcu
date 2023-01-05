@@ -716,15 +716,14 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 }
 
 /* Determine the full frame number from a relative frame number */
-uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn)
+uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn)
 {
-	int32_t m_cur_rfn;
-	int32_t fn;
-	int32_t fn_rounded;
+	uint32_t m_cur_rfn;
+	uint32_t fn_rounded;
 
-	/* double-check that relative FN is not negative and fits into int32_t */
+	/* make sure RFN does not exceed the maximum possible value of a valid
+	 * GSM frame number. */
 	OSMO_ASSERT(rfn < GSM_MAX_FN);
-	OSMO_ASSERT(rfn >= 0);
 
 	/* Note: If a BTS is sending in a rach request it will be fully aware
 	 * of the frame number. If the PCU is used in a BSC-co-located setup.
@@ -744,13 +743,13 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn)
 
 	/* Compute a "rounded" version of the internal frame number, which
 	 * exactly fits in the RFN_MODULUS raster */
-	fn_rounded = bts->cur_fn - m_cur_rfn;
+	fn_rounded = GSM_TDMA_FN_SUB(bts->cur_fn, m_cur_rfn);
 
 	/* If the delta between the internal and the external relative frame
 	 * number exceeds a certain limit, we need to assume that the incoming
 	 * rach request belongs to a the previous rfn period. To correct this,
 	 * we roll back the rounded frame number by one RFN_MODULUS */
-	if (abs(rfn - m_cur_rfn) > RFN_THRESHOLD) {
+	if (GSM_TDMA_FN_DIFF(rfn, m_cur_rfn) > RFN_THRESHOLD) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previous modulus %u cycle, wrapping...\n",
 		     rfn, bts->cur_fn, RFN_MODULUS);
@@ -758,17 +757,15 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn)
 			LOGP(DRLCMAC, LOGL_DEBUG,
 			"Cornercase detected: wrapping crosses %u border\n",
 			GSM_MAX_FN);
-			fn_rounded = GSM_MAX_FN - (RFN_MODULUS - fn_rounded);
+			fn_rounded = GSM_TDMA_FN_SUB(GSM_MAX_FN, (GSM_TDMA_FN_SUB(RFN_MODULUS, fn_rounded)));
 		}
 		else
-			fn_rounded -= RFN_MODULUS;
+			fn_rounded = GSM_TDMA_FN_SUB(fn_rounded, RFN_MODULUS);
 	}
 
 	/* The real frame number is the sum of the rounded frame number and the
 	 * relative framenumber computed via RACH */
-	fn = fn_rounded + rfn;
-
-	return fn;
+	return GSM_TDMA_FN_SUM(fn_rounded, rfn);
 }
 
 /* 3GPP TS 44.060:

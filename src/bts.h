@@ -296,7 +296,7 @@ struct paging_req_cs {
 struct GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts *bts, uint8_t ms_class, uint8_t egprs_ms_class);
 int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req, struct GprsMs *ms);
 
-uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn);
+uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn);
 
 struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
 struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
