@@ -338,6 +338,9 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 
 void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t fn)
 {
+	/* See also 3GPP TS 45.002, section 4.3.3 */
+	OSMO_ASSERT(fn < GSM_TDMA_HYPERFRAME);
+
 	/* The UL frame numbers lag 3 behind the DL frames and the data
 	 * indication is only sent after all 4 frames of the block have been
 	 * received. Sometimes there is an idle frame between the end of one

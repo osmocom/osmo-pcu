@@ -92,13 +92,13 @@ static void run_test()
 	fn = calc_fn(bts, RFN_MODULUS - 1);
 	OSMO_ASSERT(fn == 42431);
 
-	set_fn(bts, RFN_MODULUS * 123 + 16);
+	set_fn(bts, RFN_MODULUS * 12 + 16);
 	fn = calc_fn(bts, RFN_MODULUS - 4);
-	OSMO_ASSERT(fn == 5219132);
+	OSMO_ASSERT(fn == 509180);
 
-	set_fn(bts, RFN_MODULUS * 123 + 451);
+	set_fn(bts, RFN_MODULUS * 12 + 451);
 	fn = calc_fn(bts, RFN_MODULUS - 175);
-	OSMO_ASSERT(fn == 5218961);
+	OSMO_ASSERT(fn == 509009);
 
 
 	/* Lets check a special cornercase. We assume that
@@ -125,7 +125,7 @@ static void run_test()
 	/* Also check with some corner case
 	 * values where Fn and RFn reach its
 	 * maximum/minimum valid range */
-	set_fn(bts, GSM_MAX_FN);
+	set_fn(bts, GSM_MAX_FN-1);
 	fn = calc_fn(bts, RFN_MODULUS-1);
 	OSMO_ASSERT(fn == GSM_MAX_FN-1);
 
@@ -133,9 +133,9 @@ static void run_test()
 	fn = calc_fn(bts, RFN_MODULUS-1);
 	OSMO_ASSERT(fn == GSM_MAX_FN-1);
 
-	set_fn(bts, GSM_MAX_FN);
+	set_fn(bts, GSM_MAX_FN-1);
 	fn = calc_fn(bts, 0);
-	OSMO_ASSERT(fn == GSM_MAX_FN);
+	OSMO_ASSERT(fn == GSM_MAX_FN-RFN_MODULUS*2);
 
 	set_fn(bts, 0);
 	fn = calc_fn(bts, 0);
