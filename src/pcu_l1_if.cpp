@@ -40,6 +40,7 @@ extern "C" {
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/gsm48_rest_octets.h>
 #include <osmocom/gsm/sysinfo.h>
+#include <osmocom/gsm/gsm0502.h>
 
 #include <nacc_fsm.h>
 }
@@ -622,6 +623,12 @@ static int pcu_rx_rach_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
 		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
 		rach_ind->ra, rach_ind->fn, current_fn, rach_ind->is_11bit);
+
+	if (OSMO_UNLIKELY(rach_ind->fn > GSM_TDMA_HYPERFRAME - 1)) {
+		LOGP(DL1IF, LOGL_ERROR, "RACH request contains fn=%u that exceeds valid limits (0-%u) -- ignored!\n",
+		     rach_ind->fn,  GSM_TDMA_HYPERFRAME - 1);
+			return -EINVAL;
+	}
 
 	struct rach_ind_params rip = {
 		.burst_type = (enum ph_burst_type) rach_ind->burst_type,
