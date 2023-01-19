@@ -193,6 +193,9 @@ static int pdch_ulc_add_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item)
 	struct rb_node **n = &(ulc->tree_root.rb_node);
 	struct rb_node *parent = NULL;
 
+	LOGPDCH(ulc->pdch, DRLCMAC, LOGL_DEBUG, "Reserving FN %u for type %s\n",
+		item->fn, get_value_string(pdch_ul_node_names, item->type));
+
 	while (*n) {
 		struct pdch_ulc_node *it;
 		int res;

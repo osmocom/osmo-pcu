@@ -93,6 +93,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc)
@@ -206,6 +207,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc)
@@ -319,6 +321,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc)
@@ -498,6 +501,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 20)
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=4) Reserving FN 104 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=104, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=104, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:TLLI-0xffeeddcc) msg block (BSN 20, CS-1): 0f 00 28 09 c6 c7 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
@@ -523,6 +527,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BS
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 21)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 203 + 13 = 216
+PDCH(bts=0,trx=0,ts=4) Reserving FN 216 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=216, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=216, TS=4
@@ -1787,6 +1792,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) Copyi
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) Copying data unit 0 (BSN 2)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 12 + 18 = 30
+PDCH(bts=0,trx=0,ts=4) Reserving FN 30 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) Scheduled DL Acknowledgement polling on PACCH (FN=30, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-001001000123456:TLLI-0xc0123456) Scheduled Ack/Nack polling on FN=30, TS=4
@@ -1917,6 +1923,7 @@ UL_ACK_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS){SCHED_UL_ACK}: Received Event CREATE_RLC
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654167 + 17 = 2654184
 UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS){FINISHED}: Received Event CONTENTION_RESOLUTION_MS_SUCCESS
 TBF(UL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xf1223344) stopping timer T3141 [Contention resolution success (UL-TBF, CCCH)]
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654184 for type POLL
 TBF(UL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xf1223344) Scheduled UL Acknowledgement polling on PACCH (FN=2654184, TS=7)
 UL_ACK_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS){SCHED_UL_ACK}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654167 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FINISHED:GPRS:TLLI-0xf1223344)
@@ -1971,6 +1978,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-0-0) Detaching TBF: TBF(DL:TFI-0-0
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2013,6 +2021,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
@@ -2074,6 +2083,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0) Detaching TBF: TBF(DL:TFI-0-0
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2116,6 +2126,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
@@ -2170,11 +2181,13 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){NEW}: state_
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654279
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654279 for type USF
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type POLL
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
@@ -2198,6 +2211,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654283
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 0, CS=CS-4
@@ -2211,6 +2225,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying 1 
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654292 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Acknowledgement polling on PACCH (FN=2654292, TS=7)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled Ack/Nack polling on FN=2654292, TS=7
@@ -2224,6 +2239,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Timeout fo
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654296 block_nr=2 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654301
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654301 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Restarting at BSN 0, because all blocks have been transmitted.
@@ -2233,12 +2249,14 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying 1 
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduling Ack/Nack polling, because polling timed out.
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654296 + 13 = 2654309
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654309 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Acknowledgement polling on PACCH (FN=2654309, TS=7)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) restarting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654292
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled Ack/Nack polling on FN=2654309, TS=7
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654245 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654348 for type SBA
 Allocated a single block at SBFn=2654348 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=1
@@ -2286,11 +2304,13 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Timeout fo
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654353
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654353 for type USF
 UL_ASS_TBF(UL:TFI-0-0-1:STATE-NEW:GPRS:TLLI-0xf5667788){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654348 + 13 = 2654361
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654361 for type POLL
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788) Scheduled UL Assignment polling on PACCH (FN=2654361, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-1:STATE-NEW:GPRS:TLLI-0xf5667788){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling control message at RTS for TBF(UL:TFI-0-0-1:STATE-ASSIGN:GPRS:TLLI-0xf5667788)
@@ -2367,6 +2387,7 @@ MS(TA-7:MSCLS-1-0) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS)
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2410,6 +2431,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
@@ -2475,6 +2497,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){NONE}: 
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Deallocated
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654327 for type SBA
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2521,6 +2544,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654327 + 13 = 2654340
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654340 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654340, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344)
@@ -2578,6 +2602,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0) Detaching TBF: TBF(DL:TFI-0-0
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2621,6 +2646,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
@@ -2755,6 +2781,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0) Detaching TBF: TBF(UL:TFI-0-0
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2798,6 +2825,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:GPRS:TLLI-0xf1223344)
@@ -2892,11 +2920,13 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 13 bytes to D
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 13 bytes to DL LLC queue
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654279
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654279 for type USF
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type POLL
 TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344)
@@ -2920,6 +2950,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654283
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 0, CS=CS-1
@@ -2939,6 +2970,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654288
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 1, CS=CS-1
@@ -2957,6 +2989,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654288 block_nr=0 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654292
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654292 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654288 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 2, CS=CS-1
@@ -2977,6 +3010,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654292 block_nr=1 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654296
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654296 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654292 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 3, CS=CS-1
@@ -2995,6 +3029,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654296 block_nr=2 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654301
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654301 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 4, CS=CS-1
@@ -3015,6 +3050,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654301 block_nr=3 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654305
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654305 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654301 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 5, CS=CS-1
@@ -3033,6 +3069,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654305 block_nr=4 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654309
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654309 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654305 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 6, CS=CS-1
@@ -3053,6 +3090,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654309 block_nr=5 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654314
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654314 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654309 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 7, CS=CS-1
@@ -3071,6 +3109,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654314 block_nr=6 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654318
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654318 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654314 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 8, CS=CS-1
@@ -3089,6 +3128,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654318 block_nr=7 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654322
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654322 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654318 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 9, CS=CS-1
@@ -3109,6 +3149,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654322 block_nr=8 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654327
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654327 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654322 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 10, CS=CS-1
@@ -3127,6 +3168,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654327 block_nr=9 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654331
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654331 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 11, CS=CS-1
@@ -3147,6 +3189,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654331 block_nr=10 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654335
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654335 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654331 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 12, CS=CS-1
@@ -3165,6 +3208,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654335 block_nr=11 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654340
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654340 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654335 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 13, CS=CS-1
@@ -3185,6 +3229,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654340 block_nr=0 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654344
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654344 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654340 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 14, CS=CS-1
@@ -3203,6 +3248,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654344 block_nr=1 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654348
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654348 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654344 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 15, CS=CS-1
@@ -3221,6 +3267,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654353
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654353 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 16, CS=CS-1
@@ -3241,6 +3288,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654353 block_nr=3 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654357
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654357 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654353 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 17, CS=CS-1
@@ -3259,6 +3307,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654357 block_nr=4 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654361
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654361 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654357 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 18, CS=CS-1
@@ -3279,6 +3328,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654361 block_nr=5 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654366
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654366 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654361 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 19, CS=CS-1
@@ -3297,6 +3347,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654366 block_nr=6 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654370
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654370 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654366 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==20) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 20, CS=CS-1
@@ -3310,6 +3361,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying 1 RLC 
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying data unit 0 (BSN 20)
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduling Ack/Nack polling, because 20 blocks sent.
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654366 + 13 = 2654379
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654379 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Acknowledgement polling on PACCH (FN=2654379, TS=7)
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled Ack/Nack polling on FN=2654379, TS=7
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) msg block (BSN 20, CS-1): 0f 00 28 16 35 45 54 20 32 38 4c 4c 43 20 50 41 43 4b 45 54 20 32 39 
@@ -3321,6 +3373,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654370 block_nr=7 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654374
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654374 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654370 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==21) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 21, CS=CS-1
@@ -3357,6 +3410,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654379 block_nr=9 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654383
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654383 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654379 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==23) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 23, CS=CS-1
@@ -3377,6 +3431,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654383 block_nr=10 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654387
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654387 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654383 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==24) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 24, CS=CS-1
@@ -3395,6 +3450,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654387 block_nr=11 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654392
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654392 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654387 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==25) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 25, CS=CS-1
@@ -3415,6 +3471,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654392 block_nr=0 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654396
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654396 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654392 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==26) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 26, CS=CS-1
@@ -3433,6 +3490,7 @@ PDCH(bts=0,trx=0,ts=4) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=5) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=6) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654396 block_nr=1 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654400
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654400 for type USF
 PDCH(bts=0,trx=0,ts=7) FN=2654396 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) downlink (V(A)==0 .. V(S)==27) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(DL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344) Sending new block at BSN 27, CS=CS-1
@@ -3447,6 +3505,7 @@ TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying 1 
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying data unit 0 (BSN 27)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654396 + 13 = 2654409
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654409 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Acknowledgement polling on PACCH (FN=2654409, TS=7)
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(DL:TFI-0-0-0:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled Ack/Nack polling on FN=2654409, TS=7
@@ -3596,6 +3655,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
 TBF(DL:TFI-0-0-0:STATE-WAIT_RELEASE:GPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-1:STATE-ASSIGN:GPRS:IMSI-0011223344:TLLI-0xf1223344)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654413 for type POLL
 TBF(DL:TFI-0-0-0:STATE-WAIT_RELEASE:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-WAIT_RELEASE:GPRS:IMSI-0011223344:TLLI-0xf1223344)
@@ -3802,6 +3862,7 @@ TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying 1 
 TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Copying data unit 0 (BSN 10)
 TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654448 + 13 = 2654461
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654461 for type POLL
 TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Acknowledgement polling on PACCH (FN=2654461, TS=7)
 TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
 TBF(DL:TFI-0-0-1:STATE-FINISHED:GPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled Ack/Nack polling on FN=2654461, TS=7
@@ -3943,6 +4004,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -3990,6 +4052,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
@@ -4054,6 +4117,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-1) Detaching TBF: TBF(DL:TFI-0-0
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -4101,6 +4165,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
@@ -4330,6 +4395,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -4346,6 +4412,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-1): 0f 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
@@ -4515,6 +4582,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 20)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because 20 blocks sent.
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=4) Reserving FN 104 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=104, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=104, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 20, MCS-1): 0f 00 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
@@ -4555,6 +4623,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 24)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 108 + 13 = 121
+PDCH(bts=0,trx=0,ts=4) Reserving FN 121 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=121, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=121, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 24, MCS-1): 0f 00 06 16 18 fe 03 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -4637,6 +4706,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -4653,6 +4723,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-2): 0f 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -4817,6 +4888,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 19)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 86 + 13 = 99
+PDCH(bts=0,trx=0,ts=4) Reserving FN 99 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=99, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=99, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 19, MCS-2): 0f c0 04 12 20 fe 03 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -4894,6 +4966,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -4910,6 +4983,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-3): 0f 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -5034,6 +5108,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 14)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 65 + 13 = 78
+PDCH(bts=0,trx=0,ts=4) Reserving FN 78 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=78, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=78, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 14, MCS-3): 0f 80 03 06 7c fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 00 
@@ -5111,6 +5186,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -5127,6 +5203,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-4): 0f 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -5235,6 +5312,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 12)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 56 + 13 = 69
+PDCH(bts=0,trx=0,ts=4) Reserving FN 69 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=69, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=69, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 12, MCS-4): 0f 00 03 00 70 fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
@@ -5312,6 +5390,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -5328,6 +5407,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5420,6 +5500,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 10)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 47 + 13 = 60
+PDCH(bts=0,trx=0,ts=4) Reserving FN 60 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=60, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=60, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5497,6 +5578,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -5513,6 +5595,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5581,6 +5664,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 7)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 34 + 13 = 47
+PDCH(bts=0,trx=0,ts=4) Reserving FN 47 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=47, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=47, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 7, MCS-6): 0f c0 01 00 e2 7f 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 ca ca ca 0a 
@@ -5658,6 +5742,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -5675,6 +5760,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5751,6 +5837,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 10)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 30 + 13 = 43
+PDCH(bts=0,trx=0,ts=4) Reserving FN 43 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=43, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=43, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5828,6 +5915,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -5846,6 +5934,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-8): 0f 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -5912,6 +6001,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 8)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 8)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 26 + 13 = 39
+PDCH(bts=0,trx=0,ts=4) Reserving FN 39 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=39, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=39, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 8, MCS-8): 0f 00 02 00 60 20 fd 07 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 f4 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -5989,6 +6079,7 @@ PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=4) Reserving FN 13 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc)
@@ -6006,6 +6097,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -6062,6 +6154,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 6)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 7)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 21 + 13 = 34
+PDCH(bts=0,trx=0,ts=4) Reserving FN 34 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=34, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=34, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 6, MCS-9): 0f 80 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 80 f8 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 02 
@@ -6367,6 +6460,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 1)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 8 + 13 = 21
+PDCH(bts=0,trx=0,ts=4) Reserving FN 21 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=21, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 1, MCS-5): 0f 40 00 08 d6 3f 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca 0a 
@@ -6461,6 +6555,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying 1 RLC blocks, 1 BSNs
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 1)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 8 + 13 = 21
+PDCH(bts=0,trx=0,ts=4) Reserving FN 21 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=21, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 1, MCS-6): 0f 40 00 00 cd bf d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -6550,6 +6645,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 1)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-7): 0f 00 00 02 a0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 f5 8f 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -6643,6 +6739,7 @@ TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 0 (BSN 0)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Copying data unit 1 (BSN 1)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
+PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xffeeddcc) msg block (BSN 0, MCS-9): 0f 00 00 02 00 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 f3 af b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -7005,6 +7102,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -7052,6 +7150,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
@@ -7209,6 +7308,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -7256,6 +7356,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
@@ -7634,6 +7735,7 @@ Tx Immediate Assignment Reject on AGCH
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654270 for type SBA
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -7681,6 +7783,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xf1223344)
@@ -8200,6 +8303,7 @@ TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) UL DATA TFI=0 received (V(Q)=
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344) BSN 64 already received
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344), expect answer on UL FN=2654279
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654279 for type USF
 Got 'TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:TLLI-0xf1223344)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -8376,11 +8480,13 @@ TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) Sending Ack/N
 UL_ACK_TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
 UL_ACK_TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654283
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654283 for type USF
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-0:STATE-ASSIGN:EGPRS:IMSI-0011223344:TLLI-0xf1223344)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654292 for type POLL
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) Scheduled DL Assignment polling on PACCH (FN=2654292, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344)
@@ -8889,6 +8995,7 @@ TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) Got MCS-4 RLC
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) BSN 64 storing in window (0..191)
 TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344) data_length=44, data=80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling USF=0 for TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344), expect answer on UL FN=2654288
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type USF
 Got 'TBF(UL:TFI-0-0-0:STATE-FLOW:EGPRS:IMSI-0011223344:TLLI-0xf1223344)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-1:UL:DL) appending 256 bytes to DL LLC queue
@@ -8948,34 +9055,42 @@ MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-FLOW:
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 52 for type SBA
 Allocated a single block at SBFn=52 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x71 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 56 for type SBA
 Allocated a single block at SBFn=56 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x72 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 60 for type SBA
 Allocated a single block at SBFn=60 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 65 for type SBA
 Allocated a single block at SBFn=65 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x74 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 69 for type SBA
 Allocated a single block at SBFn=69 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x75 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 73 for type SBA
 Allocated a single block at SBFn=73 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x76 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 78 for type SBA
 Allocated a single block at SBFn=78 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x77 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation (two phase packet access)
+PDCH(bts=0,trx=0,ts=7) Reserving FN 82 for type SBA
 Allocated a single block at SBFn=82 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Detected FN jump! 2654167 -> 52 (expected 2654171, delta 61533)
@@ -9022,6 +9137,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xffeeddcc){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc)
@@ -9075,6 +9191,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcd) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcd) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-1:STATE-NEW:EGPRS:TLLI-0xffeeddcd){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcd)
@@ -9128,6 +9245,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-2:STATE-ASSIGN:EGPRS:TLLI-0xffeeddce) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-2:STATE-ASSIGN:EGPRS:TLLI-0xffeeddce) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-2:STATE-NEW:EGPRS:TLLI-0xffeeddce){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-2:STATE-ASSIGN:EGPRS:TLLI-0xffeeddce)
@@ -9181,6 +9299,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-3:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcf) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-3:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcf) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-3:STATE-NEW:EGPRS:TLLI-0xffeeddcf){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-3:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcf)
@@ -9234,6 +9353,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-4:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd0) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-4:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd0) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-4:STATE-NEW:EGPRS:TLLI-0xffeeddd0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-4:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd0)
@@ -9287,6 +9407,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-5:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd1) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-5:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd1) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-5:STATE-NEW:EGPRS:TLLI-0xffeeddd1){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-5:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd1)
@@ -9340,6 +9461,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-6:STATE-NEW:EGPRS:TLLI-0xffeeddd2){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2)
@@ -9399,6 +9521,7 @@ PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=7) Reserving FN 2654231 for type POLL
 TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xffeeddcc){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc)
@@ -9567,6 +9690,7 @@ PDCH(bts=0,trx=0,ts=2) POLL scheduled at FN 0 + 13 = 13
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xecc1f953)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+PDCH(bts=0,trx=0,ts=2) Reserving FN 13 for type POLL
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953) Scheduled DL Assignment polling on PACCH (FN=13, TS=2)
 DL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=2) FN=0 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953)
