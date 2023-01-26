@@ -80,9 +80,12 @@ void llc_append_frame(struct gprs_llc *llc, const uint8_t *data, size_t len)
 	llc->length += len;
 }
 
-static bool llc_is_user_data_frame(const uint8_t *data, size_t len)
+static bool llc_pdu_can_be_discarded(const uint8_t *data, size_t len)
 {
-	if (len < 2)
+	const unsigned keep_small_thresh = 60;
+
+	/* Is the frame small, perhaps only a TCP ACK? */
+	if (len <= keep_small_thresh)
 		return false;
 
 	if ((data[0] & 0x0f) == 1 /* GPRS_SAPI_GMM */)
@@ -271,7 +274,6 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
 	struct gprs_rlcmac_bts *bts = q->ms->bts;
 	struct gprs_pcu *pcu = bts->pcu;
 	struct timespec hyst_delta = {0, 0};
-	const unsigned keep_small_thresh = 60;
 	enum gprs_llc_queue_prio prio;
 
 	if (pcu->vty.llc_discard_csec)
@@ -306,14 +308,9 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
 			/* Hysteresis mode, try to discard LLC messages until
 			 * the low water mark has been reached */
 
-			/* Check whether to abort the hysteresis mode */
-
-			/* Is the frame small, perhaps only a TCP ACK? */
-			if (msg->len <= keep_small_thresh)
-				break;
-
-			/* Is it a GMM message? */
-			if (!llc_is_user_data_frame(msg->data, msg->len))
+			/* Check whether to abort the hysteresis mode:
+			 * Can the PDU be discarded according to its type? */
+			if (!llc_pdu_can_be_discarded(msg->data, msg->len))
 				break;
 		}
 
