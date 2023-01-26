@@ -236,7 +236,7 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *prio)
 {
 	struct msgb *msg;
-	struct timespec *tv, tv_now, tv_result;
+	struct timespec tv_now, tv_result;
 	uint32_t lifetime;
 	unsigned int i;
 	const struct MetaInfo *meta_storage;
@@ -257,7 +257,6 @@ static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_q
 
 	/* take the second time */
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
-	tv = (struct timespec *)&msg->data[sizeof(*tv)];
 	timespecsub(&tv_now, &meta_storage->recv_time, &tv_result);
 
 	lifetime = tv_result.tv_sec*1000 + tv_result.tv_nsec/1000000;
