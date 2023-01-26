@@ -58,7 +58,6 @@ struct gprs_llc {
 	uint16_t index; /* current write/read position of frame */
 	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
 };
-bool llc_is_user_data_frame(const uint8_t *data, size_t len);
 
 void llc_init(struct gprs_llc *llc);
 void llc_reset(struct gprs_llc *llc);

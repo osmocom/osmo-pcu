@@ -80,7 +80,7 @@ void llc_append_frame(struct gprs_llc *llc, const uint8_t *data, size_t len)
 	llc->length += len;
 }
 
-bool llc_is_user_data_frame(const uint8_t *data, size_t len)
+static bool llc_is_user_data_frame(const uint8_t *data, size_t len)
 {
 	if (len < 2)
 		return false;
