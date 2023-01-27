@@ -42,16 +42,6 @@ struct tbf_ul_ack_fsm_ctx {
 	struct gprs_rlcmac_ul_tbf *tbf; /* back pointer */
 };
 
-extern const struct osmo_tdef_state_timeout tbf_ul_ack_fsm_timeouts[32];
-/* Transition to a state, using the T timer defined in tbf_ul_ack_fsm_timeouts.
- * The actual timeout value is in turn obtained from conn->T_defs.
- * Assumes local variable fi exists. */
-#define tbf_ul_ack_fsm_state_chg(fi, NEXT_STATE) \
-	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
-				     tbf_ul_ack_fsm_timeouts, \
-				     the_pcu->T_defs, \
-				     -1)
-
 extern struct osmo_fsm tbf_ul_ack_fsm;
 
 

@@ -33,19 +33,28 @@
 
 #define X(s) (1 << (s))
 
-const struct osmo_tdef_state_timeout tbf_ul_ack_fsm_timeouts[32] = {
+static const struct osmo_tdef_state_timeout tbf_ul_ack_fsm_timeouts[32] = {
 	[TBF_UL_ACK_ST_NONE] = {},
 	[TBF_UL_ACK_ST_SCHED_UL_ACK] = {},
 	[TBF_UL_ACK_ST_WAIT_ACK] = {},
 };
 
-const struct value_string tbf_ul_ack_fsm_event_names[] = {
+static const struct value_string tbf_ul_ack_fsm_event_names[] = {
 	{ TBF_UL_ACK_EV_SCHED_ACK, "SCHED_ACK" },
 	{ TBF_UL_ACK_EV_CREATE_RLCMAC_MSG, "CREATE_RLCMAC_MSG" },
 	{ TBF_UL_ACK_EV_RX_CTRL_ACK, "RX_CTRL_ACK" },
 	{ TBF_UL_ACK_EV_POLL_TIMEOUT, "POLL_TIMEOUT" },
 	{ 0, NULL }
 };
+
+/* Transition to a state, using the T timer defined in tbf_ul_ack_fsm_timeouts.
+ * The actual timeout value is in turn obtained from conn->T_defs.
+ * Assumes local variable fi exists. */
+#define tbf_ul_ack_fsm_state_chg(fi, NEXT_STATE) \
+	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
+				     tbf_ul_ack_fsm_timeouts, \
+				     the_pcu->T_defs, \
+				     -1)
 
 static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 				       const struct tbf_ul_ack_ev_create_rlcmac_msg_ctx *d,

@@ -29,7 +29,7 @@
 
 #define X(s) (1 << (s))
 
-const struct osmo_tdef_state_timeout tbf_dl_fsm_timeouts[32] = {
+static const struct osmo_tdef_state_timeout tbf_dl_fsm_timeouts[32] = {
 	[TBF_ST_NEW] = {},
 	[TBF_ST_ASSIGN] = { },
 	[TBF_ST_FLOW] = { },

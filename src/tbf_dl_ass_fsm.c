@@ -31,13 +31,13 @@
 
 #define X(s) (1 << (s))
 
-const struct osmo_tdef_state_timeout tbf_dl_ass_fsm_timeouts[32] = {
+static const struct osmo_tdef_state_timeout tbf_dl_ass_fsm_timeouts[32] = {
 	[TBF_DL_ASS_NONE] = {},
 	[TBF_DL_ASS_SEND_ASS] = {},
 	[TBF_DL_ASS_WAIT_ACK] = {},
 };
 
-const struct value_string tbf_dl_ass_fsm_event_names[] = {
+static const struct value_string tbf_dl_ass_fsm_event_names[] = {
 	{ TBF_DL_ASS_EV_SCHED_ASS, "SCHED_ASS" },
 	{ TBF_DL_ASS_EV_CREATE_RLCMAC_MSG, "CREATE_RLCMAC_MSG" },
 	{ TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, "RX_ASS_CTRL_ACK" },
@@ -45,7 +45,16 @@ const struct value_string tbf_dl_ass_fsm_event_names[] = {
 	{ 0, NULL }
 };
 
-struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
+/* Transition to a state, using the T timer defined in tbf_dl_ass_fsm_timeouts.
+ * The actual timeout value is in turn obtained from conn->T_defs.
+ * Assumes local variable fi exists. */
+#define tbf_dl_ass_fsm_state_chg(fi, NEXT_STATE) \
+	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
+				     tbf_dl_ass_fsm_timeouts, \
+				     the_pcu->T_defs, \
+				     -1)
+
+static struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 				     const struct tbf_dl_ass_ev_create_rlcmac_msg_ctx *d)
 {
 	struct msgb *msg;
