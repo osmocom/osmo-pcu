@@ -162,9 +162,8 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 				msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, pdch, fn);
 			else if (tbf == tbfs->ul_ack)
 				msg = tbf_ul_ack_create_rlcmac_msg(tbfs->ul_ack, pdch, fn);
-			else if (tbf == tbfs->nacc) {
+			else if (tbf == tbfs->nacc)
 				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, pdch, fn);
-			}
 
 			if (!msg) {
 				tbf = NULL;
