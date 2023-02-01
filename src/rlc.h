@@ -313,7 +313,7 @@ struct gprs_rlc_dl_window: public gprs_rlc_window {
 			uint16_t first_bsn, uint16_t *lost,
 			uint16_t *received);
 	int move_window();
-	void show_state(char *show_rbb);
+	void show_state(char *show_v_b);
 	int count_unacked();
 
 	uint16_t m_v_s;	/* send state */
