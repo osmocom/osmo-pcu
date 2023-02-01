@@ -294,6 +294,24 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, uint1
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, sizeof(data));
 }
 
+/* Send a block via the paging channel and require a confirmation by the receiving end */
+void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi, uint32_t tlli)
+{
+	/* NOTE: This is in practice only used to transmit IMMEDIATE ASSIGNMENT messages through the paging channel and
+	 * it is not guaranteed to work with other message types. The prepended TLLI will be used as an identifier in
+	 * the confirmation message. */
+
+	struct gsm_pcu_if_pch_dt pch_dt;
+
+	pch_dt.tlli = tlli;
+	strcpy(pch_dt.imsi, imsi);
+
+	pch_dt.data[0] = (plen << 2) | 0x01;
+	bitvec_pack(block, pch_dt.data + 1);
+
+	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH_DT, 0, 0, 0, (uint8_t*)&pch_dt, sizeof(pch_dt));
+}
+
 int pcu_tx_neigh_addr_res_req(struct gprs_rlcmac_bts *bts, const struct neigh_cache_entry_key *neigh_key)
 {
 	struct msgb *msg;
@@ -734,14 +752,22 @@ static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 	if (llist_count(&the_pcu->bts_list) > 1)
 		LOGP(DL1IF, LOGL_ERROR, "more than one BTS regsitered at this PCU. This PCU has only been tested with one BTS! OS#5930\n");
 
-	if (info_ind->version != PCU_IF_VERSION) {
-		fprintf(stderr, "PCU interface version number of BTS (%u) is "
-			"different (%u).\nPlease re-compile!\n",
+	LOGP(DL1IF, LOGL_DEBUG, "Info indication received:\n");
+
+	/* NOTE: The classic way to confirm an IMMEDIATE assignment is to send the whole MAC block payload back to the
+	 * PCU. So it is the MAC block itsself that serves a reference for the confirmation. This method has certain
+	 * disadvantages so it was replaced with a method that uses the TLLI as a reference ("Direct TLLI"). This new
+	 * method will replace the old one. The code that handles the old method will be removed in the foreseeable
+	 * future. (see also OS#5927) */
+	if (info_ind->version == 0x0a) {
+		LOGP(DL1IF, LOGL_NOTICE, "PCUIF version 10 is deprecated. OS#5927\n");
+	} else if (info_ind->version != PCU_IF_VERSION) {
+		fprintf(stderr, "PCU interface version number of BTS/BSC (%u) is different (%u).\nPlease use a BTS/BSC with a compatble interface!\n",
 			info_ind->version, PCU_IF_VERSION);
 		exit(-1);
 	}
 
-	LOGP(DL1IF, LOGL_DEBUG, "Info indication received:\n");
+	the_pcu->pcu_if_version = info_ind->version;
 
 	if (!(info_ind->flags & PCU_IF_FLAG_ACTIVE)) {
 		LOGP(DL1IF, LOGL_NOTICE, "BTS not available\n");

@@ -1103,7 +1103,6 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 
 void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf *tbf)
 {
-	uint16_t pgroup = ms_paging_group(tbf_ms(tbf));
 	int plen;
 	const struct gprs_rlcmac_pdch *pdch;
 
@@ -1129,7 +1128,10 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
-		pcu_l1if_tx_pch(bts, immediate_assignment, plen, pgroup);
+		if (the_pcu->pcu_if_version >= 0x0b)
+			pcu_l1if_tx_pch_dt(bts, immediate_assignment, plen, tbf->imsi(), tbf->tlli());
+		else
+			pcu_l1if_tx_pch(bts, immediate_assignment, plen, ms_paging_group(tbf_ms(tbf)));
 	}
 
 	bitvec_free(immediate_assignment);

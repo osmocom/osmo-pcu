@@ -134,6 +134,8 @@ struct gprs_pcu {
 	struct si_cache *si_cache; /* ARFC+BSIC -> CGI PS cache */
 
 	struct osmo_timer_list update_stats_timer; /* Used to update some time_cc stats periodically */
+
+	uint8_t pcu_if_version;
 };
 
 

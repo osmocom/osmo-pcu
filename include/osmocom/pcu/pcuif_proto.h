@@ -3,10 +3,12 @@
 
 #include <osmocom/gsm/l1sap.h>
 #include <arpa/inet.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/protocol/gsm_23_003.h>
 
 #define PCU_SOCK_DEFAULT	"/tmp/pcu_bts"
 
-#define PCU_IF_VERSION		0x0a
+#define PCU_IF_VERSION		0x0b
 #define TXT_MAX_LEN	128
 
 /* msg_type */
@@ -268,6 +270,17 @@ struct gsm_pcu_if_neigh_addr_cnf {
 		uint16_t	cell_identity;
 	} cgi_ps;
 } __attribute__ ((packed));
+
+/* Struct to send a (confirmed) IMMEDIATE ASSIGNMENT message via PCH. The struct is sent as a data request
+ * (data_req) under SAPI PCU_IF_SAPI_PCH_DT. */
+struct gsm_pcu_if_pch_dt {
+	/* TLLI as reference for confirmation */
+	uint32_t tlli;
+	/* IMSI (to derive paging group) */
+	char imsi[OSMO_IMSI_BUF_SIZE];
+	/* GSM mac-block (with immediate assignment message) */
+	uint8_t data[GSM_MACBLOCK_LEN];
+} __attribute__((packed));
 
 struct gsm_pcu_if {
 	/* context based information */
