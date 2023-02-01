@@ -512,11 +512,31 @@ static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == GSM48_MT_RR_IMM_ASS)
-			bts_rcv_imm_ass_cnf(bts, data_cnf->data, data_cnf->fn);
+			bts_rcv_imm_ass_cnf(bts, data_cnf->data, GSM_RESERVED_TMSI, data_cnf->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
 			"unsupported sapi %d\n", data_cnf->sapi);
+		rc = -EINVAL;
+	}
+
+	return rc;
+}
+
+static int pcu_rx_data_cnf_dt(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_cnf_dt *data_cnf_dt)
+{
+	int rc = 0;
+	int current_fn = bts_current_frame_number(bts);
+
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
+	     data_cnf_dt->sapi, data_cnf_dt->fn, current_fn);
+
+	switch (data_cnf_dt->sapi) {
+	case PCU_IF_SAPI_PCH:
+		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->tlli, data_cnf_dt->fn);
+		break;
+	default:
+		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with unsupported sapi %d\n", data_cnf_dt->sapi);
 		rc = -EINVAL;
 	}
 
@@ -1132,6 +1152,10 @@ int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 	case PCU_IF_MSG_DATA_CNF:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf);
 		rc = pcu_rx_data_cnf(bts, &pcu_prim->u.data_cnf);
+		break;
+	case PCU_IF_MSG_DATA_CNF_DT:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf_dt);
+		rc = pcu_rx_data_cnf_dt(bts, &pcu_prim->u.data_cnf_dt);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.rts_req);

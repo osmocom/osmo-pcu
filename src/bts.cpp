@@ -668,13 +668,10 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 	return best_first_tfi;
 }
 
-int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t fn)
+static int tlli_from_imm_ass(uint32_t *tlli, const uint8_t *data, uint32_t fn)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	const struct gsm48_imm_ass *imm_ass = (struct gsm48_imm_ass *)data;
 	uint8_t plen;
-	uint32_t tlli;
-	GprsMs *ms;
 
 	/* Move to IA Rest Octets: TS 44.018 9.1.18 "The L2 pseudo length of
 	 * this message is the sum of lengths of all information elements
@@ -692,12 +689,41 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	}
 
 	/* get TLLI from downlink assignment */
-	tlli = (uint32_t)((*data++) & 0xf) << 28;
-	tlli |= (*data++) << 20;
-	tlli |= (*data++) << 12;
-	tlli |= (*data++) << 4;
-	tlli |= (*data++) >> 4;
+	*tlli = (uint32_t)((*data++) & 0xf) << 28;
+	*tlli |= (*data++) << 20;
+	*tlli |= (*data++) << 12;
+	*tlli |= (*data++) << 4;
+	*tlli |= (*data++) >> 4;
 
+	return 0;
+}
+
+int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t tlli, uint32_t fn)
+{
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms;
+	int rc;
+
+	/* NOTE: A confirmation for a downlink IMMEDIATE ASSIGNMENT can be received using two different methods.
+	 * One way is to send the whole IMMEDIATE ASSIGNMENT back to the PCU and the TLLI, which we use as
+	 * reference is extracted from the rest octets of this message. Alternatively the TLLI may be sent as
+	 * confirmation directly. */
+
+	/* Extract TLLI from the presented IMMEDIATE ASSIGNMENT
+	 * (if present and only when TLLI that is supplied as function parameter is valid.) */
+	if (data && tlli == GSM_RESERVED_TMSI) {
+		rc = tlli_from_imm_ass(&tlli, data, fn);
+		if (rc != 0)
+			return -EINVAL;
+	}
+
+	/* Make sure TLLI is valid */
+	if (tlli == GSM_RESERVED_TMSI) {
+		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but TLLI is invalid!\n", fn);
+		return -EINVAL;
+	}
+
+	/* Find related TBF and send confirmation signal to FSM */
 	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (!ms) {
 		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm for unknown MS with TLLI=%08x\n", fn, tlli);
