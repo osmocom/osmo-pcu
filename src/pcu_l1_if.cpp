@@ -255,7 +255,7 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
 }
 
-void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen)
+void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
 {
 	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
 
@@ -269,7 +269,7 @@ void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen)
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, sizeof(data));
 }
 
-void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint16_t pgroup)
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, uint16_t pgroup)
 {
 	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
 	int i;

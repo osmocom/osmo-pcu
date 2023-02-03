@@ -146,9 +146,9 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		       uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len);
-void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec * block, int len);
+void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int len);
 
-void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint16_t pgroup);
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, uint16_t pgroup);
 #endif
 
 #ifdef __cplusplus
