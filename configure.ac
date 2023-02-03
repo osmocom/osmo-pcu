@@ -167,6 +167,18 @@ if test "$enable_oc2g" = "yes"; then
 	CPPFLAGS=$oldCPPFLAGS
 fi
 
+AC_MSG_CHECKING([whether to enable direct E1 CCU access for PDCH of Ericsson RBS])
+AC_ARG_ENABLE(er-e1-ccu,
+                AC_HELP_STRING([--enable-er-e1-ccu],
+                                [enable code for Ericsson RBS E1 CCU [default=no]]),
+                [enable_er_e1_ccu="$enableval"],[enable_er_e1_ccu="no"])
+AC_MSG_RESULT([$enable_er_e1_ccu])
+AM_CONDITIONAL(ENABLE_ER_E1_CCU, test "x$enable_er_e1_ccu" = "xyes")
+AS_IF([test "x$enable_er_e1_ccu" = "xyes"], [
+	PKG_CHECK_MODULES(LIBOSMOABIS, libosmoabis >= 1.4.0)
+	PKG_CHECK_MODULES(LIBOSMOTRAU, libosmotrau >= 1.4.0)
+])
+
 AC_ARG_ENABLE([vty_tests],
 		AC_HELP_STRING([--enable-vty-tests],
 				[Include the VTY tests in make check [default=no]]),

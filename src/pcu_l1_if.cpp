@@ -61,6 +61,23 @@ extern void *tall_pcu_ctx;
 
 #define PAGING_GROUP_LEN 3
 
+struct e1_ccu_conn_pars {
+	struct llist_head entry;
+
+	/* Related air interface */
+	uint8_t bts_nr;
+	uint8_t trx_nr;
+	uint8_t ts_nr;
+
+	/* E1 communication parameter */
+	struct e1_conn_pars e1_conn_pars;
+};
+
+/* List storage to collect E1 connection information that we receive through the pcu_sock. The collected data serves as
+ * a lookup table so that we can lookup the E1 connection information for each PDCH (trx number and timeslot number)
+ * when it is needed. */
+static LLIST_HEAD(e1_ccu_table);
+
 /* returns [0,999] on success, > 999 on error */
 uint16_t imsi2paging_group(const char* imsi)
 {
@@ -962,6 +979,73 @@ bssgp_failed:
 	return rc;
 }
 
+/* Query E1 CCU connection parameters by TS and TRX number */
+int pcu_l1if_get_e1_ccu_conn_pars(struct e1_conn_pars **e1_conn_pars, uint8_t bts_nr, uint8_t trx_nr, uint8_t ts_nr)
+{
+	struct e1_ccu_conn_pars *e1_ccu_conn_pars;
+
+	llist_for_each_entry(e1_ccu_conn_pars, &e1_ccu_table, entry) {
+		if (e1_ccu_conn_pars->bts_nr == bts_nr && e1_ccu_conn_pars->trx_nr == trx_nr
+		    && e1_ccu_conn_pars->ts_nr == ts_nr) {
+			*e1_conn_pars = &e1_ccu_conn_pars->e1_conn_pars;
+			return 0;
+		}
+	}
+
+	return -EINVAL;
+}
+
+/* Allocate a new connection parameter struct and store connection parameters */
+static void new_e1_ccu_conn_pars(const struct gsm_pcu_if_e1_ccu_ind *e1_ccu_ind, uint8_t bts_nr)
+{
+	struct e1_ccu_conn_pars *e1_ccu_conn_pars;
+
+	e1_ccu_conn_pars = talloc_zero(tall_pcu_ctx, struct e1_ccu_conn_pars);
+	OSMO_ASSERT(e1_ccu_conn_pars);
+	e1_ccu_conn_pars->bts_nr = bts_nr;
+	e1_ccu_conn_pars->trx_nr = e1_ccu_ind->trx_nr;
+	e1_ccu_conn_pars->ts_nr = e1_ccu_ind->ts_nr;
+	e1_ccu_conn_pars->e1_conn_pars.e1_nr = e1_ccu_ind->e1_nr;
+	e1_ccu_conn_pars->e1_conn_pars.e1_ts = e1_ccu_ind->e1_ts;
+	e1_ccu_conn_pars->e1_conn_pars.e1_ts_ss = e1_ccu_ind->e1_ts_ss;
+	llist_add(&e1_ccu_conn_pars->entry, &e1_ccu_table);
+}
+
+static int pcu_rx_e1_ccu_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_e1_ccu_ind *e1_ccu_ind)
+{
+	struct e1_conn_pars *e1_conn_pars;
+	uint8_t rate;
+	uint8_t subslot_nr;
+	int rc;
+
+	/* only used with log statement below, no technical relevance otherwise. */
+	if (e1_ccu_ind->e1_ts_ss > 3) {
+		rate = 64;
+		subslot_nr = 0;
+	} else {
+		rate = 16;
+		subslot_nr = e1_ccu_ind->e1_ts_ss;
+	}
+
+	LOGP(DL1IF, LOGL_NOTICE,
+	     "(ts=%u,trx=%u) new E1 CCU communication parameters for CCU (E1-line:%u, E1-TS:%u, E1-SS:%u, rate:%ukbps)\n",
+	     e1_ccu_ind->ts_nr, e1_ccu_ind->trx_nr, e1_ccu_ind->e1_nr, e1_ccu_ind->e1_ts,
+	     subslot_nr, rate);
+
+	/* Search for an existing entry, when found, update it. */
+	rc = pcu_l1if_get_e1_ccu_conn_pars(&e1_conn_pars, bts->nr, e1_ccu_ind->trx_nr, e1_ccu_ind->ts_nr);
+	if (rc == 0) {
+		e1_conn_pars->e1_nr = e1_ccu_ind->e1_nr;
+		e1_conn_pars->e1_ts = e1_ccu_ind->e1_ts;
+		e1_conn_pars->e1_ts_ss = e1_ccu_ind->e1_ts_ss;
+		return 0;
+	}
+
+	/* Create new connection parameter entry */
+	new_e1_ccu_conn_pars(e1_ccu_ind, bts->nr);
+	return 0;
+}
+
 static int pcu_rx_time_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_time_ind *time_ind)
 {
 	uint8_t fn13 = time_ind->fn % 13;
@@ -1193,6 +1277,10 @@ int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 	case PCU_IF_MSG_INFO_IND:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.info_ind);
 		rc = pcu_rx_info_ind(bts, &pcu_prim->u.info_ind);
+		break;
+	case PCU_IF_MSG_E1_CCU_IND:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.e1_ccu_ind);
+		rc = pcu_rx_e1_ccu_ind(bts, &pcu_prim->u.e1_ccu_ind);
 		break;
 	case PCU_IF_MSG_TIME_IND:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.time_ind);

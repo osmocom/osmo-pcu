@@ -24,7 +24,7 @@ override_dh_auto_test:
 	dh_auto_test || (find . -name testsuite.log -exec cat {} \; ; false)
 
 override_dh_auto_configure:
-	dh_auto_configure -- --with-systemdsystemunitdir=/lib/systemd/system --enable-manuals
+	dh_auto_configure -- --with-systemdsystemunitdir=/lib/systemd/system --enable-manuals --enable-er-e1-ccu
 
 # Don't create .pdf.gz files (barely saves space and they can't be opened directly by most pdf readers)
 override_dh_compress:

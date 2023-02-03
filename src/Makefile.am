@@ -19,7 +19,7 @@
 #
 
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CPPFLAGS = -I$(top_srcdir)/include $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGSM_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/include $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGSM_CFLAGS) $(LIBOSMOABIS_CFLAGS) $(LIBOSMOTRAU_CFLAGS)
 
 if ENABLE_SYSMODSP
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
@@ -30,6 +30,10 @@ AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
 if ENABLE_OC2GBTS_PHY
+AM_CPPFLAGS += -DENABLE_DIRECT_PHY
+endif
+
+if ENABLE_ER_E1_CCU
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
@@ -208,12 +212,26 @@ osmo_pcu_SOURCES += \
 	osmo-bts-oc2g/oc2gbts.c
 endif
 
+if ENABLE_ER_E1_CCU
+AM_CPPFLAGS += -I$(srcdir)/ericsson-rbs
+
+noinst_HEADERS += \
+	ericsson-rbs/er_ccu_if.h \
+	ericsson-rbs/er_ccu_descr.h
+
+osmo_pcu_SOURCES += \
+	ericsson-rbs/er_ccu_l1_if.c \
+	ericsson-rbs/er_ccu_if.c
+endif
+
 osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOABIS_LIBS) \
+	$(LIBOSMOTRAU_LIBS) \
 	-lrt \
 	$(NULL)
 

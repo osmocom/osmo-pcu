@@ -55,8 +55,8 @@ elif [ "$with_dsp" = oc2g ]; then
   cd "$base"
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
-  echo "Direct DSP access disabled, sanitizer enabled"
-  PCU_CONFIG="$PCU_CONFIG --enable-werror --enable-sanitize"
+  echo "Ericsson E1 CCU support enabled, sanitizer enabled"
+  PCU_CONFIG="$PCU_CONFIG --enable-werror --enable-sanitize --enable-er-e1-ccu"
 else
   echo 'Invalid $with_dsp value:' $with_dsp
   exit 1
@@ -79,6 +79,8 @@ osmo-build-dep.sh libosmocore "" --disable-doxygen
 export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$inst/lib"
 export PATH="$inst/bin:$PATH"
+
+osmo-build-dep.sh libosmo-abis "" --disable-dahdi
 
 if [ "$WITH_MANUALS" = "1" ]; then
   PCU_CONFIG="$PCU_CONFIG --enable-manuals"

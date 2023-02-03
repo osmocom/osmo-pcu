@@ -128,6 +128,13 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
+	[DE1] = {
+		.name = "DE1",
+		.color = "\033[1;31m",
+		.description = "E1 line handling",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 };
 
 static int filter_fn(const struct log_context *ctx,

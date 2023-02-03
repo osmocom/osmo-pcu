@@ -178,6 +178,17 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 uint16_t imsi2paging_group(const char* imsi);
 
+struct e1_conn_pars {
+	/* Number of E1 line */
+	uint8_t e1_nr;
+	/* Number of E1 timeslot */
+	uint8_t e1_ts;
+	/* Number of I.460 subslot inside E1 timeslot */
+	uint8_t e1_ts_ss;
+};
+
+int pcu_l1if_get_e1_ccu_conn_pars(struct e1_conn_pars **e1_conn_pars, uint8_t bts_nr, uint8_t trx_nr, uint8_t ts_nr);
+
 #define PCUIF_HDR_SIZE ( sizeof(struct gsm_pcu_if) - sizeof(((struct gsm_pcu_if *)0)->u) )
 
 #ifdef __cplusplus

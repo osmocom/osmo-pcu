@@ -33,6 +33,8 @@ BuildRequires:  pkgconfig(libosmogb) >= 1.8.0
 BuildRequires:  pkgconfig(libosmogsm) >= 1.8.0
 BuildRequires:  pkgconfig(libosmovty) >= 1.8.0
 BuildRequires:  pkgconfig(libosmoctrl) >= 1.8.0
+BuildRequires:  pkgconfig(libosmoabis) >= 1.4.0
+BuildRequires:  pkgconfig(libosmotrau) >= 1.4.0
 %{?systemd_requires}
 
 %description
@@ -48,7 +50,8 @@ autoreconf -fi
   --enable-shared \
   --disable-static \
   --docdir=%{_docdir}/%{name} \
-  --with-systemdsystemunitdir=%{_unitdir}
+  --with-systemdsystemunitdir=%{_unitdir} \
+  --enable-er-e1-ccu
 make %{?_smp_mflags}
 
 %install
