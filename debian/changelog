@@ -1,3 +1,136 @@
+osmo-pcu (1.2.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * encoding: fix an uninitialized field in gen_freq_params()
+  * neigh_cache: fix: properly convert from nanoseconds to microseconds
+  * tests/rlcmac: remove unused #includes
+  * tests/rlcmac: remove unused printSizeofRLCMAC()
+  * tests/rlcmac: make all test functions static
+  * tests/rlcmac: cosmetic: fix coding style in arrays
+  * tests/rlcmac: use ARRAY_SIZE macro
+  * tests: make target 'check-local' depend on 'atconfig'
+  * tests: target 'check-local' does not depend on BUILT_SOURCES
+  * Makefile.am: generate missing .version file
+  * Makefile.am: add 'git-version-gen' to EXTRA_DIST
+  * {ms,gprs_pcu}_talloc_destructor(): call osmo_timer_del() unconditionally
+  * {src,tests}/Makefile.am: $(COMMON_LA) is not definied
+  * fix pcu_l1if_tx_ptcch(): do not send empty blocks to GSMTAP
+  * Make linter happy: fix coding style issues
+  * bts_set_current_frame_number(): log expected TDMA FN
+  * bts: bts_snd_dl_ass(): clarify the meaning of last_rts_fn + 21216
+  * bts: bts_snd_dl_ass(): use GSM_TDMA_FN_SUM() macro
+  * Makefile.am: drop unneeded '-ldl -pthread' from AM_CXXFLAGS
+
+  [ Pau Espin Pedrol ]
+  * nacc_fsm: Fix uninitialized plmn.mnc_3_digits parsing CTRL neigh resolution cmd
+  * cosmetic: Add missing spacing between params
+  * Use GSM48_MT_RR_IMM_ASS instead of hardcoded 0x3f value
+  * Clarify use RR imm_ass msg fields
+  * bts_rcv_imm_ass_cnf(): Improve logging
+  * cosmetic: Update reference to func renamed in the past
+  * gprs_ms: Document functions setting/updating TLLI
+  * Call ms_store->get_ms() with GSM_RESERVED_TMSI instead of 0
+  * gprs_ms: Move creating string name of object to a function
+  * Move LLC enqueuing and retransmit timer to MS object
+  * tbf_ul_ack_fsm: Pass ul_tbf instead of generic tbf
+  * Rename tbf_alloc_dl_tbf() -> dl_tbf_alloc()
+  * tbf_dl: Make dl_tbf_alloc API available in C code
+  * Fix mess with struct tbf types passed to LOGPTBF macro
+  * Rename as_{dl,ul}_tbf -> tbf_as_{dl,ul}_tbf
+  * tbf_ul_ack_fsm: get ul_tbf base class only when needed
+  * use new {dl,ul}_tbf_as_tbf(_const) helper functions
+  * pdch: Use helper function tbf_as_ul_tbf()
+  * rcv_resource_request(): Validate expected message before MS lookup & allocation
+  * encoding: Use MT_PACKET_UPLINK_ASSIGNMENT define instead of hardcoded value
+  * rcv_resource_request(): Update meas before allocating and assigning new UL TBF
+  * Delay ImmAss(PCH, PktDlAss) if waiting for PKT_CTRL_ACK answering UL_ACK_NACK (FinACK=1)
+  * Refactor and clarify tbf->triger_ass() code
+  * Rename function tbf_dl_request_dl_ack() -> dl_tbf_request_dl_ack()
+  * Replace tbf->establish_dl_tbf_on_pacch() refactoring GprsMs functions
+  * ul_tbf: Define m_contention_resolution_done as bool
+  * tbf_fsm: Identify several events as Dl-TBF only
+  * Move UL allocation&assign functions to gprs_ms.c
+  * update_ms(): Set TLLI of new MS object before merge with old MS
+  * Join ms_merge_and_clear_ms() and ms_merge_old_ms()
+  * gprs_ms: Add comment warning the user that a ptr may be freed after call to func
+  * Rename tbf_alloc_ul_tbf -> ul_tbf_alloc
+  * Rework tbf::update_ms()
+  * tbf_fsm: Introduce new event TBF_EV_FIRST_UL_DATA_RECVD
+  * Avoid losing DL-TBF during MS merge
+  * tbf_fsm: Introduce new event to act upon contention resolution success
+  * tbf_ul: Assign DL-TBF if needed after UL-TBF has gone over contenion resolution
+  * Improve TBF logging
+  * Improve MS logging
+  * Disable logging fsm addresses
+  * tbf_fsm: Move tbf_fsm_state_chg macro to .c file
+  * tbf_fsm: Move osmo_fsm_inst fi out of struct tbf_fsm_ctx
+  * tbf: Drop unused function
+  * tbf: Add tbf_as_{ul,dl}_tbf_const func helpers
+  * Refactor tbf_is_tfi_assigned() to avoid accessing tbf->state_fsm
+  * Split tbf_fsm as tbf_{ul,dl}_fsm
+  * Convert gprs_debug.cpp to C
+  * pdch: Initial support Handling PktResReq with ID_TYPE=UL/DL_TFI
+  * pdch_ulc_get_node(): assert if ulc pointer is null
+  * Pass gprs_rlcmac_pdch to tbf_is_control_ts
+  * Pass pdch ptr to tbf_compute_priority
+  * encoding::write_immediate_assignment(): Constify tbf param
+  * tbf_ul_fsm_ctx: Properly define tbf backptr as ul_tbf
+  * tbf_dl_fsm_ctx: Properly define tbf backptr as dl_tbf
+  * Move control_ts explicit checks out of the scheduler implementation
+  * sched: Pass pdch to *_create_rlcmac_msg() functions
+  * Move first_common_ts from gprs_rlcmac_tbf to GprsMs
+  * Get rid of tbf->first_ts
+  * Refactor code related to DL-TBF upgrade to multislot
+  * Trigger PACCH assignment inside dl_tbf_upgrade_to_multislot()
+  * tbf_ul: Fix wrong struct type in field
+  * Refactor code rejecting UL-TBF upon rx of PktResourceReq
+  * bts: Adapt slot_mask to trx defined array size
+  * Convert ms_first_common_ts to struct gprs_rlcmac_pdch
+  * Rename gprs_rlcmac_ts_alloc.cpp -> alloc_algo.cpp & create own .h file
+  * pdch: Introduce APIs to print PDCH name
+  * tbf: Fix typo in define used
+  * Convert tbf->control_ts to be a gprs_rlcmac_pdch*
+  * tests/tbf: test_tbf_dl_llc_loss(): Fix wrong param passed and wrong expectancies
+  * Pass gprs_rlcmac_pdch to create_dl_acked_block()
+  * Pass gprc_rlcmac_pdch to tbf_check_polling
+  * Pass gprc_rlcmac_pdch to tbf_set_polling
+  * bts: Adapt trx check based on bts->trx[] defined array size
+  * tests/TbfTest: reproduce buggy corner case: MS with TBFs on 2 TRXs
+  * Avoid moving DL-TBF from old_msg to new_ms during ms_merge
+  * llc: Mark llc_is_user_data_frame() as static
+  * llc: Refactor code checking if PDU expired while dequeueing
+  * llc: remove unused reference to msgb address
+  * cosmetic: Remove unneeded curly braces
+  * Mark several fsm related internal symbols as static
+  * rlc.h: Fix typo in param name
+
+  [ Max ]
+  * Set working directory in systemd service file
+  * Update and document realtime scheduling priority in service file
+  * cosmetic: drop unused field from struct pdch_ulc
+  * cosmetic: drop duplicated comment
+  * constify pdch_ulc_get_next_free_fn() parameter
+
+  [ Philipp Maier ]
+  * pcuif_proto: cosmetic: rename struct member "h" to "hopping"
+  * pcuif_proto: cosmetic: rename gsm_pcu_if_info_ts to gsm_pcu_if_info_trx_ts
+  * pcuif_proto: use define constant to specify nax number of trx
+  * bts: refuse to set invalid frame numbers
+  * bts: use GSM_TDMA_FN_ macros and uint32_t in bts_rfn_to_fn
+  * bts: log FN jump delta in bts_set_current_frame_number()
+  * pcuif_proto: add indication to communicate E1 parameters
+  * pcu_l1_if: cosmetic: use sizeof instead of constants
+  * pcu_l1_if: ignore frame numbers that exceed the valid range
+  * pcuif_proto: rename PCU_IF_SAPI_AGCH_DT to PCU_IF_SAPI_PCH_DT
+
+  [ Harald Welte ]
+  * update horribly outdated copyright statement on VTY
+
+  [ arehbein ]
+  * osmo-pcu:  Transition to use of 'telnet_init_default'
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 07 Feb 2023 17:10:40 +0100
+
 osmo-pcu (1.1.0) unstable; urgency=medium
 
   [ Oliver Smith ]
