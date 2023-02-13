@@ -43,6 +43,7 @@ extern "C" {
 #include <osmocom/gsm/gsm0502.h>
 
 #include <nacc_fsm.h>
+#include <pcu_l1_if_phy.h>
 }
 
 #include <gprs_rlcmac.h>
@@ -55,15 +56,6 @@ extern "C" {
 #include <tbf_ul.h>
 #include <tbf_dl.h>
 #include <gprs_ms_storage.h>
-
-// FIXME: move this, when changed from c++ to c.
-extern "C" {
-void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1,
-		     struct gsmtap_inst *gsmtap);
-int l1if_connect_pdch(void *obj, uint8_t ts);
-int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
-        uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len);
-}
 
 extern void *tall_pcu_ctx;
 

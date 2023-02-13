@@ -30,14 +30,13 @@
 
 
 #include <pcu_l1_if.h>
+#include <pcu_l1_if_phy.h>
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
 #include <tbf.h>
 #include <pdch.h>
-
-int l1if_close_pdch(void *obj);
 
 /*
  * osmo-bts PCU socket functions

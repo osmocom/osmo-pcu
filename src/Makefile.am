@@ -100,6 +100,7 @@ noinst_HEADERS = \
 	gprs_ms_storage.h \
 	gprs_pcu.h \
 	pcu_l1_if.h \
+	pcu_l1_if_phy.h \
 	pcu_vty.h \
 	pcu_vty_functions.h \
 	mslot_class.h \
