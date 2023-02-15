@@ -361,7 +361,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	return 0;
 }
 
-void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1)
+void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
 	struct lc15l1_hdl *fl1h;
 	int rc;
