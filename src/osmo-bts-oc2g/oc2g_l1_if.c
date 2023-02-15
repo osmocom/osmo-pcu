@@ -35,6 +35,7 @@
 
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <pcu_l1_if_phy.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
 

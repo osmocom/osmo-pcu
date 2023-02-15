@@ -34,6 +34,7 @@
 #include <lc15_l1_if.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <pcu_l1_if_phy.h>
 #include <pdch.h>
 #include <bts.h>
 
