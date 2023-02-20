@@ -41,7 +41,7 @@ struct gprs_llc_hdr {
 		uint8_t address;
 		uint8_t sapi:4, unused:2, c_r:1, pd:1;
 #elif OSMO_IS_BIG_ENDIAN
-/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianness.py) */
 	union {
 		uint8_t address;
 		uint8_t pd:1, c_r:1, unused:2, sapi:4;
