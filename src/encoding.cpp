@@ -25,7 +25,7 @@
 #include <egprs_rlc_compression.h>
 
 extern "C" {
-#include <osmocom/gprs/protocol/gsm_04_60.h>
+#include <osmocom/gsm/protocol/gsm_44_060.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/gsm48.h>
 }
