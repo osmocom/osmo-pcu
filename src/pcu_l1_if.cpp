@@ -610,7 +610,7 @@ static int pcu_rx_rts_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_rts_req
 	return rc;
 }
 
-/* C -> C++ adapter for direct DSP access code (e.g. osmo-bts-sysmo) */
+/* C -> C++ adapter for direct PHY access code (e.g. osmo-bts-sysmo) */
 extern "C" int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 {
 	struct rach_ind_params rip = {
@@ -869,11 +869,11 @@ bssgp_failed:
 						the_pcu->gsmtap);
 			if (!bts->trx[trx_nr].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
-					"DSP access for PDCH.\n");
+					"PHY access for PDCH.\n");
 				exit(0);
 			}
 #else
-			LOGP(DL1IF, LOGL_FATAL, "Compiled without direct DSP "
+			LOGP(DL1IF, LOGL_FATAL, "Compiled without direct PHY "
 					"access for PDCH, but enabled at "
 					"BTS. Please deactivate it!\n");
 			exit(0);
