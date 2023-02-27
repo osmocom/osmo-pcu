@@ -386,3 +386,8 @@ int l1if_close_pdch(void *obj)
 	talloc_free(fl1h);
 	return 0;
 }
+
+int l1if_init(void)
+{
+	return 0;
+}

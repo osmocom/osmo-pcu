@@ -33,6 +33,7 @@
 extern "C" {
 #include "pcu_vty.h"
 #include "coding_scheme.h"
+#include "pcu_l1_if_phy.h"
 #include <osmocom/gprs/gprs_bssgp.h>
 #include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/vty/telnet_interface.h>
@@ -249,6 +250,12 @@ int main(int argc, char *argv[])
 	pcu_vty_init();
 	osmo_cpu_sched_vty_init(tall_pcu_ctx);
 	logging_vty_add_deprecated_subsys(tall_pcu_ctx, "bssgp");
+
+#ifdef ENABLE_DIRECT_PHY
+	rc = l1if_init();
+	if (rc < 0)
+		return -EINVAL;
+#endif
 
 	handle_options(argc, argv);
 	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
