@@ -145,6 +145,11 @@ int l1if_connect_pdch(void *obj, uint8_t ts)
 	return l1if_req_pdch(fl1h, msg);
 }
 
+int l1if_disconnect_pdch(void *obj, uint8_t ts)
+{
+	return 0;
+}
+
 static int handle_ph_readytosend_ind(struct lc15l1_hdl *fl1h,
 				     GsmL1_PhReadyToSendInd_t *rts_ind)
 {

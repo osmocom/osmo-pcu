@@ -918,6 +918,10 @@ bssgp_failed:
 				     trx_nr, ts_nr, pdch->tsc, pdch->fh.enabled ? "yes" : "no");
 			} else {
 				if (pdch->is_enabled()) {
+#ifdef ENABLE_DIRECT_PHY
+					if ((info_ind->flags & PCU_IF_FLAG_SYSMO))
+						l1if_disconnect_pdch(bts->trx[trx_nr].fl1h, ts_nr);
+#endif
 					pcu_tx_act_req(bts, pdch, 0);
 					pdch->disable();
 				}

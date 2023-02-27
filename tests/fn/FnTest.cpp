@@ -171,6 +171,8 @@ extern "C" {
 		abort();
 	} void l1if_connect_pdch() {
 		abort();
+	} void l1if_disconnect_pdch() {
+		abort();
 	}
 	void l1if_close_pdch() {
 		abort();

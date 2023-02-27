@@ -170,6 +170,7 @@ void gprs_test_success(struct gprs_bssgp_pcu *pcu)
 extern "C" {
 void l1if_pdch_req() { abort(); }
 void l1if_connect_pdch() { abort(); }
+void l1if_disconnect_pdch() { abort(); }
 void l1if_close_pdch() { abort(); }
 void l1if_open_pdch() { abort(); }
 }
