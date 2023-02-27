@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <osmocom/core/gsmtap_util.h>
 
 void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap);
 int l1if_connect_pdch(void *obj, uint8_t ts);
