@@ -59,8 +59,6 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-#define PAGING_GROUP_LEN 3
-
 struct e1_ccu_conn_pars {
 	struct llist_head entry;
 
@@ -77,27 +75,6 @@ struct e1_ccu_conn_pars {
  * a lookup table so that we can lookup the E1 connection information for each PDCH (trx number and timeslot number)
  * when it is needed. */
 static LLIST_HEAD(e1_ccu_table);
-
-/* returns [0,999] on success, > 999 on error */
-uint16_t imsi2paging_group(const char* imsi)
-{
-	uint16_t pgroup = 0;
-	size_t len;
-
-	len = (imsi != NULL) ? strlen(imsi) : 0;
-	if (len < PAGING_GROUP_LEN)
-		return 0xFFFF;
-	imsi += len - PAGING_GROUP_LEN;
-
-	while (*imsi != '\0') {
-		if (!isdigit(*imsi))
-			return 0xFFFF;
-		pgroup *= 10;
-		pgroup += *imsi - '0';
-		imsi++;
-	}
-	return pgroup;
-}
 
 /*
  * PCU messages
@@ -286,24 +263,23 @@ void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, sizeof(data));
 }
 
-void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, uint16_t pgroup)
+#define IMSI_DIGITS_FOR_PAGING 3
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi)
 {
-	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
-	int i;
+	uint8_t data[IMSI_DIGITS_FOR_PAGING + GSM_MACBLOCK_LEN];
 
-	/* prepend paging group */
-	for (i = 0; i < PAGING_GROUP_LEN; i++) {
-		data[PAGING_GROUP_LEN - 1 - i] = '0' + (char)(pgroup % 10);
-		pgroup = pgroup / 10;
-	}
-	OSMO_ASSERT(pgroup == 0);
+	/* prepend last three IMSI digits (if present) from which BTS/BSC will calculate the paging group */
+	if (imsi && strlen(imsi) >= IMSI_DIGITS_FOR_PAGING)
+		memcpy(data, imsi + strlen(imsi) - IMSI_DIGITS_FOR_PAGING, IMSI_DIGITS_FOR_PAGING);
+	else
+		memset(data, '0', IMSI_DIGITS_FOR_PAGING);
 
 	/* block provided by upper layer comes without first byte (plen),
 	 * prepend it manually:
 	 */
-	OSMO_ASSERT(sizeof(data) >= PAGING_GROUP_LEN + 1 + block->data_len);
+	OSMO_ASSERT(sizeof(data) >= IMSI_DIGITS_FOR_PAGING + 1 + block->data_len);
 	data[3] = (plen << 2) | 0x01;
-	bitvec_pack(block, data + PAGING_GROUP_LEN + 1);
+	bitvec_pack(block, data + IMSI_DIGITS_FOR_PAGING + 1);
 
 	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);

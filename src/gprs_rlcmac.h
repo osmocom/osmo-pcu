@@ -100,7 +100,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 extern "C" {
 #endif
-int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi, uint16_t pgroup);
+int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi, const char *imsi);
 #ifdef __cplusplus
 }
 #endif

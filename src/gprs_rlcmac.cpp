@@ -29,7 +29,7 @@ extern "C" {
 extern void *tall_pcu_ctx;
 
 int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi,
-			       uint16_t pgroup)
+			       const char *imsi)
 {
 	if (log_check_level(DRLCMAC, LOGL_NOTICE)) {
 		char str[64];
@@ -44,7 +44,7 @@ int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mo
 		return -1;
 	}
 	bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS);
-	pcu_l1if_tx_pch(bts, paging_request, plen, pgroup);
+	pcu_l1if_tx_pch(bts, paging_request, plen, imsi);
 	bitvec_free(paging_request);
 
 	return 0;

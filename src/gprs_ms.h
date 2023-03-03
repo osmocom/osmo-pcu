@@ -131,7 +131,6 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
 void ms_set_tlli(struct GprsMs *ms, uint32_t tlli);
 bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli);
 void ms_set_imsi(struct GprsMs *ms, const char *imsi);
-uint16_t ms_paging_group(struct GprsMs *ms);
 
 void ms_update_l1_meas(struct GprsMs *ms, const struct pcu_l1_meas *meas);
 

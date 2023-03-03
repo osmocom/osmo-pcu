@@ -289,7 +289,6 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 	struct osmo_mobile_identity mi_imsi;
 	struct osmo_mobile_identity paging_mi;
 	struct gprs_rlcmac_bts *bts;
-	uint16_t pgroup;
 	int rc;
 
 	rate_ctr_inc(rate_ctr_group_get_ctr(the_pcu->bssgp.ctrs, SGSN_CTR_RX_PAGING_PS));
@@ -304,11 +303,6 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 		LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
-	pgroup = imsi2paging_group(mi_imsi.imsi);
-	if (pgroup > 999) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Failed to compute IMSI %s paging group\n", mi_imsi.imsi);
-		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
-	}
 
 	if ((rc = get_paging_ps_mi(&paging_mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
@@ -320,7 +314,7 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 			bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS_ALREADY);
 			continue;
 		}
-		if (gprs_rlcmac_paging_request(bts, &paging_mi, pgroup) < 0)
+		if (gprs_rlcmac_paging_request(bts, &paging_mi, mi_imsi.imsi) < 0)
 			continue;
 		bts_pch_timer_start(bts, &paging_mi, mi_imsi.imsi);
 	}

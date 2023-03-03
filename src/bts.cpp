@@ -1131,7 +1131,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 		if (the_pcu->pcu_if_version >= 0x0b)
 			pcu_l1if_tx_pch_dt(bts, immediate_assignment, plen, tbf->imsi(), tbf->tlli());
 		else
-			pcu_l1if_tx_pch(bts, immediate_assignment, plen, ms_paging_group(tbf_ms(tbf)));
+			pcu_l1if_tx_pch(bts, immediate_assignment, plen, tbf->imsi());
 	}
 
 	bitvec_free(immediate_assignment);

@@ -148,7 +148,7 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		       uint8_t *data, size_t data_len);
 void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int len);
 
-void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, uint16_t pgroup);
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi);
 void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi, uint32_t tlli);
 #endif
 
@@ -176,7 +176,6 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
-uint16_t imsi2paging_group(const char* imsi);
 
 struct e1_conn_pars {
 	/* Number of E1 line */

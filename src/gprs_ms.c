@@ -577,18 +577,6 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 		tbf_update_state_fsm_name(dl_tbf_as_tbf(ms->dl_tbf));
 }
 
-uint16_t ms_paging_group(struct GprsMs *ms)
-{
-	uint16_t pgroup;
-	if (!ms_imsi_is_valid(ms))
-		return 0; /* 000 is the special "all paging" group */
-	if ((pgroup = imsi2paging_group(ms_imsi(ms))) > 999) {
-		LOGPMS(ms, DRLCMAC, LOGL_ERROR, "IMSI to paging group failed!\n");
-		return 0;
-	}
-	return pgroup;
-}
-
 void ms_set_ta(struct GprsMs *ms, uint8_t ta_)
 {
 	if (ta_ == ms->ta)
