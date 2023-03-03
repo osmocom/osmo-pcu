@@ -731,6 +731,9 @@ static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 	unsigned int trx_nr, ts_nr;
 	unsigned int i;
 
+	if (llist_count(&the_pcu->bts_list) > 1)
+		LOGP(DL1IF, LOGL_ERROR, "more than one BTS regsitered at this PCU. This PCU has only been tested with one BTS! OS#5930\n");
+
 	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS (%u) is "
 			"different (%u).\nPlease re-compile!\n",
@@ -864,7 +867,7 @@ bssgp_failed:
 				info_ind->trx[trx_nr].hlayer1);
 				if (!bts->trx[trx_nr].fl1h)
 					bts->trx[trx_nr].fl1h = l1if_open_pdch(
-						trx_nr,
+						bts->nr, trx_nr,
 						info_ind->trx[trx_nr].hlayer1,
 						the_pcu->gsmtap);
 			if (!bts->trx[trx_nr].fl1h) {
