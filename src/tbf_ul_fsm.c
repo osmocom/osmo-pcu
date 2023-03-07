@@ -279,7 +279,15 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 
 static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
-	OSMO_ASSERT(0);
+	switch (event) {
+	case TBF_EV_MAX_N3105:
+		/* This may be received here if the TBF had several polls
+		 * allocated concurrently and several failed each increasing N3105
+		 * over MAX_N3015. We are already releasing, ignore.*/
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
 }
 
 static int tbf_ul_fsm_timer_cb(struct osmo_fsm_inst *fi)
@@ -351,7 +359,8 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 		.action = st_finished,
 	},
 	[TBF_ST_RELEASING] = {
-		.in_event_mask = 0,
+		.in_event_mask =
+			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			0,
 		.name = "RELEASING",
