@@ -294,10 +294,11 @@ void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, co
 	 * it is not guaranteed to work with other message types. The prepended TLLI will be used as an identifier in
 	 * the confirmation message. */
 
-	struct gsm_pcu_if_pch_dt pch_dt;
+	struct gsm_pcu_if_pch_dt pch_dt = { 0 };
 
 	pch_dt.tlli = tlli;
-	strcpy(pch_dt.imsi, imsi);
+	if (imsi)
+		OSMO_STRLCPY_ARRAY(pch_dt.imsi, imsi);
 
 	pch_dt.data[0] = (plen << 2) | 0x01;
 	bitvec_pack(block, pch_dt.data + 1);
