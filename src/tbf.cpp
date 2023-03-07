@@ -818,7 +818,7 @@ int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcma
 
 	if (!tbf_is_control_ts(tbf, pdch)) {
 		char buf[128];
-		LOGPTBF(tbf, LOGL_DEBUG, "Polling cannot be "
+		LOGPTBF(tbf, LOGL_NOTICE, "Polling cannot be "
 			"scheduled in this TS %s (control TS %s)\n",
 			pdch_name(pdch),
 			tbf->control_ts ? pdch_name_buf(tbf->control_ts, buf, sizeof(buf)) : "none");
