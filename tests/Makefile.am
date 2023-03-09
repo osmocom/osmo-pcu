@@ -1,5 +1,10 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/ -I$(top_srcdir)/include/
-AM_LDFLAGS = -lrt -no-install
+AM_LDFLAGS = -no-install
+
+LDADD = \
+	$(LIBOSMOCORE_LIBS) \
+	-lrt \
+	$(NULL)
 
 check_PROGRAMS = \
 	rlcmac/RLCMACTest \
@@ -23,7 +28,7 @@ noinst_PROGRAMS = emu/pcu_emu
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
 rlcmac_RLCMACTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 alloc_AllocTest_SOURCES = alloc/AllocTest.cpp
@@ -32,7 +37,7 @@ alloc_AllocTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 alloc_MslotTest_SOURCES = alloc/MslotTest.cpp
@@ -41,7 +46,7 @@ alloc_MslotTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 tbf_TbfTest_SOURCES = tbf/TbfTest.cpp
@@ -50,7 +55,7 @@ tbf_TbfTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 tbf_TbfTest_LDFLAGS = -Wl,--wrap=pcu_sock_send
 
@@ -58,7 +63,7 @@ bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compressi
 bitcomp_BitcompTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 edge_EdgeTest_SOURCES = edge/EdgeTest.cpp
@@ -67,7 +72,7 @@ edge_EdgeTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 emu_pcu_emu_SOURCES = emu/pcu_emu.cpp emu/test_replay_gprs_attach.cpp \
@@ -78,7 +83,7 @@ emu_pcu_emu_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 types_TypesTest_SOURCES = types/TypesTest.cpp
@@ -87,7 +92,7 @@ types_TypesTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 ms_MsTest_SOURCES = ms/MsTest.cpp
@@ -96,7 +101,7 @@ ms_MsTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 ms_MsTest_LDFLAGS = \
@@ -108,7 +113,7 @@ llc_LlcTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 llc_LlcTest_LDFLAGS = \
@@ -116,14 +121,14 @@ llc_LlcTest_LDFLAGS = \
 
 llist_LListTest_SOURCES = llist/LListTest.cpp
 llist_LListTest_LDADD = \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 codel_codel_test_SOURCES = codel/codel_test.c
 codel_codel_test_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 fn_FnTest_SOURCES = fn/FnTest.cpp
@@ -132,7 +137,7 @@ fn_FnTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 app_info_AppInfoTest_SOURCES = app_info/AppInfoTest.cpp
@@ -141,7 +146,7 @@ app_info_AppInfoTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 ulc_PdchUlcTest_SOURCES = ulc/PdchUlcTest.cpp
@@ -150,7 +155,7 @@ ulc_PdchUlcTest_LDADD = \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
+	$(LDADD) \
 	$(NULL)
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.

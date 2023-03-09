@@ -34,7 +34,6 @@ AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
 AM_CXXFLAGS = -Wall
-AM_LDFLAGS = -lrt
 
 noinst_LTLIBRARIES = libgprs.la
 
@@ -165,6 +164,7 @@ osmo_pcu_remote_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	-lrt \
 	$(NULL)
 endif
 
@@ -214,6 +214,7 @@ osmo_pcu_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	-lrt \
 	$(NULL)
 
 #MOSTLYCLEANFILES += testSource testDestination
