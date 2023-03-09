@@ -137,13 +137,6 @@ osmo_pcu_SOURCES = pcu_main.cpp
 if ENABLE_SYSMODSP
 AM_CPPFLAGS += -I$(srcdir)/osmo-bts-sysmo -I$(SYSMOBTS_INCDIR)
 
-EXTRA_DIST = \
-	osmo-bts-sysmo/sysmo_l1_if.c \
-        osmo-bts-sysmo/sysmo_l1_if.h \
-        osmo-bts-sysmo/sysmo_l1_hw.c \
-        osmo-bts-sysmo/femtobts.c \
-        osmo-bts-sysmo/femtobts.h
-
 noinst_HEADERS += \
         osmo-bts-sysmo/sysmo_l1_if.h \
         osmo-bts-sysmo/femtobts.h
@@ -175,13 +168,6 @@ endif
 if ENABLE_LC15BTS_PHY
 AM_CPPFLAGS += $(LITECELL15_CFLAGS) -I$(srcdir)/osmo-bts-litecell15
 
-EXTRA_DIST = \
-	osmo-bts-litecell15/lc15_l1_if.c \
-        osmo-bts-litecell15/lc15_l1_if.h \
-        osmo-bts-litecell15/lc15_l1_hw.c \
-        osmo-bts-litecell15/lc15bts.c \
-        osmo-bts-litecell15/lc15bts.h
-
 noinst_HEADERS += \
         osmo-bts-litecell15/lc15_l1_if.h \
         osmo-bts-litecell15/lc15bts.h
@@ -194,13 +180,6 @@ endif
 
 if ENABLE_OC2GBTS_PHY
 AM_CPPFLAGS += -I$(OC2G_INCDIR) -I$(srcdir)/osmo-bts-oc2g
-
-EXTRA_DIST = \
-	osmo-bts-oc2g/oc2g_l1_if.c \
-        osmo-bts-oc2g/oc2g_l1_if.h \
-        osmo-bts-oc2g/oc2g_l1_hw.c \
-        osmo-bts-oc2g/oc2gbts.c \
-        osmo-bts-oc2g/oc2gbts.h
 
 noinst_HEADERS += \
         osmo-bts-oc2g/oc2g_l1_if.h \
