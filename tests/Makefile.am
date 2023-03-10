@@ -57,7 +57,10 @@ tbf_TbfTest_LDADD = \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LDADD) \
 	$(NULL)
-tbf_TbfTest_LDFLAGS = -Wl,--wrap=pcu_sock_send
+tbf_TbfTest_LDFLAGS = \
+	-Wl,--wrap=pcu_sock_send \
+	$(AM_LDFLAGS) \
+	$(NULL)
 
 bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compression.cpp
 bitcomp_BitcompTest_LDADD = \
@@ -105,7 +108,9 @@ ms_MsTest_LDADD = \
 	$(NULL)
 
 ms_MsTest_LDFLAGS = \
-	-Wl,-u,bssgp_prim_cb
+	-Wl,-u,bssgp_prim_cb \
+	$(AM_LDFLAGS) \
+	$(NULL)
 
 llc_LlcTest_SOURCES = llc/LlcTest.cpp
 llc_LlcTest_LDADD = \
@@ -117,7 +122,9 @@ llc_LlcTest_LDADD = \
 	$(NULL)
 
 llc_LlcTest_LDFLAGS = \
-	-Wl,-u,bssgp_prim_cb
+	-Wl,-u,bssgp_prim_cb \
+	$(AM_LDFLAGS) \
+	$(NULL)
 
 llist_LListTest_SOURCES = llist/LListTest.cpp
 llist_LListTest_LDADD = \
