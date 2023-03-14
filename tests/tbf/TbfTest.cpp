@@ -43,7 +43,7 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/vty/vty.h>
-#include <osmocom/gprs/protocol/gsm_04_60.h>
+#include <osmocom/gsm/protocol/gsm_44_060.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/core/fsm.h>
 }
