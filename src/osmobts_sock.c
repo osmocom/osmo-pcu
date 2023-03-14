@@ -96,9 +96,9 @@ static void pcu_sock_close(int lost)
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",
 		(lost) ? "LOST" : "closed");
 
+	osmo_fd_unregister(bfd);
 	close(bfd->fd);
 	bfd->fd = -1;
-	osmo_fd_unregister(bfd);
 
 	/* flush the queue */
 	while (!llist_empty(&pcu_sock_state.upqueue)) {
