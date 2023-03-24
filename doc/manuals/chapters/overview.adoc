@@ -2,14 +2,17 @@
 
 === About OsmoPCU
 
-OsmoPCU is the Osmocom implementation of the GPRS PCU (Packet Control
-Unit) element inside the GPRS network.
+OsmoPCU is the Osmocom implementation of the GPRS PCU (Packet Control Unit)
+element inside the GPRS network. Depending on the BTS type the PCU will be
+co-located within the BTS or run in co-location with the BSC.
 
-The OsmoPCU is co-located within the BTS and connects to OsmoBTS via its
-PCU socket interface.
+[[pcu_co_located_with_bts]]
+==== OsmoPCU in co-location with OsmoBTS
 
-On the other side, OsmoPCU is connected via the Gb interface to the
-SGSN.
+In most OsmoPCU-supported base stations, the PCU is co-located with the BTS.
+In this scenario OsmoPCU and OsmoBTS run on the same host system. Both are
+interconnected using a unix domain socket based interface.
+(see also: <<pcu_sock_iface>>)
 
 [[fig-gprs-pcubts]]
 .GPRS network architecture with PCU in BTS
@@ -31,12 +34,62 @@ digraph G {
 }
 ----
 
+NOTE: Depending on the hardware architecture, OsmoPCU may also have direct
+access on the PHY interface to exchange PDCH traffic efficiently. The socket
+interface is then only used for signalling.
+
+==== OsmoPCU in co-location with OsmoBSC
+
+Classic E1 based BTSs usually do not include a PCU. Instead those base stations
+typically rely on an external PCU that is co-located with the BSC. The
+signalling traffic (paging, channel assignments ect.) is then exchanged with the
+BTS via RSL, while the PDCH traffic is handled by the PCU through a dedicated
+TRAU frame based E1 connection.
+
+OsmoPCU supports this scenario as well. Due to the dedicated E1 connection, the
+implementation is complex and strongly hardware specific. As of now (March 2023)
+OsmoPCU supports Ericsson RBS2000/RBS6000 only. This implementation has been
+made possible through funding by the NLnet Foundation.
+
+[[fig-gprs-pcubts]]
+.GPRS network architecture with PCU in BTS
+[graphviz]
+----
+digraph G {
+	rankdir=LR;
+	MS0 [label="MS"]
+	MS1 [label="MS"]
+	MS0->BTS [label="Um"]
+	MS1->BTS [label="Um"]
+	BTS->BSC [label="Abis"]
+	BSC->MSC [label="A"]
+	BTS->PCU [label="pcu_sock"]
+	PCU->SGSN [label="Gb"]
+	SGSN->GGSN [label="GTP"]
+	PCU [color=red]
+	{ rank=same BTS PCU }
+}
+----
+
+When OsmoPCU runs in co-location to OsmoBSC, both are connected through the
+same unix domain socket interface as mentioned above.
+(see also: <<pcu_co_located_with_bts>>) The socket is used to pass signalling
+traffic between PCU and BSC while the PCU controls the PDCH by directly talking
+to the BTS CCU (channel coding unit) through a dedicated E1 connection. The
+E1 line interface uses TRAU frames and is vastly comparable to the interface that
+is used when speech is transferred.
+
+Since the PCU is mainly set up by OsmoBSC (or OsmoBTS) via the PCU socket, the
+configuration in the BSC co-located scenario is no different from the BTS
+co-located scenario. However, since the PCU requires a direct E1 connection to
+the BTS an E1 line must be set up. (See also: <<cfg_e1_line>>)
+
 === Software Components
 
 OsmoPCU consists of a variety of components, including
 
 * Gb interface (NS/BSSGP protocol)
-* `pcu_sock` interface towards OsmoBTS
+* `pcu_sock` interface towards OsmoBTS (or OsmoBSC)
 * TBF management for uplink and downlink TBF
 * RLC/MAC protocol implementation
 * per-MS context for each MS currently served
@@ -53,17 +106,18 @@ in turn part of the libosmocore software package.  This allows the same
 Gb implementation to be used from OsmoPCU, OsmoGbProxy as well as
 OsmoSGSN.
 
-==== `pcu_sock` Interface to OsmoBTS
+[[pcu_sock_iface]]
+==== `pcu_sock` Interface to OsmoBTS/OsmoBSC
 
-The interface towards OsmoBTS is called 'pcu_sock' and implemented as a
-set of non-standardized primitives over a unix domain socket.  The
+The interface towards OsmoBTS/OsmoBSC is called 'pcu_sock' and implemented
+as a set of non-standardized primitives over a unix domain socket. The
 default file system path for this socket is `/tmp/pcu_bts`.
 
-The PCU socket can be changed on both OsmoBTS and OsmoPCU to a different
-file/path name, primarily to permit running multiple independent BTS+PCU
-pairs on a single Linux machine without having to use filesystem
-namespaces or other complex configurations.
+The PCU socket path can be freely configured to a different file/path name,
+primarily to permit running multiple independent BTS+PCU (or BSC+PCU) pairs
+on a single Linux machine without having to use filesystem namespaces or other
+complex configurations.
 
-NOTE: If you change the PCU socket path on OsmoBTS by means of the
+NOTE: If you change the PCU socket path on OsmoBTS/OsmoBSC by means of the
 `pcu-socket` VTY configuration command, you must ensure to make the
 identical change on the OsmoPCU side.

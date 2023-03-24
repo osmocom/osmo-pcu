@@ -328,6 +328,25 @@ pcu
 <1> Time out if the SGSN doesn't answer our RIM RAN-INFO request request after 500 ms
 <2> Keep resolved remote neighbor System Information cached for 60 seconds
 
+[[cfg_e1_line]]
+=== Configuring E1 line for CCU access
+
+Depending on the configuration the PCU may require direct access to a BTS CCU
+(channel coding unit) via an E1 line. This is in particular the case when
+OsmoPCU runs in co-location with OsmoBSC.
+
+The exact timeslot configuration is passed to the PCU via the pcu_sock
+interface. Only basic E1 line settings are required. However, it is important
+that the E1 line number is the same as the E1 line number that is used in the
+timeslot configuration of OsmoBSC.
+
+.Example: Configure an E1 line
+----
+e1_input
+ e1_line 0 driver dahdi
+ e1_line 0 port 2
+ no e1_line 0 keepalive
+----
 
 === GPRS vs EGPRS considerations
 
