@@ -216,7 +216,7 @@ static int pcu_sock_cb(struct osmo_fd *bfd, unsigned int flags)
 int pcu_l1if_open(void)
 {
 	int rc;
-	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OsmoBTS\n");
+	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface v%u to OsmoBTS\n", PCU_IF_VERSION);
 
 	memset(&pcu_sock_state, 0x00, sizeof(pcu_sock_state));
 	INIT_LLIST_HEAD(&pcu_sock_state.upqueue);
