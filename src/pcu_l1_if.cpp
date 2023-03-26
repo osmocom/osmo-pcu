@@ -1285,6 +1285,8 @@ int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 		if (pcu_prim_length < exp_len) {
 			LOGP(DL1IF, LOGL_ERROR, "Received %zu bytes on PCU Socket, but primitive container size" \
 			     "is %zu, discarding\n", pcu_prim_length, exp_len);
+			rc = -EINVAL;
+			break;
 		}
 		rc = pcu_rx_container(bts, &pcu_prim->u.container);
 		break;
