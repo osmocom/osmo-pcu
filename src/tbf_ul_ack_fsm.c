@@ -65,7 +65,6 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
 	struct gprs_rlcmac_tbf *tbf = ul_tbf_as_tbf(ctx->tbf);
-	struct GprsMs *ms = tbf_ms(tbf);
 
 	if (final) {
 		rc = tbf_check_polling(tbf, d->pdch, d->fn, &new_poll_fn, &rrbp);
@@ -85,21 +84,6 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	write_packet_uplink_ack(ack_vec, ctx->tbf, final, rrbp);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
-
-	/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
-	 * the network side when the network receives an RLC data block that
-	 * comprises the TLLI value that identifies the mobile station and the
-	 * TFI value associated with the TBF." (see TBF_EV_FIRST_UL_DATA_RECVD).
-	 *
-	 * However, it's handier for us to mark contention resolution success here
-	 * since upon rx UL ACK is the time at which MS realizes contention resolution
-	 * succeeds:
-	 * TS 44.060 7.1.2.3: "The contention resolution is successfully completed
-	 * on the mobile station side when the mobile station receives a
-	 * PACKET UPLINK ACK/NACK"
-	 */
-	if (ms_tlli(ms) != GSM_RESERVED_TMSI && !ul_tbf_contention_resolution_done(ctx->tbf))
-		osmo_fsm_inst_dispatch(tbf_state_fi(tbf), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
 
 	if (final) {
 		tbf_set_polling(tbf, d->pdch, new_poll_fn, PDCH_ULC_POLL_UL_ACK);
@@ -126,6 +110,7 @@ static void st_sched_ul_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data
 {
 	struct tbf_ul_ack_fsm_ctx *ctx = (struct tbf_ul_ack_fsm_ctx *)fi->priv;
 	struct gprs_rlcmac_ul_tbf *tbf = ctx->tbf;
+	struct GprsMs *ms = tbf_ms(ul_tbf_as_tbf(tbf));
 	struct tbf_ul_ack_ev_create_rlcmac_msg_ctx *data_ctx;
 	bool final;
 
@@ -144,6 +129,28 @@ static void st_sched_ul_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data
 			tbf_ul_ack_fsm_state_chg(fi, TBF_UL_ACK_ST_WAIT_ACK);
 		else
 			tbf_ul_ack_fsm_state_chg(fi, TBF_UL_ACK_ST_NONE);
+
+		/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
+		* the network side when the network receives an RLC data block that
+		* comprises the TLLI value that identifies the mobile station and the
+		* TFI value associated with the TBF." (see TBF_EV_FIRST_UL_DATA_RECVD).
+		*
+		* However, it's handier for us to mark contention resolution success here
+		* since upon rx UL ACK is the time at which MS realizes contention resolution
+		* succeeds:
+		* TS 44.060 7.1.2.3: "The contention resolution is successfully completed
+		* on the mobile station side when the mobile station receives a
+		* PACKET UPLINK ACK/NACK"
+		*
+		* This event must be triggered here *after* potentially transitioning
+		* to ST_WAIT_ACK above, so that gprs_ms knows whether it can create a
+		* DL TBF on PACCH of the UL_TBF or not (not possible if we are in
+		* ST_WAIT_ACK, since UL TBF is terminating sending the final PKT CTRL
+		* ACK).
+		*/
+		if (ms_tlli(ms) != GSM_RESERVED_TMSI && !ul_tbf_contention_resolution_done(ctx->tbf))
+			osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ctx->tbf)), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
+
 		break;
 	default:
 		OSMO_ASSERT(0);

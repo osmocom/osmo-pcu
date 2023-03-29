@@ -2072,11 +2072,11 @@ Got 'TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FINISHED}', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 UL_ACK_TBF(UL:TFI-0-0-0:G){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654167 + 17 = 2654184
-UL_TBF(UL:TFI-0-0-0:G){FINISHED}: Received Event CONTENTION_RESOLUTION_MS_SUCCESS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FINISHED} stopping timer T3141 [Contention resolution success (UL-TBF, CCCH)]
 PDCH(bts=0,trx=0,ts=7) Reserving FN 2654184 for type POLL
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FINISHED} Scheduled UL Acknowledgement polling on PACCH (FN=2654184, TS=7)
 UL_ACK_TBF(UL:TFI-0-0-0:G){SCHED_UL_ACK}: state_chg to WAIT_ACK
+UL_TBF(UL:TFI-0-0-0:G){FINISHED}: Received Event CONTENTION_RESOLUTION_MS_SUCCESS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FINISHED} stopping timer T3141 [Contention resolution success (UL-TBF, CCCH)]
 PDCH(bts=0,trx=0,ts=7) FN=2654167 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FINISHED}
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
