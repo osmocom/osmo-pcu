@@ -247,12 +247,12 @@ update_exp: $(check_PROGRAMS)
 
 # Python testing
 if ENABLE_VTY_TESTS
-python-tests: $(BUILT_SOURCES)
+python-tests: $(top_builddir)/src/osmo-pcu
 	osmotestvty.py -p $(abs_top_srcdir) -w $(abs_top_builddir) -v
 	osmotestconfig.py -p $(abs_top_srcdir) -w $(abs_top_builddir) -v
 
 else
-python-tests: $(BUILT_SOURCES)
+python-tests:
 	@echo "Not running python-based tests (determined at configure-time)"
 endif
 
