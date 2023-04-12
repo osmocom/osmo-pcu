@@ -1,8 +1,9 @@
-/* gprs_rlcmac.cpp
+/* gprs_rlcmac.c
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2023 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,9 +16,7 @@
  * GNU General Public License for more details.
  */
 
-extern "C" {
-	#include <osmocom/gsm/gsm48.h>
-}
+#include <osmocom/gsm/gsm48.h>
 
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
@@ -36,9 +35,9 @@ int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mo
 		osmo_mobile_identity_to_str_buf(str, sizeof(str), mi);
 		LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH) MI=%s\n", str);
 	}
-	bitvec *paging_request = bitvec_alloc(22, tall_pcu_ctx);
+	struct bitvec *paging_request = bitvec_alloc(22, tall_pcu_ctx);
 	bitvec_unhex(paging_request, DUMMY_VEC);
-	int plen = Encoding::write_paging_request(paging_request, mi);
+	int plen = write_paging_request(paging_request, mi);
 	if (plen <= 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "TX: [PCU -> BTS] Failed to encode Paging Request\n");
 		return -1;

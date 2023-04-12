@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2023 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,8 +15,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef GPRS_RLCMAC_H
-#define GPRS_RLCMAC_H
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -92,8 +92,6 @@ enum gprs_rlcmac_block_type {
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-struct msgb *gprs_rlcmac_app_info_msg(const struct gsm_pcu_if_app_info_req *req);
-
 int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts,
         uint32_t fn, uint8_t block_nr);
@@ -101,9 +99,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 extern "C" {
 #endif
 int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi, const char *imsi);
+struct msgb *gprs_rlcmac_app_info_msg(const struct gsm_pcu_if_app_info_req *req);
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif // GPRS_RLCMAC_H

@@ -61,8 +61,6 @@ public:
 
 	static void encode_rbb(const char *show_rbb, bitvec *rbb);
 
-	static int write_paging_request(bitvec * dest, const struct osmo_mobile_identity *mi);
-
 	static unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 			uint8_t *identity, uint8_t chan_needed);
 
@@ -98,6 +96,9 @@ extern "C" {
 #endif
 
 void write_packet_access_reject(struct bitvec *dest, uint32_t tlli, unsigned long t3172_ms);
+
+int write_paging_request(struct bitvec *dest, const struct osmo_mobile_identity *mi);
+
 void write_packet_uplink_assignment(RlcMacDownlink_t *block, uint8_t old_tfi,
 				    uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 				    const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll,

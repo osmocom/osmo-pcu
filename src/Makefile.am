@@ -50,7 +50,7 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.c \
 	gprs_bssgp_pcu.c \
 	gprs_bssgp_rim.c \
-	gprs_rlcmac.cpp \
+	gprs_rlcmac.c \
 	gprs_rlcmac_sched.cpp \
 	gprs_rlcmac_meas.cpp \
 	gprs_ms.c \

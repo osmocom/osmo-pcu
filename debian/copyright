@@ -45,7 +45,7 @@ Files:     src/tbf.cpp
            src/llc.c
            src/encoding.cpp
            src/encoding.h
-           src/gprs_rlcmac.cpp
+           src/gprs_rlcmac.c
            src/ts_alloc.cpp
 Copyright: 2012 Ivan Klyuchnikov
            2012 Andreas Eversberg <jolly@eversberg.eu>

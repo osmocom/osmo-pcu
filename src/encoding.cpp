@@ -801,7 +801,7 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block,
 }
 
 /* Generate paging request. See 44.018, sections 10 and 9.1.22 */
-int Encoding::write_paging_request(bitvec * dest, const struct osmo_mobile_identity *mi)
+int write_paging_request(struct bitvec *dest, const struct osmo_mobile_identity *mi)
 {
 	uint8_t mi_buf[GSM48_MID_MAX_SIZE];
 	int mi_len;
