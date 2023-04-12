@@ -358,63 +358,11 @@ static void st_initial(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
-static int send_neigh_addr_req_ctrl_iface(struct nacc_fsm_ctx *ctx)
-{
-	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
-	struct gprs_pcu *pcu = bts->pcu;
-	struct ctrl_cmd *cmd = NULL;
-	int rc;
-
-	/* We may have changed to this state previously (eg: we are handling
-	 * another Pkt cell Change Notify with different target). Avoid
-	 * re-creating the socket in that case. */
-	if (ctx->neigh_ctrl_conn->write_queue.bfd.fd == -1) {
-		rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
-					 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
-					 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
-					 OSMO_SOCK_F_CONNECT);
-		if (rc < 0) {
-			LOGPFSML(ctx->fi, LOGL_ERROR,
-				"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
-				pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
-			goto err_term;
-		}
-	}
-
-	cmd = ctrl_cmd_create(ctx, CTRL_TYPE_GET);
-	if (!cmd) {
-		LOGPFSML(ctx->fi, LOGL_ERROR, "CTRL msg creation failed\n");
-		goto err_term;
-	}
-
-	cmd->id = talloc_asprintf(cmd, "%u", arfcn_bsic_2_ctrl_id(ctx->neigh_key.tgt_arfcn,
-								  ctx->neigh_key.tgt_bsic));
-	cmd->variable = talloc_asprintf(cmd, "neighbor_resolve_cgi_ps_from_lac_ci.%d.%d.%d.%d",
-					ctx->neigh_key.local_lac, ctx->neigh_key.local_ci,
-					ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic);
-	rc = ctrl_cmd_send(&ctx->neigh_ctrl_conn->write_queue, cmd);
-	if (rc) {
-		LOGPFSML(ctx->fi, LOGL_ERROR, "CTRL msg sent failed: %d\n", rc);
-		goto err_term;
-	}
-
-	talloc_free(cmd);
-	return 0;
-
-err_term:
-	talloc_free(cmd);
-	return -1;
-}
-
 static int send_neigh_addr_req(struct nacc_fsm_ctx *ctx)
 {
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 
-	/* If PCU was configured to use the old CTRL interface, use it: */
-	if (ctx->neigh_ctrl_conn)
-		return send_neigh_addr_req_ctrl_iface(ctx);
-
-	/* Otherwise, by default the new PCUIF over IPA Abis multiplex proto should be used: */
+	/* Using PCUIF over IPA Abis multiplex proto: */
 	return pcu_tx_neigh_addr_res_req(bts, &ctx->neigh_key);
 }
 
@@ -833,15 +781,6 @@ static int nacc_fsm_ctx_talloc_destructor(struct nacc_fsm_ctx *ctx)
 		ctx->fi = NULL;
 	}
 
-	if (ctx->neigh_ctrl_conn) {
-		if (ctx->neigh_ctrl_conn->write_queue.bfd.fd != -1) {
-			osmo_wqueue_clear(&ctx->neigh_ctrl_conn->write_queue);
-			osmo_fd_unregister(&ctx->neigh_ctrl_conn->write_queue.bfd);
-			close(ctx->neigh_ctrl_conn->write_queue.bfd.fd);
-			ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
-		}
-	}
-
 	return 0;
 }
 
@@ -858,19 +797,6 @@ struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms)
 	ctx->fi = osmo_fsm_inst_alloc(&nacc_fsm, ctx, ctx, LOGL_INFO, buf);
 	if (!ctx->fi)
 		goto free_ret;
-
-	/* If CTRL ip present, use the old CTRL interface for neighbor resolution */
-	if (ms->bts->pcu->vty.neigh_ctrl_addr) {
-		ctx->neigh_ctrl = ctrl_handle_alloc(ctx, ctx, NULL);
-		ctx->neigh_ctrl->reply_cb = nacc_fsm_ctrl_reply_cb;
-		ctx->neigh_ctrl_conn = osmo_ctrl_conn_alloc(ctx, ctx->neigh_ctrl);
-		if (!ctx->neigh_ctrl_conn)
-			goto free_ret;
-		/* Older versions of osmo_ctrl_conn_alloc didn't properly initialize fd to -1,
-		 * so make sure to do it here otherwise fd may be valid fd 0 and cause trouble */
-		ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
-		llist_add(&ctx->neigh_ctrl_conn->list_entry, &ctx->neigh_ctrl->ccon_list);
-	}
 
 	return ctx;
 free_ret:

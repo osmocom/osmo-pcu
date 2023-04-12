@@ -112,9 +112,6 @@ struct gprs_pcu {
 		uint32_t llc_discard_csec;
 		uint32_t llc_idle_ack_csec;
 		uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
-		/* Remote BSS resolution sevice (CTRL iface) */
-		char *neigh_ctrl_addr;
-		uint16_t neigh_ctrl_port;
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

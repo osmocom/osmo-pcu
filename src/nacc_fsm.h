@@ -46,8 +46,6 @@ enum nacc_fsm_states {
 struct nacc_fsm_ctx {
 	struct osmo_fsm_inst *fi;
 	struct GprsMs* ms; /* back pointer */
-	struct ctrl_handle *neigh_ctrl;
-	struct ctrl_connection *neigh_ctrl_conn;
 	struct neigh_cache_entry_key neigh_key; /* target cell info from MS */
 	struct osmo_cell_global_id_ps cgi_ps; /* target cell info resolved from req_{arfcn+bsic} */
 	struct si_cache_value si_info; /* SI info resolved from SGSN, to be sent to MS */

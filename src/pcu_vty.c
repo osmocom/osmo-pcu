@@ -303,11 +303,6 @@ static int config_write_pcu(struct vty *vty)
 	if (the_pcu->vty.ns_priority != -1)
 		vty_out(vty, " gb socket-priority %d%s", the_pcu->vty.ns_priority, VTY_NEWLINE);
 
-	if (the_pcu->vty.neigh_ctrl_addr) {
-		vty_out(vty, " neighbor resolution %s %u%s",
-			the_pcu->vty.neigh_ctrl_addr, the_pcu->vty.neigh_ctrl_port, VTY_NEWLINE);
-	}
-
 	osmo_tdef_vty_write(vty, the_pcu->T_defs, " timer ");
 
 	return CMD_SUCCESS;
@@ -1107,26 +1102,6 @@ DEFUN_USRATTR(cfg_pcu_gb_priority,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_neighbor_resolution, cfg_neighbor_resolution_cmd,
-       "neighbor resolution " VTY_IPV46_CMD " [<0-65535>]",
-       "Manage local and remote-BSS neighbor cells\n"
-       "Connect to Neighbor Resolution Service (CTRL interface) to given ip and port\n"
-       "IPv4 address to connect to\n" "IPv6 address to connect to\n"
-       "Port to connect to (default 4248)\n")
-{
-	vty_out(vty, "%% Warning: The CTRL interface for Neighbor Address Resolution is now deprecated."
-		"Upgrade osmo-bsc and drop the 'neighbor resolution " VTY_IPV46_CMD " [<0-65535>]' VTY "
-		"option in order to let osmo-pcu use the new resoluton method using the PCUIF over IPA "
-		"multiplex, which will work out of the box without required configuration.%s", VTY_NEWLINE);
-	osmo_talloc_replace_string(the_pcu, &the_pcu->vty.neigh_ctrl_addr, argv[0]);
-	if (argc > 1)
-		the_pcu->vty.neigh_ctrl_port = atoi(argv[1]);
-	else
-		the_pcu->vty.neigh_ctrl_port = OSMO_CTRL_PORT_BSC_NEIGH;
-	return CMD_SUCCESS;
-}
-
-
 DEFUN(show_bts_timer, show_bts_timer_cmd,
       "show bts-timer " OSMO_TDEF_VTY_ARG_T_OPTIONAL,
       SHOW_STR "Show BTS controlled timers\n"
@@ -1350,7 +1325,6 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_gb_dialect_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gb_ip_dscp_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gb_priority_cmd);
-	install_element(PCU_NODE, &cfg_neighbor_resolution_cmd);
 	install_element(PCU_NODE, &cfg_pcu_timer_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);

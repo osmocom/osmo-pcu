@@ -131,8 +131,6 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.ws_pdch = 0;
 	pcu->vty.llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	pcu->vty.llc_idle_ack_csec = 10;
-	pcu->vty.neigh_ctrl_addr = NULL; /* don't use CTRL iface for Neigh Addr Resolution */
-	pcu->vty.neigh_ctrl_port = OSMO_CTRL_PORT_BSC_NEIGH;
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);
