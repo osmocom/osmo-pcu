@@ -276,11 +276,12 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 
 	/* block provided by upper layer comes without first byte (plen), prepend it manually: */
 	OSMO_ASSERT(sizeof(data) >= IMSI_DIGITS_FOR_PAGING + 1 + block->data_len);
-	data[3] = (plen << 2) | 0x01;
+	data[IMSI_DIGITS_FOR_PAGING] = (plen << 2) | 0x01;
 	bitvec_pack(block, data + IMSI_DIGITS_FOR_PAGING + 1);
 
 	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
-		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
+		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0,
+			    data + IMSI_DIGITS_FOR_PAGING, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, sizeof(data));
 }
