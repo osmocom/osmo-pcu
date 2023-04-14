@@ -274,9 +274,7 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 	else
 		memset(data, '0', IMSI_DIGITS_FOR_PAGING);
 
-	/* block provided by upper layer comes without first byte (plen),
-	 * prepend it manually:
-	 */
+	/* block provided by upper layer comes without first byte (plen), prepend it manually: */
 	OSMO_ASSERT(sizeof(data) >= IMSI_DIGITS_FOR_PAGING + 1 + block->data_len);
 	data[3] = (plen << 2) | 0x01;
 	bitvec_pack(block, data + IMSI_DIGITS_FOR_PAGING + 1);
