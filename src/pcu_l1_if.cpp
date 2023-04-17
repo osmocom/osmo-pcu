@@ -1071,7 +1071,7 @@ static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req
 	case GSM_MI_TYPE_IMSI:
 		req.mi_imsi = mi;
 		req.mi_imsi_present = true;
-		ms = bts_ms_by_imsi(bts, req.mi_imsi.imsi);
+		ms = bts_get_ms_by_imsi(bts, req.mi_imsi.imsi);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Unexpected MI type %u\n", mi.type);

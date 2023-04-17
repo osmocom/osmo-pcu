@@ -724,7 +724,7 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	}
 
 	/* Find related TBF and send confirmation signal to FSM */
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (!ms) {
 		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm for unknown MS with TLLI=%08x\n", fn, tlli);
 		return -EINVAL;
@@ -1212,9 +1212,14 @@ struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts)
 	return bts->ms_store;
 }
 
-struct GprsMs *bts_ms_by_tlli(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli)
+struct GprsMs *bts_get_ms_by_tlli(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli)
 {
 	return bts_ms_store(bts)->get_ms(tlli, old_tlli);
+}
+
+struct GprsMs *bts_get_ms_by_imsi(const struct gprs_rlcmac_bts *bts, const char *imsi)
+{
+	return bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 }
 
 /* update TA based on TA provided by PH-DATA-IND */
@@ -1420,11 +1425,6 @@ void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 	LOGP(DRLCMAC, LOGL_DEBUG, "New max MCS: DL=%u UL=%u\n", mcs_dl, mcs_ul);
 	bts_set_max_mcs_dl(bts, mcs_dl);
 	bts_set_max_mcs_ul(bts, mcs_ul);
-}
-
-struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
-{
-	return bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 }
 
 const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts)

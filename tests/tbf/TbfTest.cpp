@@ -139,7 +139,7 @@ static void test_tbf_tlli_update()
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 	OSMO_ASSERT(ul_tbf->ms() == ms);
 
-	OSMO_ASSERT(bts_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI) == ms);
+	OSMO_ASSERT(bts_get_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI) == ms);
 
 	/*
 	 * Now check.. that DL changes and that the timing advance
@@ -148,20 +148,20 @@ static void test_tbf_tlli_update()
 	ms_confirm_tlli(dl_tbf->ms(), 0x4232);
 
 	/* It is still there, since the new TLLI has not been used for UL yet */
-	ms_new = bts_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
+	ms_new = bts_get_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == ms_new);
 
-	ms_new = bts_ms_by_tlli(bts, 0x4232, GSM_RESERVED_TMSI);
+	ms_new = bts_get_ms_by_tlli(bts, 0x4232, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == ms_new);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 
 	/* Now use the new TLLI for UL */
 	ms_update_announced_tlli(ms, 0x4232);
-	ms_new = bts_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
+	ms_new = bts_get_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms_new == NULL);
 
-	ms_new = bts_ms_by_tlli(bts, 0x4232, GSM_RESERVED_TMSI);
+	ms_new = bts_get_ms_by_tlli(bts, 0x4232, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms_new != NULL);
 	OSMO_ASSERT(ms_ta(ms_new) == 4);
 
@@ -658,7 +658,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(struct gprs_rlcmac_bts 
 
 	pdch->rcv_block(&data_msg[0], sizeof(data_msg), *fn, &meas);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 
 	return ul_tbf;
@@ -797,7 +797,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 
 	pdch->rcv_block(&data_msg[0], 23, *fn, &meas);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -941,7 +941,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(struct gprs_rlcmac_bts
 
 	pdch->rcv_block(&data_msg[0], 23, *fn, &meas);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -1430,7 +1430,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(struct
 	check_tbf(ul_tbf);
 	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -1511,7 +1511,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 	check_tbf(ul_tbf);
 	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -1593,7 +1593,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(struct gprs_rlcm
 	check_tbf(ul_tbf);
 	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -1670,7 +1670,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(struct gprs_rlcmac_bts *bt
 
 	pdch->rcv_block(&data_msg[0], sizeof(data_msg), *fn, &meas);
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
@@ -1688,11 +1688,11 @@ static void send_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, const char 
 	dl_tbf_handle(bts, tlli, 0, imsi, 0, 0,
 		1000, data, data_size);
 
-	ms = bts_ms_by_imsi(bts, imsi);
+	ms = bts_get_ms_by_imsi(bts, imsi);
 	OSMO_ASSERT(ms != NULL);
 
 	if (imsi[0] != '\0') {
-		ms2 = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+		ms2 = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		OSMO_ASSERT(ms == ms2);
 	}
 }
@@ -1704,7 +1704,7 @@ static void transmit_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_
 	GprsMs *ms;
 	unsigned ts_no;
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms);
 	dl_tbf = ms_dl_tbf(ms);
 	OSMO_ASSERT(dl_tbf);
@@ -2013,14 +2013,14 @@ static void test_tbf_ra_update_rach()
 	 * the PCU can see, that both MS objects belong to same MS */
 	send_dl_data(bts, tlli2, imsi, (const uint8_t *)"DATA", 4);
 
-	ms = bts_ms_by_imsi(bts, imsi);
+	ms = bts_get_ms_by_imsi(bts, imsi);
 	OSMO_ASSERT(ms == ms2);
 
 	print_ms(ms2, false);
 
-	ms = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
-	ms = bts_ms_by_tlli(bts, tlli2, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli2, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == ms2);
 
 	TALLOC_FREE(the_pcu);
@@ -2063,7 +2063,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 
 	/* Get rid of old UL TBF */
 	tbf_free(ul_tbf);
-	ms = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms1 == ms);
 
 	/* Now establish a new UL TBF, this will consume one LLC packet */
@@ -2076,7 +2076,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 	/* This should be the same MS object */
 	OSMO_ASSERT(ms2 == ms1);
 
-	ms = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms2 == ms);
 
 	/* A DL TBF should still exist */
@@ -2126,7 +2126,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 
 	/* Get rid of old UL TBF */
 	tbf_free(ul_tbf);
-	ms = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms1 == ms);
 
 	/* Now establish a new UL TBF */
@@ -2138,7 +2138,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	/* There should be a different MS object */
 	OSMO_ASSERT(ms2 != ms1);
 
-	ms = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms2 == ms);
 	OSMO_ASSERT(ms1 != ms);
 
@@ -2235,7 +2235,7 @@ static void test_tbf_dl_reuse()
 
 	request_dl_rlc_block(dl_tbf1, &fn);
 
-	ms2 = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
+	ms2 = bts_get_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms2 == ms1);
 	OSMO_ASSERT(ms_dl_tbf(ms2));
 	OSMO_ASSERT(ms_dl_tbf(ms2)->state_is(TBF_ST_ASSIGN));
@@ -2607,7 +2607,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(struct gprs_rlcmac_bts *bts,
 
 	uint8_t data_msg[49] = {0};
 
-	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_ta(ms) == qta/4);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);

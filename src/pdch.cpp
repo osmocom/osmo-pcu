@@ -348,7 +348,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
-		ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
+		ms = bts_get_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 		if (ms)
 			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 				"unknown TBF corresponds to MS with IMSI %s, TA %d, "
@@ -664,7 +664,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	/* First gather MS from TLLI/DL_TFI/UL_TFI:*/
 	if (request->ID.UnionType) { /* ID_TYPE = TLLI */
 		uint32_t tlli = request->ID.u.TLLI;
-		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+		ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
 			ms = bts_alloc_ms(bts);
 			ms_set_tlli(ms, tlli);
@@ -854,7 +854,7 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 	struct pdch_ulc_node *poll;
 	GprsMs *ms;
 
-	ms = bts_ms_by_tlli(bts(), report->TLLI, GSM_RESERVED_TMSI);
+	ms = bts_get_ms_by_tlli(bts(), report->TLLI, GSM_RESERVED_TMSI);
 	if (!ms) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "MS send measurement "
 			"but TLLI 0x%08x is unknown\n", report->TLLI);

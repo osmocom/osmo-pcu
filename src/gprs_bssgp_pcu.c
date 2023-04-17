@@ -244,9 +244,9 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed
 	 * target MS is using. */
 	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
 		/* TODO: Match by TMSI before IMSI if present?! */
-		ms = bts_ms_by_tlli(bts, req.tlli, req.tlli);
+		ms = bts_get_ms_by_tlli(bts, req.tlli, req.tlli);
 		if (!ms && req.mi_imsi_present)
-			ms = bts_ms_by_imsi(bts, req.mi_imsi.imsi);
+			ms = bts_get_ms_by_imsi(bts, req.mi_imsi.imsi);
 		bts_add_paging(bts, &req, ms);
 	}
 

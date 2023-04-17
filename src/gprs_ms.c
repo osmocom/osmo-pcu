@@ -558,7 +558,7 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 		"Modifying MS object, TLLI = 0x%08x, IMSI '%s' -> '%s'\n",
 		ms_tlli(ms), ms->imsi, imsi);
 
-	struct GprsMs *old_ms = bts_ms_by_imsi(ms->bts, imsi);
+	struct GprsMs *old_ms = bts_get_ms_by_imsi(ms->bts, imsi);
 	/* Check if we are going to store a different MS object with already
 	   existing IMSI. This is probably a bug in code calling this function,
 	   since it should take care of this explicitly */

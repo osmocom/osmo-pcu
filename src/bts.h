@@ -331,7 +331,8 @@ void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
 
 struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts);
 
-struct GprsMs *bts_ms_by_tlli(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli);
+struct GprsMs *bts_get_ms_by_tlli(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli);
+struct GprsMs *bts_get_ms_by_imsi(const struct gprs_rlcmac_bts *bts, const char *imsi);
 
 static inline struct rate_ctr_group *bts_rate_counters(struct gprs_rlcmac_bts *bts)
 {
@@ -369,7 +370,6 @@ void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts);
-struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi);
 uint8_t bts_max_cs_dl(const struct gprs_rlcmac_bts *bts);
 uint8_t bts_max_cs_ul(const struct gprs_rlcmac_bts *bts);
 uint8_t bts_max_mcs_dl(const struct gprs_rlcmac_bts *bts);

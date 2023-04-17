@@ -559,7 +559,7 @@ static unsigned alloc_many_tbfs(struct gprs_rlcmac_bts *bts, unsigned min_class,
 		enum gprs_rlcmac_tbf_direction dir;
 		uint32_t tlli = counter + 0xc0000000;
 
-		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+		ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms)
 			ms = bts_alloc_ms(bts);
 		ms_set_ms_class(ms, ms_class);
