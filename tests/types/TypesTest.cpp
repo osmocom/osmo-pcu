@@ -31,6 +31,7 @@
 #include "gprs_rlcmac.h"
 #include "egprs_rlc_compression.h"
 #include "alloc_algo.h"
+#include "gprs_ms.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -687,7 +688,9 @@ static void test_egprs_ul_ack_nack()
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[4].enable();
 
-	GprsMs *ms = bts_alloc_ms(bts, 1, 1);
+	GprsMs *ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, 1);
+	ms_set_egprs_ms_class(ms, 1);
 	struct gprs_rlcmac_ul_tbf *tbf = ul_tbf_alloc(bts, ms, 0, true);
 	struct crbb_test crbb_test = {0};
 	bitvec *rbb = NULL;
@@ -778,7 +781,8 @@ void test_immediate_assign_dl()
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();
-	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
+	GprsMs *ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, 1);
 
 	struct gprs_rlcmac_tbf *tbf = dl_tbf_alloc(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
@@ -804,7 +808,8 @@ void test_immediate_assign_ul0m()
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
 
-	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
+	GprsMs *ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, 1);
 	struct gprs_rlcmac_tbf *tbf = ul_tbf_alloc(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
@@ -846,7 +851,9 @@ void test_immediate_assign_ul1s()
 	bts->trx[0].pdch[1].enable();
 	bts->trx[0].pdch[2].enable();
 
-	GprsMs *ms = bts_alloc_ms(bts, 1, 1);
+	GprsMs *ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, 1);
+	ms_set_egprs_ms_class(ms, 1);
 	struct gprs_rlcmac_tbf *tbf = ul_tbf_alloc(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */

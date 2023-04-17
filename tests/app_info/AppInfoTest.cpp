@@ -17,6 +17,7 @@
 #include "gprs_rlcmac.h"
 #include "bts.h"
 #include "tbf_dl.h"
+#include "gprs_ms.h"
 
 extern "C" {
 #include <osmocom/vty/telnet_interface.h>
@@ -89,9 +90,13 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms1 = bts_alloc_ms(bts, 10, 11);
+	ms1 = bts_alloc_ms(bts);
+	ms_set_ms_class(ms1, 10);
+	ms_set_egprs_ms_class(ms1, 11);
 	tbf1 = dl_tbf_alloc(bts, ms1, 0, false);
-	ms2 = bts_alloc_ms(bts, 12, 13);
+	ms2 = bts_alloc_ms(bts);
+	ms_set_ms_class(ms2, 12);
+	ms_set_egprs_ms_class(ms2, 13);
 	tbf2 = dl_tbf_alloc(bts, ms2, 0, false);
 
 	fprintf(stderr, "\n");

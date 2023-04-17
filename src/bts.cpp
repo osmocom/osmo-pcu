@@ -1006,7 +1006,8 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_TWO_PHASE);
 	} else {
-		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
+		GprsMs *ms = bts_alloc_ms(bts);
+		ms_set_egprs_ms_class(ms, chan_req.egprs_mslot_class);
 		tbf = ms_new_ul_tbf_assigned_agch(ms);
 		if (!tbf) {
 			/* Send RR Immediate Assignment Reject */
@@ -1196,14 +1197,12 @@ bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts* bts, CodingScheme cs)
 	}
 }
 
-GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts, uint8_t ms_class, uint8_t egprs_ms_class)
+GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts)
 {
 	GprsMs *ms;
 	ms = bts_ms_store(bts)->create_ms();
 
 	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
-	ms_set_ms_class(ms, ms_class);
-	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
 	return ms;
 }

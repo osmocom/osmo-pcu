@@ -666,7 +666,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		uint32_t tlli = request->ID.u.TLLI;
 		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
-			ms = bts_alloc_ms(bts, 0, 0); /* ms class updated later */
+			ms = bts_alloc_ms(bts);
 			ms_set_tlli(ms, tlli);
 		}
 	} else if (request->ID.u.Global_TFI.UnionType) { /* ID_TYPE = DL_TFI */
@@ -858,7 +858,7 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 	if (!ms) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "MS send measurement "
 			"but TLLI 0x%08x is unknown\n", report->TLLI);
-		ms = bts_alloc_ms(bts(), 0, 0);
+		ms = bts_alloc_ms(bts());
 		ms_set_tlli(ms, report->TLLI);
 	}
 	if ((poll = pdch_ulc_get_node(ulc, fn))) {

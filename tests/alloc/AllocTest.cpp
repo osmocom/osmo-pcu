@@ -135,7 +135,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	 * least this part is working okay.
 	 */
 	for (i = 0; i < (int)ARRAY_SIZE(tbfs); ++i) {
-		ms = bts_alloc_ms(bts, 0, 0);
+		ms = bts_alloc_ms(bts);
 		tbfs[i] = tbf_alloc(bts, ms, dir, -1, 0);
 		if (tbfs[i] == NULL)
 			break;
@@ -155,7 +155,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	ms = bts_alloc_ms(bts, 0, 0);
+	ms = bts_alloc_ms(bts);
 	tbfs[0] = tbf_alloc(bts, ms, dir, -1, 0);
 	OSMO_ASSERT(tbfs[0]);
 	tbf_free(tbfs[0]);
@@ -221,7 +221,8 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	ms = bts_alloc_ms(bts, ms_class, 0);
+	ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	ul_tbf = ul_tbf_alloc(bts, ms, -1, true);
@@ -263,7 +264,8 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	ms = bts_alloc_ms(bts, ms_class, 0);
+	ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	dl_tbf = dl_tbf_alloc(bts, ms, -1, true);
@@ -313,7 +315,8 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	ms = bts_alloc_ms(bts, ms_class, 0);
+	ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	ul_tbf = ul_tbf_alloc(bts, ms, -1, false);
@@ -558,7 +561,7 @@ static unsigned alloc_many_tbfs(struct gprs_rlcmac_bts *bts, unsigned min_class,
 
 		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms)
-			ms = bts_alloc_ms(bts, 0, 0);
+			ms = bts_alloc_ms(bts);
 		ms_set_ms_class(ms, ms_class);
 		ms = alloc_tbfs(bts, ms, mode);
 		if (!ms)
@@ -767,7 +770,9 @@ static void test_2_consecutive_dl_tbfs()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
+	ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, ms_class);
+	ms_set_egprs_ms_class(ms, egprs_ms_class);
 	dl_tbf1 = dl_tbf_alloc(bts, ms, 0, false);
 	OSMO_ASSERT(dl_tbf1);
 
@@ -778,7 +783,9 @@ static void test_2_consecutive_dl_tbfs()
 	OSMO_ASSERT(numTs1 == 4);
 	printf("TBF1: numTs(%d)\n", numTs1);
 
-	ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
+	ms = bts_alloc_ms(bts);
+	ms_set_ms_class(ms, ms_class);
+	ms_set_egprs_ms_class(ms, egprs_ms_class);
 	dl_tbf2 = dl_tbf_alloc(bts, ms, 0, false);
 	OSMO_ASSERT(dl_tbf2);
 

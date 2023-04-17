@@ -644,9 +644,9 @@ DL_ASS_TBF(DL:TFI-0-0-1:STATE-FLOW:GPRS:IMSI-001001000000002:TLLI-0xf1000002){SE
 === start test_tbf_exhaustion ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000000'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
+Modifying MS object, TLLI = 0xc0000000, MS class 0 -> 45
 MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -674,9 +674,9 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000000:TLLI-0xc0000000){NEW}: s
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000000:TLLI-0xc0000000) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
+Modifying MS object, TLLI = 0xc0000001, MS class 0 -> 45
 MS(IMSI-001001000000001:TLLI-0xc0000001:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000001:TLLI-0xc0000001:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000001:TLLI-0xc0000001:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -704,9 +704,9 @@ DL_TBF(DL:TFI-0-0-1:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xc0000001){NEW}: s
 TBF(DL:TFI-0-0-1:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xc0000001) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000002'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
+Modifying MS object, TLLI = 0xc0000002, MS class 0 -> 45
 MS(IMSI-001001000000002:TLLI-0xc0000002:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000002:TLLI-0xc0000002:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000002:TLLI-0xc0000002:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -734,9 +734,9 @@ DL_TBF(DL:TFI-0-0-2:STATE-NEW:GPRS:IMSI-001001000000002:TLLI-0xc0000002){NEW}: s
 TBF(DL:TFI-0-0-2:STATE-ASSIGN:GPRS:IMSI-001001000000002:TLLI-0xc0000002) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000003'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
+Modifying MS object, TLLI = 0xc0000003, MS class 0 -> 45
 MS(IMSI-001001000000003:TLLI-0xc0000003:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000003:TLLI-0xc0000003:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000003:TLLI-0xc0000003:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -764,9 +764,9 @@ DL_TBF(DL:TFI-0-0-3:STATE-NEW:GPRS:IMSI-001001000000003:TLLI-0xc0000003){NEW}: s
 TBF(DL:TFI-0-0-3:STATE-ASSIGN:GPRS:IMSI-001001000000003:TLLI-0xc0000003) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000004'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
+Modifying MS object, TLLI = 0xc0000004, MS class 0 -> 45
 MS(IMSI-001001000000004:TLLI-0xc0000004:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000004:TLLI-0xc0000004:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000004:TLLI-0xc0000004:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -794,9 +794,9 @@ DL_TBF(DL:TFI-0-0-4:STATE-NEW:GPRS:IMSI-001001000000004:TLLI-0xc0000004){NEW}: s
 TBF(DL:TFI-0-0-4:STATE-ASSIGN:GPRS:IMSI-001001000000004:TLLI-0xc0000004) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000005'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
+Modifying MS object, TLLI = 0xc0000005, MS class 0 -> 45
 MS(IMSI-001001000000005:TLLI-0xc0000005:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000005:TLLI-0xc0000005:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000005:TLLI-0xc0000005:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -824,9 +824,9 @@ DL_TBF(DL:TFI-0-0-5:STATE-NEW:GPRS:IMSI-001001000000005:TLLI-0xc0000005){NEW}: s
 TBF(DL:TFI-0-0-5:STATE-ASSIGN:GPRS:IMSI-001001000000005:TLLI-0xc0000005) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000006'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
+Modifying MS object, TLLI = 0xc0000006, MS class 0 -> 45
 MS(IMSI-001001000000006:TLLI-0xc0000006:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000006:TLLI-0xc0000006:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000006:TLLI-0xc0000006:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -854,9 +854,9 @@ DL_TBF(DL:TFI-0-0-6:STATE-NEW:GPRS:IMSI-001001000000006:TLLI-0xc0000006){NEW}: s
 TBF(DL:TFI-0-0-6:STATE-ASSIGN:GPRS:IMSI-001001000000006:TLLI-0xc0000006) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000007'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
+Modifying MS object, TLLI = 0xc0000007, MS class 0 -> 45
 MS(IMSI-001001000000007:TLLI-0xc0000007:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000007:TLLI-0xc0000007:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000007:TLLI-0xc0000007:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -884,9 +884,9 @@ DL_TBF(DL:TFI-0-0-7:STATE-NEW:GPRS:IMSI-001001000000007:TLLI-0xc0000007){NEW}: s
 TBF(DL:TFI-0-0-7:STATE-ASSIGN:GPRS:IMSI-001001000000007:TLLI-0xc0000007) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000008'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
+Modifying MS object, TLLI = 0xc0000008, MS class 0 -> 45
 MS(IMSI-001001000000008:TLLI-0xc0000008:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000008:TLLI-0xc0000008:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000008:TLLI-0xc0000008:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -914,9 +914,9 @@ DL_TBF(DL:TFI-0-0-8:STATE-NEW:GPRS:IMSI-001001000000008:TLLI-0xc0000008){NEW}: s
 TBF(DL:TFI-0-0-8:STATE-ASSIGN:GPRS:IMSI-001001000000008:TLLI-0xc0000008) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000009'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
+Modifying MS object, TLLI = 0xc0000009, MS class 0 -> 45
 MS(IMSI-001001000000009:TLLI-0xc0000009:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000009:TLLI-0xc0000009:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000009:TLLI-0xc0000009:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -944,9 +944,9 @@ DL_TBF(DL:TFI-0-0-9:STATE-NEW:GPRS:IMSI-001001000000009:TLLI-0xc0000009){NEW}: s
 TBF(DL:TFI-0-0-9:STATE-ASSIGN:GPRS:IMSI-001001000000009:TLLI-0xc0000009) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000010'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
+Modifying MS object, TLLI = 0xc000000a, MS class 0 -> 45
 MS(IMSI-001001000000010:TLLI-0xc000000a:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000010:TLLI-0xc000000a:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000010:TLLI-0xc000000a:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -974,9 +974,9 @@ DL_TBF(DL:TFI-0-0-10:STATE-NEW:GPRS:IMSI-001001000000010:TLLI-0xc000000a){NEW}: 
 TBF(DL:TFI-0-0-10:STATE-ASSIGN:GPRS:IMSI-001001000000010:TLLI-0xc000000a) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000011'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
+Modifying MS object, TLLI = 0xc000000b, MS class 0 -> 45
 MS(IMSI-001001000000011:TLLI-0xc000000b:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000011:TLLI-0xc000000b:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000011:TLLI-0xc000000b:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1004,9 +1004,9 @@ DL_TBF(DL:TFI-0-0-11:STATE-NEW:GPRS:IMSI-001001000000011:TLLI-0xc000000b){NEW}: 
 TBF(DL:TFI-0-0-11:STATE-ASSIGN:GPRS:IMSI-001001000000011:TLLI-0xc000000b) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000012'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
+Modifying MS object, TLLI = 0xc000000c, MS class 0 -> 45
 MS(IMSI-001001000000012:TLLI-0xc000000c:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000012:TLLI-0xc000000c:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000012:TLLI-0xc000000c:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1034,9 +1034,9 @@ DL_TBF(DL:TFI-0-0-12:STATE-NEW:GPRS:IMSI-001001000000012:TLLI-0xc000000c){NEW}: 
 TBF(DL:TFI-0-0-12:STATE-ASSIGN:GPRS:IMSI-001001000000012:TLLI-0xc000000c) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000013'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
+Modifying MS object, TLLI = 0xc000000d, MS class 0 -> 45
 MS(IMSI-001001000000013:TLLI-0xc000000d:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000013:TLLI-0xc000000d:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000013:TLLI-0xc000000d:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1064,9 +1064,9 @@ DL_TBF(DL:TFI-0-0-13:STATE-NEW:GPRS:IMSI-001001000000013:TLLI-0xc000000d){NEW}: 
 TBF(DL:TFI-0-0-13:STATE-ASSIGN:GPRS:IMSI-001001000000013:TLLI-0xc000000d) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000014'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
+Modifying MS object, TLLI = 0xc000000e, MS class 0 -> 45
 MS(IMSI-001001000000014:TLLI-0xc000000e:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000014:TLLI-0xc000000e:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000014:TLLI-0xc000000e:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1094,9 +1094,9 @@ DL_TBF(DL:TFI-0-0-14:STATE-NEW:GPRS:IMSI-001001000000014:TLLI-0xc000000e){NEW}: 
 TBF(DL:TFI-0-0-14:STATE-ASSIGN:GPRS:IMSI-001001000000014:TLLI-0xc000000e) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000015'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
+Modifying MS object, TLLI = 0xc000000f, MS class 0 -> 45
 MS(IMSI-001001000000015:TLLI-0xc000000f:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000015:TLLI-0xc000000f:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000015:TLLI-0xc000000f:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1124,9 +1124,9 @@ DL_TBF(DL:TFI-0-0-15:STATE-NEW:GPRS:IMSI-001001000000015:TLLI-0xc000000f){NEW}: 
 TBF(DL:TFI-0-0-15:STATE-ASSIGN:GPRS:IMSI-001001000000015:TLLI-0xc000000f) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000016'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
+Modifying MS object, TLLI = 0xc0000010, MS class 0 -> 45
 MS(IMSI-001001000000016:TLLI-0xc0000010:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000016:TLLI-0xc0000010:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000016:TLLI-0xc0000010:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1154,9 +1154,9 @@ DL_TBF(DL:TFI-0-0-16:STATE-NEW:GPRS:IMSI-001001000000016:TLLI-0xc0000010){NEW}: 
 TBF(DL:TFI-0-0-16:STATE-ASSIGN:GPRS:IMSI-001001000000016:TLLI-0xc0000010) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000017'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
+Modifying MS object, TLLI = 0xc0000011, MS class 0 -> 45
 MS(IMSI-001001000000017:TLLI-0xc0000011:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000017:TLLI-0xc0000011:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000017:TLLI-0xc0000011:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1184,9 +1184,9 @@ DL_TBF(DL:TFI-0-0-17:STATE-NEW:GPRS:IMSI-001001000000017:TLLI-0xc0000011){NEW}: 
 TBF(DL:TFI-0-0-17:STATE-ASSIGN:GPRS:IMSI-001001000000017:TLLI-0xc0000011) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000018'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
+Modifying MS object, TLLI = 0xc0000012, MS class 0 -> 45
 MS(IMSI-001001000000018:TLLI-0xc0000012:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000018:TLLI-0xc0000012:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000018:TLLI-0xc0000012:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1214,9 +1214,9 @@ DL_TBF(DL:TFI-0-0-18:STATE-NEW:GPRS:IMSI-001001000000018:TLLI-0xc0000012){NEW}: 
 TBF(DL:TFI-0-0-18:STATE-ASSIGN:GPRS:IMSI-001001000000018:TLLI-0xc0000012) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000019'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
+Modifying MS object, TLLI = 0xc0000013, MS class 0 -> 45
 MS(IMSI-001001000000019:TLLI-0xc0000013:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000019:TLLI-0xc0000013:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000019:TLLI-0xc0000013:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1244,9 +1244,9 @@ DL_TBF(DL:TFI-0-0-19:STATE-NEW:GPRS:IMSI-001001000000019:TLLI-0xc0000013){NEW}: 
 TBF(DL:TFI-0-0-19:STATE-ASSIGN:GPRS:IMSI-001001000000019:TLLI-0xc0000013) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000020'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
+Modifying MS object, TLLI = 0xc0000014, MS class 0 -> 45
 MS(IMSI-001001000000020:TLLI-0xc0000014:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000020:TLLI-0xc0000014:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000020:TLLI-0xc0000014:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1274,9 +1274,9 @@ DL_TBF(DL:TFI-0-0-20:STATE-NEW:GPRS:IMSI-001001000000020:TLLI-0xc0000014){NEW}: 
 TBF(DL:TFI-0-0-20:STATE-ASSIGN:GPRS:IMSI-001001000000020:TLLI-0xc0000014) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000021'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
+Modifying MS object, TLLI = 0xc0000015, MS class 0 -> 45
 MS(IMSI-001001000000021:TLLI-0xc0000015:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000021:TLLI-0xc0000015:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000021:TLLI-0xc0000015:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1304,9 +1304,9 @@ DL_TBF(DL:TFI-0-0-21:STATE-NEW:GPRS:IMSI-001001000000021:TLLI-0xc0000015){NEW}: 
 TBF(DL:TFI-0-0-21:STATE-ASSIGN:GPRS:IMSI-001001000000021:TLLI-0xc0000015) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000022'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
+Modifying MS object, TLLI = 0xc0000016, MS class 0 -> 45
 MS(IMSI-001001000000022:TLLI-0xc0000016:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000022:TLLI-0xc0000016:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000022:TLLI-0xc0000016:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1334,9 +1334,9 @@ DL_TBF(DL:TFI-0-0-22:STATE-NEW:GPRS:IMSI-001001000000022:TLLI-0xc0000016){NEW}: 
 TBF(DL:TFI-0-0-22:STATE-ASSIGN:GPRS:IMSI-001001000000022:TLLI-0xc0000016) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000023'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
+Modifying MS object, TLLI = 0xc0000017, MS class 0 -> 45
 MS(IMSI-001001000000023:TLLI-0xc0000017:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000023:TLLI-0xc0000017:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000023:TLLI-0xc0000017:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1364,9 +1364,9 @@ DL_TBF(DL:TFI-0-0-23:STATE-NEW:GPRS:IMSI-001001000000023:TLLI-0xc0000017){NEW}: 
 TBF(DL:TFI-0-0-23:STATE-ASSIGN:GPRS:IMSI-001001000000023:TLLI-0xc0000017) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000024'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
+Modifying MS object, TLLI = 0xc0000018, MS class 0 -> 45
 MS(IMSI-001001000000024:TLLI-0xc0000018:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000024:TLLI-0xc0000018:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000024:TLLI-0xc0000018:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1394,9 +1394,9 @@ DL_TBF(DL:TFI-0-0-24:STATE-NEW:GPRS:IMSI-001001000000024:TLLI-0xc0000018){NEW}: 
 TBF(DL:TFI-0-0-24:STATE-ASSIGN:GPRS:IMSI-001001000000024:TLLI-0xc0000018) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000025'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
+Modifying MS object, TLLI = 0xc0000019, MS class 0 -> 45
 MS(IMSI-001001000000025:TLLI-0xc0000019:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000025:TLLI-0xc0000019:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000025:TLLI-0xc0000019:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1424,9 +1424,9 @@ DL_TBF(DL:TFI-0-0-25:STATE-NEW:GPRS:IMSI-001001000000025:TLLI-0xc0000019){NEW}: 
 TBF(DL:TFI-0-0-25:STATE-ASSIGN:GPRS:IMSI-001001000000025:TLLI-0xc0000019) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000026'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
+Modifying MS object, TLLI = 0xc000001a, MS class 0 -> 45
 MS(IMSI-001001000000026:TLLI-0xc000001a:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000026:TLLI-0xc000001a:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000026:TLLI-0xc000001a:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1454,9 +1454,9 @@ DL_TBF(DL:TFI-0-0-26:STATE-NEW:GPRS:IMSI-001001000000026:TLLI-0xc000001a){NEW}: 
 TBF(DL:TFI-0-0-26:STATE-ASSIGN:GPRS:IMSI-001001000000026:TLLI-0xc000001a) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000027'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
+Modifying MS object, TLLI = 0xc000001b, MS class 0 -> 45
 MS(IMSI-001001000000027:TLLI-0xc000001b:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000027:TLLI-0xc000001b:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000027:TLLI-0xc000001b:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1484,9 +1484,9 @@ DL_TBF(DL:TFI-0-0-27:STATE-NEW:GPRS:IMSI-001001000000027:TLLI-0xc000001b){NEW}: 
 TBF(DL:TFI-0-0-27:STATE-ASSIGN:GPRS:IMSI-001001000000027:TLLI-0xc000001b) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000028'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
+Modifying MS object, TLLI = 0xc000001c, MS class 0 -> 45
 MS(IMSI-001001000000028:TLLI-0xc000001c:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000028:TLLI-0xc000001c:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000028:TLLI-0xc000001c:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1514,9 +1514,9 @@ DL_TBF(DL:TFI-0-0-28:STATE-NEW:GPRS:IMSI-001001000000028:TLLI-0xc000001c){NEW}: 
 TBF(DL:TFI-0-0-28:STATE-ASSIGN:GPRS:IMSI-001001000000028:TLLI-0xc000001c) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000029'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
+Modifying MS object, TLLI = 0xc000001d, MS class 0 -> 45
 MS(IMSI-001001000000029:TLLI-0xc000001d:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000029:TLLI-0xc000001d:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000029:TLLI-0xc000001d:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1544,9 +1544,9 @@ DL_TBF(DL:TFI-0-0-29:STATE-NEW:GPRS:IMSI-001001000000029:TLLI-0xc000001d){NEW}: 
 TBF(DL:TFI-0-0-29:STATE-ASSIGN:GPRS:IMSI-001001000000029:TLLI-0xc000001d) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000030'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
+Modifying MS object, TLLI = 0xc000001e, MS class 0 -> 45
 MS(IMSI-001001000000030:TLLI-0xc000001e:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000030:TLLI-0xc000001e:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000030:TLLI-0xc000001e:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1574,9 +1574,9 @@ DL_TBF(DL:TFI-0-0-30:STATE-NEW:GPRS:IMSI-001001000000030:TLLI-0xc000001e){NEW}: 
 TBF(DL:TFI-0-0-30:STATE-ASSIGN:GPRS:IMSI-001001000000030:TLLI-0xc000001e) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000031'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
+Modifying MS object, TLLI = 0xc000001f, MS class 0 -> 45
 MS(IMSI-001001000000031:TLLI-0xc000001f:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000031:TLLI-0xc000001f:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000031:TLLI-0xc000001f:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1604,9 +1604,9 @@ DL_TBF(DL:TFI-0-0-31:STATE-NEW:GPRS:IMSI-001001000000031:TLLI-0xc000001f){NEW}: 
 TBF(DL:TFI-0-0-31:STATE-ASSIGN:GPRS:IMSI-001001000000031:TLLI-0xc000001f) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000032'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confirmed
+Modifying MS object, TLLI = 0xc0000020, MS class 0 -> 45
 MS(IMSI-001001000000032:TLLI-0xc0000020:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001000000032:TLLI-0xc0000020:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000032:TLLI-0xc0000020:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -1689,9 +1689,9 @@ MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0) Detaching TBF: TBF(DL
 === start test_tbf_dl_llc_loss ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000123456'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
+Modifying MS object, TLLI = 0xc0123456, MS class 0 -> 45
 MS(IMSI-001001000123456:TLLI-0xc0123456:TA-220:MSCLS-45-0) appending 19 bytes to DL LLC queue
 MS(IMSI-001001000123456:TLLI-0xc0123456:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000123456:TLLI-0xc0123456:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -3874,9 +3874,9 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0) Detaching TBF: TBF(DL:TFI-0-0
 === start test_tbf_gprs_egprs ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001123456789'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
+Modifying MS object, TLLI = 0xc0006789, MS class 0 -> 45
 MS(IMSI-001001123456789:TLLI-0xc0006789:TA-220:MSCLS-45-0) appending 256 bytes to DL LLC queue
 MS(IMSI-001001123456789:TLLI-0xc0006789:TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
 MS(IMSI-001001123456789:TLLI-0xc0006789:TA-220:MSCLS-45-0) Allocating DL TBF
@@ -9579,9 +9579,9 @@ PDCH(bts=0,trx=1,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=1,ts=5) PDCH state: disabled => enabled
 PDCH(bts=0,trx=1,ts=6) PDCH state: disabled => enabled
 Creating MS object
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xa3c2f953, partly confirmed
+Modifying MS object, TLLI = 0xa3c2f953, MS class 0 -> 11
 MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) appending 19 bytes to DL LLC queue
 MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) ********** DL-TBF starts here **********
 MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0) Allocating DL TBF
