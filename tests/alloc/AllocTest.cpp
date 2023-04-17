@@ -465,7 +465,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	if (ms_current_trx(old_ms))
 		trx_no = ms_current_trx(old_ms)->trx_no;
 
-	ms_ref(old_ms);
+	ms_ref(old_ms, __func__);
 
 	/* Allocate what is needed first */
 	switch (mode) {
@@ -477,7 +477,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 		tbf = ul_tbf_alloc(bts, old_ms, trx_no, false);
 		if (tbf == NULL) {
 			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
-			ms_unref(old_ms);
+			ms_unref(old_ms, __func__);
 			return NULL;
 		}
 		break;
@@ -489,7 +489,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 		tbf = dl_tbf_alloc(bts, old_ms, trx_no, false);
 		if (tbf == NULL) {
 			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
-			ms_unref(old_ms);
+			ms_unref(old_ms, __func__);
 			return NULL;
 		}
 	}
@@ -499,7 +499,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	OSMO_ASSERT(old_ms == tbf->ms());
 	ms = tbf->ms();
 
-	ms_ref(ms);
+	ms_ref(ms, __func__);
 	new_ms = ms;
 	/* Continue with what is needed next */
 	switch (mode) {
@@ -534,8 +534,8 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	if (!new_ms && tbf)
 		tbf_free(tbf);
 
-	ms_unref(old_ms);
-	ms_unref(ms);
+	ms_unref(old_ms, __func__);
+	ms_unref(ms, __func__);
 	return new_ms;
 }
 

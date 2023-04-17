@@ -31,6 +31,7 @@ extern "C" {
 #include <osmocom/core/timer.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
+#include <osmocom/core/use_count.h>
 
 #include <osmocom/gsm/protocol/gsm_23_003.h>
 #include <osmocom/gsm/gsm48.h>
@@ -84,7 +85,7 @@ struct GprsMs {
 	struct osmo_timer_list llc_timer;
 
 	bool is_idle;
-	int ref;
+	struct osmo_use_count use_count;
 	struct osmo_timer_list timer;
 	unsigned delay;
 
@@ -107,8 +108,6 @@ struct gprs_rlcmac_pdch *ms_first_common_ts(const struct GprsMs *ms);
 void ms_set_first_common_ts(struct GprsMs *ms, struct gprs_rlcmac_pdch *pdch);
 void ms_set_reserved_slots(struct GprsMs *ms, struct gprs_rlcmac_trx *trx,
 			   uint8_t ul_slots, uint8_t dl_slots);
-struct GprsMs *ms_ref(struct GprsMs *ms);
-void ms_unref(struct GprsMs *ms);
 void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode);
 void ms_set_ms_class(struct GprsMs *ms, uint8_t ms_class_);
 void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_);
@@ -157,7 +156,9 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 
 static inline bool ms_is_idle(const struct GprsMs *ms)
 {
-	return !ms->ul_tbf && !ms->dl_tbf && !ms->ref && llist_empty(&ms->old_tbfs);
+	return !ms->ul_tbf && !ms->dl_tbf &&
+		llist_empty(&ms->old_tbfs) &&
+		osmo_use_count_total(&ms->use_count) == 0;
 }
 
 static inline struct gprs_llc_queue *ms_llc_queue(struct GprsMs *ms)
@@ -249,6 +250,12 @@ static inline struct gprs_rlcmac_trx *ms_current_trx(const struct GprsMs *ms)
 {
 	return ms->current_trx;
 }
+
+#define MS_USE_RELEASE_TIMER "release_timer"
+#define ms_ref(ms, use) \
+	OSMO_ASSERT(osmo_use_count_get_put(&(ms)->use_count, use, 1) == 0)
+#define ms_unref(ms, use) \
+	OSMO_ASSERT(osmo_use_count_get_put(&(ms)->use_count, use, -1) == 0)
 
 #define LOGPMS(ms, category, level, fmt, args...) \
 	LOGP(category, level, "%s " fmt, ms_name(ms), ## args)

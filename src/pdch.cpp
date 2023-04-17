@@ -697,7 +697,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	 * temporarily, in order to avoid it being freed if we free any of its
 	 * resources (TBF). */
 	OSMO_ASSERT(ms);
-	ms_ref(ms);
+	ms_ref(ms, __func__);
 
 
 	switch (item->type) {
@@ -843,7 +843,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	/* schedule uplink assignment */
 	osmo_fsm_inst_dispatch(new_ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
 return_unref:
-	ms_unref(ms);
+	ms_unref(ms, __func__);
 	return;
 }
 

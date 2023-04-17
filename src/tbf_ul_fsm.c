@@ -227,7 +227,7 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		/* Ref the MS, otherwise it may be freed after ul_tbf is
 		 * detached when sending event below. */
 		ms = tbf_ms(ctx->tbf);
-		ms_ref(ms);
+		ms_ref(ms, __func__);
 		/* UL TBF ACKed our transmitted UL ACK/NACK with final Ack
 		 * Indicator set to '1'. We can free the TBF right away, the MS
 		 * also just released its TBF on its side. */
@@ -242,7 +242,7 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * now. */
 		if (!new_ul_tbf_requested && ms_need_dl_tbf(ms))
 			ms_new_dl_tbf_assigned_on_pch(ms);
-		ms_unref(ms);
+		ms_unref(ms, __func__);
 		break;
 	case TBF_EV_MAX_N3103:
 		ctx->T_release = 3169;

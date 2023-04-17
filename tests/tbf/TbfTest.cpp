@@ -340,20 +340,20 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	OSMO_ASSERT(new_tbf->tfi() == 1);
 	check_tbf(dl_tbf);
 	if (test_mode == TEST_MODE_REVERSE_FREE) {
-		ms_ref(ms);
+		ms_ref(ms, __func__);
 		tbf_free(new_tbf);
 		OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
 		check_tbf(dl_tbf);
 		tbf_free(dl_tbf);
-		ms_unref(ms);
+		ms_unref(ms, __func__);
 	} else {
-		ms_ref(ms);
+		ms_ref(ms, __func__);
 		tbf_free(dl_tbf);
 		OSMO_ASSERT(ms_dl_tbf(ms) == new_tbf);
 		check_tbf(new_tbf);
 		tbf_free(new_tbf);
 		OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
-		ms_unref(ms);
+		ms_unref(ms, __func__);
 	}
 
 	TALLOC_FREE(the_pcu);
@@ -469,14 +469,14 @@ static void test_tbf_imsi()
 
 	/* use the same IMSI on TBF 1 */
 	{
-		ms_ref(ms2);
+		ms_ref(ms2, __func__);
 		ms_set_imsi(dl_tbf[1]->ms(), "001001000000002");
 		ms1 = bts_get_ms(bts, GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000002");
 		OSMO_ASSERT(ms1 != NULL);
 		OSMO_ASSERT(ms1 != ms2);
 		OSMO_ASSERT(strcmp(ms_imsi(ms1), "001001000000002") == 0);
 		OSMO_ASSERT(strcmp(ms_imsi(ms2), "") == 0);
-		ms_unref(ms2);
+		ms_unref(ms2, __func__);
 	}
 
 	ms2 = bts_get_ms_by_tlli(bts, 0xf1000001, GSM_RESERVED_TMSI);

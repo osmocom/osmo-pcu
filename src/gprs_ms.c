@@ -61,6 +61,40 @@ static int64_t now_msec()
 	return (int64_t)(ts.tv_sec) * 1000 + ts.tv_nsec / 1000000;
 }
 
+static void ms_update_status(struct GprsMs *ms);
+
+static int ms_use_cb(struct osmo_use_count_entry *e, int32_t old_use_count, const char *file, int line)
+{
+	struct GprsMs *ms = e->use_count->talloc_object;
+	int32_t total;
+	int level;
+	char buf[1024];
+
+	if (!e->use)
+		return -EINVAL;
+
+	total = osmo_use_count_total(&ms->use_count);
+
+	if (total == 0
+	    || (total == 1 && old_use_count == 0 && e->count == 1))
+		level = LOGL_INFO;
+	else
+		level = LOGL_DEBUG;
+
+
+	LOGPSRC(DRLCMAC, level, file, line, "%s: %s %s: now used by %s\n",
+		ms_name(ms),
+		(e->count - old_use_count) > 0 ? "+" : "-", e->use,
+		(osmo_use_count_to_str_buf(buf, sizeof(buf), &ms->use_count), buf));
+
+	if (e->count < 0)
+		return -ERANGE;
+
+	if (total == 0)
+		ms_update_status(ms);
+	return 0;
+}
+
 void gprs_default_cb_ms_idle(struct GprsMs *ms)
 {
 	if (ms_is_idle(ms))
@@ -84,7 +118,7 @@ static void ms_release_timer_cb(void *data)
 
 	if (ms->timer.data) {
 		ms->timer.data = NULL;
-		ms_unref(ms);
+		ms_unref(ms, MS_USE_RELEASE_TIMER);
 	}
 }
 
@@ -124,6 +158,11 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	ms->current_cs_dl = UNKNOWN;
 	ms->is_idle = true;
 	INIT_LLIST_HEAD(&ms->old_tbfs);
+
+	ms->use_count = (struct osmo_use_count){
+		.talloc_object = ms,
+		.use_cb = ms_use_cb,
+	};
 
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
 
@@ -204,7 +243,7 @@ void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb)
 
 static void ms_update_status(struct GprsMs *ms)
 {
-	if (ms->ref > 0)
+	if (osmo_use_count_total(&ms->use_count) > 0)
 		return;
 
 	if (ms_is_idle(ms) && !ms->is_idle) {
@@ -218,20 +257,6 @@ static void ms_update_status(struct GprsMs *ms)
 		ms->is_idle = false;
 		ms->cb.ms_active(ms);
 	}
-}
-
-struct GprsMs *ms_ref(struct GprsMs *ms)
-{
-	ms->ref += 1;
-	return ms;
-}
-
-void ms_unref(struct GprsMs *ms)
-{
-	OSMO_ASSERT(ms->ref >= 0);
-	ms->ref -= 1;
-	if (ms->ref == 0)
-		ms_update_status(ms);
 }
 
 static void ms_release_timer_start(struct GprsMs *ms)
@@ -252,8 +277,10 @@ static void ms_release_timer_start(struct GprsMs *ms)
 
 	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
 
-	if (!ms->timer.data)
-		ms->timer.data = ms_ref(ms);
+	if (!ms->timer.data) {
+		ms_ref(ms, MS_USE_RELEASE_TIMER);
+		ms->timer.data = ms;
+	}
 
 	osmo_timer_schedule(&ms->timer, ms->delay, 0);
 }
@@ -267,7 +294,7 @@ static void ms_release_timer_stop(struct GprsMs *ms)
 
 	osmo_timer_del(&ms->timer);
 	ms->timer.data = NULL;
-	ms_unref(ms);
+	ms_unref(ms, MS_USE_RELEASE_TIMER);
 }
 
 void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
@@ -328,7 +355,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
-	ms_ref(ms);
+	ms_ref(ms, __func__);
 
 	if (ms->ul_tbf)
 		llist_add_tail(tbf_ms_list(ul_tbf_as_tbf(ms->ul_tbf)), &ms->old_tbfs);
@@ -338,7 +365,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 	if (tbf)
 		ms_release_timer_stop(ms);
 
-	ms_unref(ms);
+	ms_unref(ms, __func__);
 }
 
 static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
@@ -348,7 +375,7 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
-	ms_ref(ms);
+	ms_ref(ms, __func__);
 
 	if (ms->dl_tbf)
 		llist_add_tail(tbf_ms_list(dl_tbf_as_tbf(ms->dl_tbf)), &ms->old_tbfs);
@@ -358,7 +385,7 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 	if (tbf)
 		ms_release_timer_stop(ms);
 
-	ms_unref(ms);
+	ms_unref(ms, __func__);
 }
 
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
@@ -452,7 +479,7 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 {
 	char old_ms_name[128];
 	OSMO_ASSERT(old_ms != ms);
-	ms_ref(old_ms);
+	ms_ref(old_ms, __func__);
 
 	ms_name_buf(old_ms, old_ms_name, sizeof(old_ms_name));
 
@@ -478,7 +505,7 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 
 	ms_reset(old_ms);
 
-	ms_unref(old_ms);
+	ms_unref(old_ms, __func__);
 }
 
 /* Apply changes to the TLLI directly, used interally by functions below: */
