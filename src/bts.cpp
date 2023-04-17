@@ -1007,7 +1007,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_TWO_PHASE);
 	} else {
-		GprsMs *ms = bts_alloc_ms(bts);
+		GprsMs *ms = ms_alloc(bts);
 		ms_set_egprs_ms_class(ms, chan_req.egprs_mslot_class);
 		tbf = ms_new_ul_tbf_assigned_agch(ms);
 		if (!tbf) {
@@ -1196,36 +1196,6 @@ bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts* bts, CodingScheme cs)
 	} else {
 		return (bts_max_mcs_dl(bts) >= num) && (bts->mcs_mask & (1U << num));
 	}
-}
-
-static void bts_ms_idle_cb(struct GprsMs *ms)
-{
-	bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
-	if (ms_is_idle(ms))
-		talloc_free(ms);
-}
-
-static void bts_ms_active_cb(struct GprsMs *ms)
-{
-	/* Nothing to do */
-}
-
-GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts)
-{
-	struct GprsMs *ms;
-
-	static struct gpr_ms_callback bts_ms_cb = {
-		.ms_idle = bts_ms_idle_cb,
-		.ms_active = bts_ms_active_cb,
-	};
-
-	ms = ms_alloc(bts);
-
-	ms_set_callback(ms, &bts_ms_cb);
-	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
-
-	bts_stat_item_inc(bts, STAT_MS_PRESENT);
-	return ms;
 }
 
 struct GprsMs *bts_get_ms(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli,

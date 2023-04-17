@@ -285,7 +285,6 @@ struct paging_req_cs {
 	struct osmo_mobile_identity mi_imsi;
 };
 
-struct GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts *bts);
 int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req, struct GprsMs *ms);
 
 uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn);

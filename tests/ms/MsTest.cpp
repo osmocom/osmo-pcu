@@ -380,7 +380,7 @@ static GprsMs *prepare_ms(struct gprs_rlcmac_bts *bts, uint32_t tlli, enum gprs_
 	if (ms)
 		return ms;
 
-	ms = bts_alloc_ms(bts);
+	ms = ms_alloc(bts);
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms_set_tlli(ms, tlli);

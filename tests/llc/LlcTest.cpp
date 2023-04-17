@@ -52,7 +52,7 @@ static struct gprs_llc_queue *prepare_queue(void)
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 	the_pcu->vty.llc_codel_interval_msec = LLC_CODEL_DISABLE;
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
-	struct GprsMs *ms = bts_alloc_ms(bts);
+	struct GprsMs *ms = ms_alloc(bts);
 	return ms_llc_queue(ms);
 }
 
@@ -235,7 +235,7 @@ static void test_llc_codel()
 	/* DEFAULT should be resolved to GPRS_CODEL_SLOW_INTERVAL_MS 4000 */
 	#define GPRS_CODEL_SLOW_INTERVAL_MS 4000
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
-	struct GprsMs *ms = bts_alloc_ms(bts);
+	struct GprsMs *ms = ms_alloc(bts);
 	gprs_llc_queue *queue = ms_llc_queue(ms);
 	unsigned int i;
 
@@ -297,7 +297,7 @@ static void test_llc_codel()
 static void test_llc_merge()
 {
 	gprs_llc_queue *queue1 = prepare_queue();
-	struct GprsMs *ms = bts_alloc_ms(queue1->ms->bts);
+	struct GprsMs *ms = ms_alloc(queue1->ms->bts);
 	gprs_llc_queue *queue2 = ms_llc_queue(ms);
 	struct timespec expire_time = {0};
 

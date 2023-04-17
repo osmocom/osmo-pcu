@@ -90,11 +90,11 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms1 = bts_alloc_ms(bts);
+	ms1 = ms_alloc(bts);
 	ms_set_ms_class(ms1, 10);
 	ms_set_egprs_ms_class(ms1, 11);
 	tbf1 = dl_tbf_alloc(bts, ms1, 0, false);
-	ms2 = bts_alloc_ms(bts);
+	ms2 = ms_alloc(bts);
 	ms_set_ms_class(ms2, 12);
 	ms_set_egprs_ms_class(ms2, 13);
 	tbf2 = dl_tbf_alloc(bts, ms2, 0, false);
@@ -162,7 +162,7 @@ extern "C" void cleanup()
 	bts = gprs_pcu_get_bts_by_nr(the_pcu, 0);
 	talloc_free(bts);
 
-	/* FIXME: talloc report disabled, because bts_alloc_ms(bts, ) in prepare_bts_with_two_dl_tbf_subscr() causes leak */
+	/* FIXME: talloc report disabled, because ms_alloc(bts, ) in prepare_bts_with_two_dl_tbf_subscr() causes leak */
 	/* talloc_report_full(tall_pcu_ctx, stderr); */
 	talloc_free(the_pcu);
 	talloc_free(tall_pcu_ctx);

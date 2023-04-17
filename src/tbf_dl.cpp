@@ -216,7 +216,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	}
 
 	if (!ms)
-		ms = bts_alloc_ms(bts);
+		ms = ms_alloc(bts);
 	if (imsi)
 		ms_set_imsi(ms, imsi);
 	ms_confirm_tlli(ms, tlli);

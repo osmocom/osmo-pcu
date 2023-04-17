@@ -63,7 +63,8 @@ static int64_t now_msec()
 
 void gprs_default_cb_ms_idle(struct GprsMs *ms)
 {
-	talloc_free(ms);
+	if (ms_is_idle(ms))
+		talloc_free(ms);
 }
 
 void gprs_default_cb_ms_active(struct GprsMs *ms)
@@ -111,6 +112,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	talloc_set_destructor(ms, ms_talloc_destructor);
 
 	llist_add(&ms->list, &bts->ms_list);
+	bts_stat_item_inc(bts, STAT_MS_PRESENT);
 
 	ms->bts = bts;
 	ms->cb = gprs_default_cb;
@@ -147,6 +149,8 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	if (!ms->ctrs)
 		goto free_ret;
 
+	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
+
 	return ms;
 free_ret:
 	talloc_free(ms);
@@ -159,6 +163,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Destroying MS object\n");
 
+	bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
 	llist_del(&ms->list);
 
 	ms_set_reserved_slots(ms, NULL, 0, 0);
