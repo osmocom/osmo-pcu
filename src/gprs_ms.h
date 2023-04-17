@@ -101,7 +101,7 @@ struct GprsMs {
 	struct nacc_fsm_ctx *nacc;
 };
 
-struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli);
+struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts);
 
 struct gprs_rlcmac_pdch *ms_first_common_ts(const struct GprsMs *ms);
 void ms_set_first_common_ts(struct GprsMs *ms, struct gprs_rlcmac_pdch *pdch);

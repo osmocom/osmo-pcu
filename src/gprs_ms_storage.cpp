@@ -100,7 +100,7 @@ GprsMs *GprsMsStorage::create_ms()
 {
 	GprsMs *ms;
 
-	ms = ms_alloc(m_bts, GSM_RESERVED_TMSI);
+	ms = ms_alloc(m_bts);
 
 	ms_set_callback(ms, &ms_storage_ms_cb);
 	llist_add(&ms->list, &m_list);

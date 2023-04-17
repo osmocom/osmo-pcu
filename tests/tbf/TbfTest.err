@@ -3,7 +3,7 @@
 === start test_tbf_tlli_update ===
 PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=3) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** DL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating DL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -53,7 +53,7 @@ MS(TLLI-0x00004232:TA-6:MSCLS-0-0:DL) Detaching TBF: TBF(UL:TFI-0-0-0:STATE-NEW:
 MS(TLLI-0x00004232:TA-6:MSCLS-0-0) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0x00004232)
 === start test_tbf_final_ack ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
 MS(TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
@@ -167,7 +167,7 @@ MS(TLLI-0xffeeddcc:TA-0:MSCLS-45-0) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_final_ack ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
 MS(TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
@@ -281,7 +281,7 @@ MS(TLLI-0xffeeddcc:TA-0:MSCLS-45-0) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
 MS(TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
@@ -552,7 +552,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){WAIT_ACK}: Deallocated
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
 MS(TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
@@ -584,7 +584,7 @@ TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS) The TBF has been confirmed on the PACCH, cha
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS) unset ass. type CCCH [prev CCCH:1, PACCH:0]
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){ASSIGN}: state_chg to FLOW
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=1
 MS(TA-220:MSCLS-45-0) ********** DL-TBF starts here **********
@@ -643,7 +643,7 @@ DL_ASS_TBF(DL:TFI-0-0-1:STATE-FLOW:GPRS:IMSI-001001000000002:TLLI-0xf1000002){SE
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000000'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
@@ -673,7 +673,7 @@ TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000000:TLLI-0xc0000000) set ass. t
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000000:TLLI-0xc0000000){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000000:TLLI-0xc0000000) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
@@ -703,7 +703,7 @@ TBF(DL:TFI-0-0-1:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xc0000001) set ass. t
 DL_TBF(DL:TFI-0-0-1:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xc0000001){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-1:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xc0000001) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000002'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
@@ -733,7 +733,7 @@ TBF(DL:TFI-0-0-2:STATE-NEW:GPRS:IMSI-001001000000002:TLLI-0xc0000002) set ass. t
 DL_TBF(DL:TFI-0-0-2:STATE-NEW:GPRS:IMSI-001001000000002:TLLI-0xc0000002){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-2:STATE-ASSIGN:GPRS:IMSI-001001000000002:TLLI-0xc0000002) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000003'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
@@ -763,7 +763,7 @@ TBF(DL:TFI-0-0-3:STATE-NEW:GPRS:IMSI-001001000000003:TLLI-0xc0000003) set ass. t
 DL_TBF(DL:TFI-0-0-3:STATE-NEW:GPRS:IMSI-001001000000003:TLLI-0xc0000003){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-3:STATE-ASSIGN:GPRS:IMSI-001001000000003:TLLI-0xc0000003) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000004'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
@@ -793,7 +793,7 @@ TBF(DL:TFI-0-0-4:STATE-NEW:GPRS:IMSI-001001000000004:TLLI-0xc0000004) set ass. t
 DL_TBF(DL:TFI-0-0-4:STATE-NEW:GPRS:IMSI-001001000000004:TLLI-0xc0000004){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-4:STATE-ASSIGN:GPRS:IMSI-001001000000004:TLLI-0xc0000004) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000005'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
@@ -823,7 +823,7 @@ TBF(DL:TFI-0-0-5:STATE-NEW:GPRS:IMSI-001001000000005:TLLI-0xc0000005) set ass. t
 DL_TBF(DL:TFI-0-0-5:STATE-NEW:GPRS:IMSI-001001000000005:TLLI-0xc0000005){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-5:STATE-ASSIGN:GPRS:IMSI-001001000000005:TLLI-0xc0000005) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000006'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
@@ -853,7 +853,7 @@ TBF(DL:TFI-0-0-6:STATE-NEW:GPRS:IMSI-001001000000006:TLLI-0xc0000006) set ass. t
 DL_TBF(DL:TFI-0-0-6:STATE-NEW:GPRS:IMSI-001001000000006:TLLI-0xc0000006){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-6:STATE-ASSIGN:GPRS:IMSI-001001000000006:TLLI-0xc0000006) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000007'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
@@ -883,7 +883,7 @@ TBF(DL:TFI-0-0-7:STATE-NEW:GPRS:IMSI-001001000000007:TLLI-0xc0000007) set ass. t
 DL_TBF(DL:TFI-0-0-7:STATE-NEW:GPRS:IMSI-001001000000007:TLLI-0xc0000007){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-7:STATE-ASSIGN:GPRS:IMSI-001001000000007:TLLI-0xc0000007) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000008'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
@@ -913,7 +913,7 @@ TBF(DL:TFI-0-0-8:STATE-NEW:GPRS:IMSI-001001000000008:TLLI-0xc0000008) set ass. t
 DL_TBF(DL:TFI-0-0-8:STATE-NEW:GPRS:IMSI-001001000000008:TLLI-0xc0000008){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-8:STATE-ASSIGN:GPRS:IMSI-001001000000008:TLLI-0xc0000008) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000009'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
@@ -943,7 +943,7 @@ TBF(DL:TFI-0-0-9:STATE-NEW:GPRS:IMSI-001001000000009:TLLI-0xc0000009) set ass. t
 DL_TBF(DL:TFI-0-0-9:STATE-NEW:GPRS:IMSI-001001000000009:TLLI-0xc0000009){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-9:STATE-ASSIGN:GPRS:IMSI-001001000000009:TLLI-0xc0000009) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000010'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
@@ -973,7 +973,7 @@ TBF(DL:TFI-0-0-10:STATE-NEW:GPRS:IMSI-001001000000010:TLLI-0xc000000a) set ass. 
 DL_TBF(DL:TFI-0-0-10:STATE-NEW:GPRS:IMSI-001001000000010:TLLI-0xc000000a){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-10:STATE-ASSIGN:GPRS:IMSI-001001000000010:TLLI-0xc000000a) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000011'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
@@ -1003,7 +1003,7 @@ TBF(DL:TFI-0-0-11:STATE-NEW:GPRS:IMSI-001001000000011:TLLI-0xc000000b) set ass. 
 DL_TBF(DL:TFI-0-0-11:STATE-NEW:GPRS:IMSI-001001000000011:TLLI-0xc000000b){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-11:STATE-ASSIGN:GPRS:IMSI-001001000000011:TLLI-0xc000000b) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000012'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
@@ -1033,7 +1033,7 @@ TBF(DL:TFI-0-0-12:STATE-NEW:GPRS:IMSI-001001000000012:TLLI-0xc000000c) set ass. 
 DL_TBF(DL:TFI-0-0-12:STATE-NEW:GPRS:IMSI-001001000000012:TLLI-0xc000000c){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-12:STATE-ASSIGN:GPRS:IMSI-001001000000012:TLLI-0xc000000c) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000013'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
@@ -1063,7 +1063,7 @@ TBF(DL:TFI-0-0-13:STATE-NEW:GPRS:IMSI-001001000000013:TLLI-0xc000000d) set ass. 
 DL_TBF(DL:TFI-0-0-13:STATE-NEW:GPRS:IMSI-001001000000013:TLLI-0xc000000d){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-13:STATE-ASSIGN:GPRS:IMSI-001001000000013:TLLI-0xc000000d) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000014'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
@@ -1093,7 +1093,7 @@ TBF(DL:TFI-0-0-14:STATE-NEW:GPRS:IMSI-001001000000014:TLLI-0xc000000e) set ass. 
 DL_TBF(DL:TFI-0-0-14:STATE-NEW:GPRS:IMSI-001001000000014:TLLI-0xc000000e){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-14:STATE-ASSIGN:GPRS:IMSI-001001000000014:TLLI-0xc000000e) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000015'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
@@ -1123,7 +1123,7 @@ TBF(DL:TFI-0-0-15:STATE-NEW:GPRS:IMSI-001001000000015:TLLI-0xc000000f) set ass. 
 DL_TBF(DL:TFI-0-0-15:STATE-NEW:GPRS:IMSI-001001000000015:TLLI-0xc000000f){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-15:STATE-ASSIGN:GPRS:IMSI-001001000000015:TLLI-0xc000000f) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000016'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
@@ -1153,7 +1153,7 @@ TBF(DL:TFI-0-0-16:STATE-NEW:GPRS:IMSI-001001000000016:TLLI-0xc0000010) set ass. 
 DL_TBF(DL:TFI-0-0-16:STATE-NEW:GPRS:IMSI-001001000000016:TLLI-0xc0000010){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-16:STATE-ASSIGN:GPRS:IMSI-001001000000016:TLLI-0xc0000010) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000017'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
@@ -1183,7 +1183,7 @@ TBF(DL:TFI-0-0-17:STATE-NEW:GPRS:IMSI-001001000000017:TLLI-0xc0000011) set ass. 
 DL_TBF(DL:TFI-0-0-17:STATE-NEW:GPRS:IMSI-001001000000017:TLLI-0xc0000011){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-17:STATE-ASSIGN:GPRS:IMSI-001001000000017:TLLI-0xc0000011) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000018'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
@@ -1213,7 +1213,7 @@ TBF(DL:TFI-0-0-18:STATE-NEW:GPRS:IMSI-001001000000018:TLLI-0xc0000012) set ass. 
 DL_TBF(DL:TFI-0-0-18:STATE-NEW:GPRS:IMSI-001001000000018:TLLI-0xc0000012){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-18:STATE-ASSIGN:GPRS:IMSI-001001000000018:TLLI-0xc0000012) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000019'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
@@ -1243,7 +1243,7 @@ TBF(DL:TFI-0-0-19:STATE-NEW:GPRS:IMSI-001001000000019:TLLI-0xc0000013) set ass. 
 DL_TBF(DL:TFI-0-0-19:STATE-NEW:GPRS:IMSI-001001000000019:TLLI-0xc0000013){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-19:STATE-ASSIGN:GPRS:IMSI-001001000000019:TLLI-0xc0000013) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000020'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
@@ -1273,7 +1273,7 @@ TBF(DL:TFI-0-0-20:STATE-NEW:GPRS:IMSI-001001000000020:TLLI-0xc0000014) set ass. 
 DL_TBF(DL:TFI-0-0-20:STATE-NEW:GPRS:IMSI-001001000000020:TLLI-0xc0000014){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-20:STATE-ASSIGN:GPRS:IMSI-001001000000020:TLLI-0xc0000014) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000021'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
@@ -1303,7 +1303,7 @@ TBF(DL:TFI-0-0-21:STATE-NEW:GPRS:IMSI-001001000000021:TLLI-0xc0000015) set ass. 
 DL_TBF(DL:TFI-0-0-21:STATE-NEW:GPRS:IMSI-001001000000021:TLLI-0xc0000015){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-21:STATE-ASSIGN:GPRS:IMSI-001001000000021:TLLI-0xc0000015) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000022'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
@@ -1333,7 +1333,7 @@ TBF(DL:TFI-0-0-22:STATE-NEW:GPRS:IMSI-001001000000022:TLLI-0xc0000016) set ass. 
 DL_TBF(DL:TFI-0-0-22:STATE-NEW:GPRS:IMSI-001001000000022:TLLI-0xc0000016){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-22:STATE-ASSIGN:GPRS:IMSI-001001000000022:TLLI-0xc0000016) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000023'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
@@ -1363,7 +1363,7 @@ TBF(DL:TFI-0-0-23:STATE-NEW:GPRS:IMSI-001001000000023:TLLI-0xc0000017) set ass. 
 DL_TBF(DL:TFI-0-0-23:STATE-NEW:GPRS:IMSI-001001000000023:TLLI-0xc0000017){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-23:STATE-ASSIGN:GPRS:IMSI-001001000000023:TLLI-0xc0000017) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000024'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
@@ -1393,7 +1393,7 @@ TBF(DL:TFI-0-0-24:STATE-NEW:GPRS:IMSI-001001000000024:TLLI-0xc0000018) set ass. 
 DL_TBF(DL:TFI-0-0-24:STATE-NEW:GPRS:IMSI-001001000000024:TLLI-0xc0000018){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-24:STATE-ASSIGN:GPRS:IMSI-001001000000024:TLLI-0xc0000018) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000025'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
@@ -1423,7 +1423,7 @@ TBF(DL:TFI-0-0-25:STATE-NEW:GPRS:IMSI-001001000000025:TLLI-0xc0000019) set ass. 
 DL_TBF(DL:TFI-0-0-25:STATE-NEW:GPRS:IMSI-001001000000025:TLLI-0xc0000019){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-25:STATE-ASSIGN:GPRS:IMSI-001001000000025:TLLI-0xc0000019) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000026'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
@@ -1453,7 +1453,7 @@ TBF(DL:TFI-0-0-26:STATE-NEW:GPRS:IMSI-001001000000026:TLLI-0xc000001a) set ass. 
 DL_TBF(DL:TFI-0-0-26:STATE-NEW:GPRS:IMSI-001001000000026:TLLI-0xc000001a){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-26:STATE-ASSIGN:GPRS:IMSI-001001000000026:TLLI-0xc000001a) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000027'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
@@ -1483,7 +1483,7 @@ TBF(DL:TFI-0-0-27:STATE-NEW:GPRS:IMSI-001001000000027:TLLI-0xc000001b) set ass. 
 DL_TBF(DL:TFI-0-0-27:STATE-NEW:GPRS:IMSI-001001000000027:TLLI-0xc000001b){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-27:STATE-ASSIGN:GPRS:IMSI-001001000000027:TLLI-0xc000001b) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000028'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
@@ -1513,7 +1513,7 @@ TBF(DL:TFI-0-0-28:STATE-NEW:GPRS:IMSI-001001000000028:TLLI-0xc000001c) set ass. 
 DL_TBF(DL:TFI-0-0-28:STATE-NEW:GPRS:IMSI-001001000000028:TLLI-0xc000001c){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-28:STATE-ASSIGN:GPRS:IMSI-001001000000028:TLLI-0xc000001c) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000029'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
@@ -1543,7 +1543,7 @@ TBF(DL:TFI-0-0-29:STATE-NEW:GPRS:IMSI-001001000000029:TLLI-0xc000001d) set ass. 
 DL_TBF(DL:TFI-0-0-29:STATE-NEW:GPRS:IMSI-001001000000029:TLLI-0xc000001d){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-29:STATE-ASSIGN:GPRS:IMSI-001001000000029:TLLI-0xc000001d) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000030'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
@@ -1573,7 +1573,7 @@ TBF(DL:TFI-0-0-30:STATE-NEW:GPRS:IMSI-001001000000030:TLLI-0xc000001e) set ass. 
 DL_TBF(DL:TFI-0-0-30:STATE-NEW:GPRS:IMSI-001001000000030:TLLI-0xc000001e){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-30:STATE-ASSIGN:GPRS:IMSI-001001000000030:TLLI-0xc000001e) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000031'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
@@ -1603,7 +1603,7 @@ TBF(DL:TFI-0-0-31:STATE-NEW:GPRS:IMSI-001001000000031:TLLI-0xc000001f) set ass. 
 DL_TBF(DL:TFI-0-0-31:STATE-NEW:GPRS:IMSI-001001000000031:TLLI-0xc000001f){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-31:STATE-ASSIGN:GPRS:IMSI-001001000000031:TLLI-0xc000001f) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000032'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confirmed
@@ -1688,7 +1688,7 @@ MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0:DL) Destroying MS obje
 MS(IMSI-001001000000000:TLLI-0xc0000000:TA-220:MSCLS-45-0) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS:IMSI-001001000000000:TLLI-0xc0000000)
 === start test_tbf_dl_llc_loss ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000123456'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
@@ -1806,7 +1806,7 @@ PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -1868,7 +1868,7 @@ PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -1985,7 +1985,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -2090,7 +2090,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -2263,7 +2263,7 @@ Found first unallocated TRX=0 TFI=1
 Detected FN jump! 2654292 -> 2654348 (expected 2654296, delta 56)
 PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf5667788, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654348 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
@@ -2394,7 +2394,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -2609,7 +2609,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -2713,7 +2713,7 @@ DL_ASS_TBF(UL:TFI-0-0-0:STATE-FLOW:GPRS:IMSI-0011223344:TLLI-0xf1223344){SEND_AS
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -2788,7 +2788,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -3873,7 +3873,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0) Detaching TBF: TBF(DL:TFI-0-0
 === end test_tbf_dl_reuse ===
 === start test_tbf_gprs_egprs ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001123456789'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
@@ -3911,7 +3911,7 @@ PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=3) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=5) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 MS(TA-220:MSCLS-12-0) ********** DL-TBF starts here **********
 MS(TA-220:MSCLS-12-0) Allocating DL TBF
@@ -3953,7 +3953,7 @@ MS(TA-220:MSCLS-12-0) Destroying MS object
 DL_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){NEW}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:GPRS){NONE}: Deallocated
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 12
 MS(TA-220:MSCLS-12-12) Enabled EGPRS, mode EGPRS
@@ -4011,7 +4011,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -4124,7 +4124,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -4352,7 +4352,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-1) Detaching TBF: TBF(DL:TFI-0-0
 === start test_tbf_egprs_dl ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Testing MCS-1
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -4663,7 +4663,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-2
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -4923,7 +4923,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-3
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -5143,7 +5143,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-4
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -5347,7 +5347,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-5
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -5535,7 +5535,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-6
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -5699,7 +5699,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-7
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -5872,7 +5872,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-8
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6036,7 +6036,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing MCS-9
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6192,7 +6192,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 === start test_tbf_egprs_retx_dl ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Testing retx for MCS 6 - 6
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6263,7 +6263,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 1 - 9
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6333,7 +6333,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 2 - 8
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6403,7 +6403,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 5 - 7
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6498,7 +6498,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 6 - 9
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6592,7 +6592,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 7 - 5
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6686,7 +6686,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 9 - 6
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6783,7 +6783,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 === start test_tbf_egprs_spb_dl ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Testing retx for MCS 6 to reseg_mcs 3
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6860,7 +6860,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 5 to reseg_mcs 2
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -6937,7 +6937,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 4 to reseg_mcs 1
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -7014,7 +7014,7 @@ DL_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){NONE}: Deallocated
 DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 Testing retx for MCS 6 to reseg_mcs 3
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -7109,7 +7109,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -7239,7 +7239,7 @@ PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=3) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=5) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -7315,7 +7315,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -7431,7 +7431,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-1) Detaching TBF: TBF(DL:TFI-0-0
 === end test_tbf_li_decoding ===
 === start test_tbf_epdan_out_of_rx_window ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -7486,7 +7486,7 @@ DL_ASS_TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS){SEND_ASS}: Deallocated
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7514,7 +7514,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7542,7 +7542,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7570,7 +7570,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7598,7 +7598,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7626,7 +7626,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7654,7 +7654,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7682,7 +7682,7 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
 MS requests single TS uplink transmission (one phase packet access)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 MS(TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -7742,7 +7742,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654167 -> 2654270 (expected 2654171, delta 103)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
@@ -9005,7 +9005,7 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-1) Detaching TBF: TBF(DL:TFI-0-0
 === end test_tbf_egprs_two_phase_puan ===
 === start test_packet_access_rej_epdan ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-11-11) Enabled EGPRS, mode EGPRS
@@ -9096,7 +9096,7 @@ Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Detected FN jump! 2654167 -> 52 (expected 2654171, delta 61533)
 PDCH(bts=0,trx=0,ts=7) FN=52 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=52 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=52 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddcc, TA 220 -> 7
@@ -9143,7 +9143,7 @@ UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xffeeddcc){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc)
 PDCH(bts=0,trx=0,ts=7) FN=56 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=56 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcd, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=56 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddcd, TA 220 -> 7
@@ -9197,7 +9197,7 @@ UL_ASS_TBF(UL:TFI-0-0-1:STATE-NEW:EGPRS:TLLI-0xffeeddcd){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcd)
 PDCH(bts=0,trx=0,ts=7) FN=60 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=60 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddce, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=60 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddce, TA 220 -> 7
@@ -9251,7 +9251,7 @@ UL_ASS_TBF(UL:TFI-0-0-2:STATE-NEW:EGPRS:TLLI-0xffeeddce){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-2:STATE-ASSIGN:EGPRS:TLLI-0xffeeddce)
 PDCH(bts=0,trx=0,ts=7) FN=65 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=65 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcf, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=65 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddcf, TA 220 -> 7
@@ -9305,7 +9305,7 @@ UL_ASS_TBF(UL:TFI-0-0-3:STATE-NEW:EGPRS:TLLI-0xffeeddcf){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-3:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcf)
 PDCH(bts=0,trx=0,ts=7) FN=69 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=69 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd0, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=69 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddd0, TA 220 -> 7
@@ -9359,7 +9359,7 @@ UL_ASS_TBF(UL:TFI-0-0-4:STATE-NEW:EGPRS:TLLI-0xffeeddd0){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-4:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd0)
 PDCH(bts=0,trx=0,ts=7) FN=73 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=73 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd1, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=73 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddd1, TA 220 -> 7
@@ -9413,7 +9413,7 @@ UL_ASS_TBF(UL:TFI-0-0-5:STATE-NEW:EGPRS:TLLI-0xffeeddd1){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-5:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd1)
 PDCH(bts=0,trx=0,ts=7) FN=78 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=78 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd2, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=78 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddd2, TA 220 -> 7
@@ -9467,7 +9467,7 @@ UL_ASS_TBF(UL:TFI-0-0-6:STATE-NEW:EGPRS:TLLI-0xffeeddd2){SEND_ASS}: state_chg to
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2)
 PDCH(bts=0,trx=0,ts=7) FN=82 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=82 ------------------------- RX : Uplink Control Block -------------------------
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd3, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=82 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xffeeddd3, TA 220 -> 7
@@ -9544,7 +9544,7 @@ MS(TLLI-0xffeeddcc:TA-7:MSCLS-11-11) Detaching TBF: TBF(UL:TFI-0-0-0:STATE-ASSIG
 === end test_packet_access_rej_prr ===
 === start test_packet_access_rej_prr_no_other_tbfs ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -9578,7 +9578,7 @@ PDCH(bts=0,trx=0,ts=1) PDCH state: enabled => disabled
 PDCH(bts=0,trx=1,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=1,ts=5) PDCH state: disabled => enabled
 PDCH(bts=0,trx=1,ts=6) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xa3c2f953, partly confirmed
@@ -9617,7 +9617,7 @@ TBF(DL:TFI-0-1-0:STATE-ASSIGN:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) TX: STA
 PDCH(bts=0,trx=0,ts=1) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=3) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xecc1f953, not yet confirmed
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) Allocating UL TBF

@@ -86,7 +86,8 @@ static void test_ms_state()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts, tlli);
+	ms = ms_alloc(bts);
+	ms_set_tlli(ms, tlli);
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = alloc_dl_tbf(bts, ms);
@@ -148,7 +149,8 @@ static void test_ms_callback()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts, tlli);
+	ms = ms_alloc(bts);
+	ms_set_tlli(ms, tlli);
 	ms_set_callback(ms, &ms_cb);
 
 	OSMO_ASSERT(ms_is_idle(ms));
@@ -219,7 +221,8 @@ static void test_ms_replace_tbf()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts, tlli);
+	ms = ms_alloc(bts);
+	ms_confirm_tlli(ms, tlli);
 	ms_set_callback(ms, &ms_replace_tbf_cb);
 
 	OSMO_ASSERT(ms_is_idle(ms));
@@ -290,7 +293,7 @@ static void test_ms_change_tlli()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts, start_tlli);
+	ms = ms_alloc(bts);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -298,12 +301,10 @@ static void test_ms_change_tlli()
 	ms_set_tlli(ms, new_ms_tlli);
 	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
 	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
-	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
 	ms_confirm_tlli(ms, new_ms_tlli);
 	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
 	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
-	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
 	/* MS announces TLLI, SGSN uses it later */
 	ms_set_tlli(ms, start_tlli);
@@ -474,7 +475,8 @@ static void test_ms_timeout()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts, tlli);
+	ms = ms_alloc(bts);
+	ms_set_tlli(ms, tlli);
 	ms_set_callback(ms, &ms_cb);
 	ms_set_timeout(ms, 1);
 
@@ -532,7 +534,8 @@ static void test_ms_cs_selection()
 	the_pcu->vty.cs_downgrade_threshold = 0;
 	the_pcu->vty.cs_adj_lower_limit = 0;
 
-	ms = ms_alloc(bts, tlli);
+	ms = ms_alloc(bts);
+	ms_confirm_tlli(ms, tlli);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -571,14 +574,16 @@ static void test_ms_mcs_mode()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms1 = ms_alloc(bts, tlli);
+	ms1 = ms_alloc(bts);
+	ms_confirm_tlli(ms1, tlli);
 	dump_ms(ms1, "1: no BTS defaults  ");
 
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
 	the_pcu->vty.cs_downgrade_threshold = 0;
 
-	ms2 = ms_alloc(bts, tlli + 1);
+	ms2 = ms_alloc(bts);
+	ms_confirm_tlli(ms2, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
 
 	dl_tbf = alloc_dl_tbf(bts, ms2);

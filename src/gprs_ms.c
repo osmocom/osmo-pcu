@@ -104,7 +104,7 @@ static void ms_llc_timer_cb(void *_ms)
 }
 
 static int ms_talloc_destructor(struct GprsMs *ms);
-struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
+struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 {
 	struct GprsMs *ms = talloc_zero(tall_pcu_ctx, struct GprsMs);
 	OSMO_ASSERT(bts);
@@ -113,7 +113,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 
 	ms->bts = bts;
 	ms->cb = gprs_default_cb;
-	ms->tlli = tlli;
+	ms->tlli = GSM_RESERVED_TMSI;
 	ms->new_ul_tlli = GSM_RESERVED_TMSI;
 	ms->new_dl_tlli = GSM_RESERVED_TMSI;
 	ms->ta = GSM48_TA_INVALID;
@@ -125,7 +125,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
 
-	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object\n");
 
 	ms->imsi[0] = '\0';
 	osmo_timer_setup(&ms->timer, ms_release_timer_cb, NULL);

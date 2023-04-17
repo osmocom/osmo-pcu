@@ -15,7 +15,8 @@ PDCH(bts=0,trx=0,ts=0) Reserving FN 91 for type POLL
 PDCH(bts=0,trx=0,ts=0) Trying to release unregistered SBA (FN=78, TA=0)
 PDCH(bts=0,trx=0,ts=0) Timeout for registered SBA (FN=72, TA=0)
 PDCH(bts=0,trx=0,ts=0) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0x12345678
+Creating MS object
+The MS object cannot fully confirm an unexpected TLLI: 0x12345678, partly confirmed
 MS(TLLI-0x12345678:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0x12345678)
 PDCH(bts=0,trx=0,ts=0) Reserving FN 2715608 for type POLL
 PDCH(bts=0,trx=0,ts=0) Reserving FN 2715613 for type POLL

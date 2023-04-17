@@ -14,7 +14,7 @@ PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=5) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=6) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 10
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TA-220:MSCLS-10-11) Enabled EGPRS, mode EGPRS
@@ -25,7 +25,7 @@ PDCH(bts=0,trx=0,ts=6) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs
 PDCH(bts=0,trx=0,ts=7) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TA-220:MSCLS-10-11) Attaching DL TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
 ws(64)
-Creating MS object, TLLI = 0xffffffff
+Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 13
 MS(TA-220:MSCLS-12-13) Enabled EGPRS, mode EGPRS
