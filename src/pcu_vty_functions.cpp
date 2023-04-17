@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include "pcu_vty_functions.h"
 #include "bts.h"
-#include "gprs_ms_storage.h"
 #include "gprs_ms.h"
 #include "cxx_linuxlist.h"
 #include <llc.h>
@@ -229,8 +228,8 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts)
 {
 	struct llist_head *tmp;
 
-	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
-		GprsMs *ms_iter = llist_entry(tmp, typeof(*ms_iter), list);
+	llist_for_each(tmp, &bts->ms_list) {
+		struct GprsMs *ms_iter = llist_entry(tmp, typeof(*ms_iter), list);
 		show_ms(vty, ms_iter);
 	}
 
@@ -240,7 +239,7 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts)
 int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	uint32_t tlli)
 {
-	GprsMs *ms = bts_ms_store(bts)->get_ms(tlli);
+	struct GprsMs *ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (!ms) {
 		vty_out(vty, "Unknown TLLI %08x.%s", tlli, VTY_NEWLINE);
 		return CMD_WARNING;
@@ -252,7 +251,7 @@ int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts,
 int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	const char *imsi)
 {
-	GprsMs *ms = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
+	struct GprsMs *ms = bts_get_ms_by_imsi(bts, imsi);
 	if (!ms) {
 		vty_out(vty, "Unknown IMSI '%s'.%s", imsi, VTY_NEWLINE);
 		return CMD_WARNING;

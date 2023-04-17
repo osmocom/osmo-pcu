@@ -27,7 +27,6 @@
 #include <decoding.h>
 #include <encoding.h>
 #include <gprs_ms.h>
-#include <gprs_ms_storage.h>
 #include <llc.h>
 #include "pcu_utils.h"
 
@@ -199,12 +198,12 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, *ms_old;
 
 	/* check for existing TBF */
-	ms = bts_ms_store(bts)->get_ms(tlli, tlli_old, imsi);
+	ms = bts_get_ms(bts, tlli, tlli_old, imsi);
 
 	/* If we got MS by TLLI above let's see if we already have another MS
 	 * object identified by IMSI and merge them */
 	if (ms && !ms_imsi_is_valid(ms) && imsi) {
-		ms_old = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
+		ms_old = bts_get_ms_by_imsi(bts, imsi);
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
 			 * objects for the same MS */

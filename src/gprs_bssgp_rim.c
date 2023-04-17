@@ -152,7 +152,7 @@ static int handle_ran_info_response_nacc(const struct bssgp_ran_inf_app_cont_nac
 	}
 	entry = si_cache_add(bts->pcu->si_cache, &nacc->reprt_cell, &val);
 
-	llist_for_each(tmp, bts_ms_list(bts)) {
+	llist_for_each(tmp, &bts->ms_list) {
 		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (ms->nacc && nacc_fsm_is_waiting_si_resolution(ms->nacc, &nacc->reprt_cell))
 			osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_SI, entry);

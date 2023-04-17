@@ -10,9 +10,7 @@ Copyright: 2009-2015 Holger Hans Peter Freyther <zecke@selfish.org>
            2015 by Yves Godin <support@nuranwireless.com>
 License:   AGPL-3.0+
 
-Files:     src/gprs_ms_storage.h
-           src/gprs_ms_storage.cpp
-           src/gprs_ms.h
+Files:     src/gprs_ms.h
            src/gprs_coding_scheme.cpp
            src/gprs_coding_scheme.h
            src/coding_scheme.c

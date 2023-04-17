@@ -24,7 +24,6 @@
 #include "pcu_utils.h"
 #include "nacc_fsm.h"
 #include "tbf_ul_ack_fsm.h"
-#include "gprs_ms_storage.h"
 
 #include <time.h>
 
@@ -430,7 +429,7 @@ void ms_update_announced_tlli(struct GprsMs *ms, uint32_t tlli)
 	 * MS object that belongs to that TLLI and if yes make sure one of them
 	 * gets deleted. */
 	if (!ms_check_tlli(ms, tlli))
-		old_ms = ms_store_get_ms(bts_ms_store(ms->bts), tlli, GSM_RESERVED_TMSI, NULL);
+		old_ms = bts_get_ms_by_tlli(ms->bts, tlli, GSM_RESERVED_TMSI);
 
 	ms_set_tlli(ms, tlli);
 

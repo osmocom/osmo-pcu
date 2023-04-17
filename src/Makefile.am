@@ -54,7 +54,6 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac_sched.cpp \
 	gprs_rlcmac_meas.cpp \
 	gprs_ms.c \
-	gprs_ms_storage.cpp \
 	gprs_pcu.c \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
@@ -100,7 +99,6 @@ noinst_HEADERS = \
 	gprs_bssgp_rim.h \
 	gprs_rlcmac.h \
 	gprs_ms.h \
-	gprs_ms_storage.h \
 	gprs_pcu.h \
 	pcu_l1_if.h \
 	pcu_l1_if_phy.h \

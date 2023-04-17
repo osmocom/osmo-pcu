@@ -30,7 +30,6 @@
 #include <gprs_debug.h>
 #include <cxx_linuxlist.h>
 #include <pdch.h>
-#include <gprs_ms_storage.h>
 #include <sba.h>
 #include <bts_pch_timer.h>
 
@@ -241,10 +240,14 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 
 static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 {
-	/* this can cause counter updates and must not be left to the
-	 * m_ms_store's destructor */
-	bts->ms_store->cleanup();
-	delete bts->ms_store;
+	struct GprsMs *ms;
+	while ((ms = llist_first_entry_or_null(&bts->ms_list, struct GprsMs, list))) {
+		ms_set_callback(ms, NULL);
+		ms_set_timeout(ms, 0);
+		llist_del(&ms->list);
+		bts_stat_item_dec(bts, STAT_MS_PRESENT);
+		talloc_free(ms);
+	}
 
 	gprs_bssgp_destroy(bts);
 
@@ -281,8 +284,6 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 
 	bts->pcu = pcu;
 	bts->nr = bts_nr;
-
-	bts->ms_store = new GprsMsStorage(bts);
 
 	bts->cur_fn = FN_UNSET;
 	bts->cur_blk_fn = -1;
@@ -332,6 +333,7 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	llist_add_tail(&bts->list, &pcu->bts_list);
 
 	INIT_LLIST_HEAD(&bts->pch_timer);
+	INIT_LLIST_HEAD(&bts->ms_list);
 
 	return bts;
 }
@@ -460,7 +462,7 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req,
 	 * Don't mark, if TBF uses a different slot that is already marked. */
 	memset(slot_mask, 0, sizeof(slot_mask));
 
-	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
+	llist_for_each(tmp, &bts->ms_list) {
 		ms = llist_entry(tmp, typeof(*ms), list);
 		struct gprs_rlcmac_tbf *tbfs[] = { ms->ul_tbf, ms->dl_tbf };
 		for (l = 0; l < ARRAY_SIZE(tbfs); l++) {
@@ -1197,29 +1199,74 @@ bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts* bts, CodingScheme cs)
 	}
 }
 
+static void bts_ms_idle_cb(struct GprsMs *ms)
+{
+	llist_del(&ms->list);
+	bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
+	if (ms_is_idle(ms))
+		talloc_free(ms);
+}
+
+static void bts_ms_active_cb(struct GprsMs *ms)
+{
+	/* Nothing to do */
+}
+
 GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts)
 {
-	GprsMs *ms;
-	ms = bts_ms_store(bts)->create_ms();
+	struct GprsMs *ms;
 
+	static struct gpr_ms_callback bts_ms_cb = {
+		.ms_idle = bts_ms_idle_cb,
+		.ms_active = bts_ms_active_cb,
+	};
+
+	ms = ms_alloc(bts);
+
+	ms_set_callback(ms, &bts_ms_cb);
 	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
+	llist_add(&ms->list, &bts->ms_list);
 
+	bts_stat_item_inc(bts, STAT_MS_PRESENT);
 	return ms;
 }
 
-struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts)
+struct GprsMs *bts_get_ms(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli,
+			  const char *imsi)
 {
-	return bts->ms_store;
+	struct llist_head *tmp;
+
+	if (tlli != GSM_RESERVED_TMSI || old_tlli != GSM_RESERVED_TMSI) {
+		llist_for_each(tmp, &bts->ms_list) {
+			struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+			if (ms_check_tlli(ms, tlli))
+				return ms;
+			if (ms_check_tlli(ms, old_tlli))
+				return ms;
+		}
+	}
+
+	/* not found by TLLI */
+
+	if (imsi && imsi[0] != '\0') {
+		llist_for_each(tmp, &bts->ms_list) {
+			struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+			if (ms_imsi_is_valid(ms) && strcmp(imsi, ms_imsi(ms)) == 0)
+				return ms;
+		}
+	}
+
+	return NULL;
 }
 
 struct GprsMs *bts_get_ms_by_tlli(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli)
 {
-	return bts_ms_store(bts)->get_ms(tlli, old_tlli);
+	return bts_get_ms(bts, tlli, old_tlli, NULL);
 }
 
 struct GprsMs *bts_get_ms_by_imsi(const struct gprs_rlcmac_bts *bts, const char *imsi)
 {
-	return bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
+	return bts_get_ms(bts, GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 }
 
 /* update TA based on TA provided by PH-DATA-IND */
@@ -1425,11 +1472,6 @@ void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 	LOGP(DRLCMAC, LOGL_DEBUG, "New max MCS: DL=%u UL=%u\n", mcs_dl, mcs_ul);
 	bts_set_max_mcs_dl(bts, mcs_dl);
 	bts_set_max_mcs_ul(bts, mcs_ul);
-}
-
-const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts)
-{
-	return bts_ms_store(bts)->ms_list();
 }
 
 uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts)

@@ -24,7 +24,6 @@
 #include "tbf_ul.h"
 #include "gprs_debug.h"
 #include "gprs_ms.h"
-#include "gprs_ms_storage.h"
 #include "bts.h"
 
 extern "C" {
@@ -375,13 +374,13 @@ static void test_ms_change_tlli()
 	printf("=== end %s ===\n", __func__);
 }
 
-static GprsMs *prepare_ms(GprsMsStorage *st, uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
+static GprsMs *prepare_ms(struct gprs_rlcmac_bts *bts, uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
-	GprsMs *ms = st->get_ms(tlli);
+	GprsMs *ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (ms)
 		return ms;
 
-	ms = st->create_ms();
+	ms = bts_alloc_ms(bts);
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms_set_tlli(ms, tlli);
@@ -400,63 +399,62 @@ static void test_ms_storage()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms, *ms_tmp;
-	GprsMsStorage store(bts);
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = store.get_ms(tlli + 0);
+	ms = bts_get_ms_by_tlli(bts, tlli + 0, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
 
-	ms = prepare_ms(&store, tlli + 0, GPRS_RLCMAC_UL_TBF);
+	ms = prepare_ms(bts, tlli + 0, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 0);
 	ms_set_imsi(ms, imsi1);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi1) == 0);
 
-	ms_tmp = store.get_ms(tlli + 0);
+	ms_tmp = bts_get_ms_by_tlli(bts, tlli + 0, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 0);
 
-	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi1);
+	ms_tmp = bts_get_ms_by_imsi(bts, imsi1);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi1) == 0);
-	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi2);
+	ms_tmp = bts_get_ms_by_imsi(bts, imsi2);
 	OSMO_ASSERT(ms_tmp == NULL);
 
-	ms = prepare_ms(&store, tlli + 1, GPRS_RLCMAC_UL_TBF);
+	ms = prepare_ms(bts, tlli + 1, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 1);
 	ms_set_imsi(ms, imsi2);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi2) == 0);
 
-	ms_tmp = store.get_ms(tlli + 1);
+	ms_tmp = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 1);
 
-	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi1);
+	ms_tmp = bts_get_ms_by_imsi(bts, imsi1);
 	OSMO_ASSERT(ms_tmp != NULL);
 	OSMO_ASSERT(ms_tmp != ms);
-	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi2);
+	ms_tmp = bts_get_ms_by_imsi(bts, imsi2);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi2) == 0);
 
 	/* delete ms */
-	ms = store.get_ms(tlli + 0);
+	ms = bts_get_ms_by_tlli(bts, tlli + 0, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	ul_tbf = alloc_ul_tbf(bts, ms);
 	ms_attach_tbf(ms, ul_tbf);
 	ms_detach_tbf(ms, ul_tbf);
-	ms = store.get_ms(tlli + 0);
+	ms = bts_get_ms_by_tlli(bts, tlli + 0, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
-	ms = store.get_ms(tlli + 1);
+	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 
 	/* delete ms */
-	ms = store.get_ms(tlli + 1);
+	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
 	ms_attach_tbf(ms, ul_tbf);
 	ms_detach_tbf(ms, ul_tbf);
-	ms = store.get_ms(tlli + 1);
+	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
 
 	talloc_free(ul_tbf);
@@ -645,6 +643,8 @@ int main(int argc, char **argv)
 
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
+
+	osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S);
 
 	test_ms_state();
 	test_ms_callback();

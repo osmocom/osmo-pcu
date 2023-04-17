@@ -55,7 +55,7 @@ extern "C" {
 #include <pdch.h>
 #include <tbf_ul.h>
 #include <tbf_dl.h>
-#include <gprs_ms_storage.h>
+#include <gprs_ms.h>
 
 extern void *tall_pcu_ctx;
 
@@ -1094,7 +1094,7 @@ static int pcu_rx_susp_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_susp_r
 	LOGP(DL1IF, LOGL_INFO, "GPRS Suspend request received: TLLI=0x%08x RAI=%s\n",
 		susp_req->tlli, osmo_rai_name(&ra_id));
 
-	if ((ms = bts_ms_store(bts)->get_ms(susp_req->tlli))) {
+	if ((ms = bts_get_ms_by_tlli(bts, susp_req->tlli, GSM_RESERVED_TMSI))) {
 		/* We need to catch both pointers here since MS may become freed
 		   after first tbf_free(dl_tbf) if only DL TBF was available */
 		dl_tbf = ms_dl_tbf(ms);
@@ -1119,8 +1119,8 @@ static int pcu_rx_app_info_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_ap
 	     app_info_req->application_type, app_info_req->len);
 
 	bts->app_info_pending = 0;
-	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
-		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+	llist_for_each(tmp, &bts->ms_list) {
+		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (!ms_dl_tbf(ms))
 			continue;
 		bts->app_info_pending++;
@@ -1177,8 +1177,8 @@ static int pcu_rx_neigh_addr_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_
 		     NEIGH_CACHE_ENTRY_KEY_ARGS(&neigh_key), naddr_cnf->err_code);
 	}
 
-	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
-		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+	llist_for_each(tmp, &bts->ms_list) {
+		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (ms->nacc && nacc_fsm_is_waiting_addr_resolution(ms->nacc, &neigh_key))
 			osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_RAC_CI, cgi_ps_ptr);
 	}

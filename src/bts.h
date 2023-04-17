@@ -44,6 +44,10 @@ extern "C" {
 #include "tbf.h"
 #include "coding_scheme.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct GprsMs;
 struct gprs_rlcmac_bts;
 
@@ -64,9 +68,6 @@ struct gprs_rlcmac_trx {
 };
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 void bts_trx_init(struct gprs_rlcmac_trx *trx, struct gprs_rlcmac_bts *bts, uint8_t trx_no);
 void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
 void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
@@ -74,11 +75,6 @@ void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx);
 
 void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 		       uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
-#ifdef __cplusplus
-}
-#endif
-
-
 
 enum {
 	CTR_PDCH_ALL_ALLOCATED,
@@ -272,17 +268,13 @@ struct gprs_rlcmac_bts {
 	struct rate_ctr_group *ratectrs;
 	struct osmo_stat_item_group *statg;
 
-	struct GprsMsStorage *ms_store;
+	struct llist_head ms_list; /* list of struct GprsMs */
 
 	/* List of struct bts_pch_timer for active PCH pagings */
 	struct llist_head pch_timer;
 
 	struct osmo_time_cc all_allocated_pdch;
 };
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 struct paging_req_cs {
 	uint8_t chan_needed;
@@ -329,8 +321,8 @@ void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
 			  enum pcu_gsmtap_category categ, uint8_t channel,
 			  const struct rach_ind_params *rip);
 
-struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts);
-
+struct GprsMs *bts_get_ms(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli,
+			  const char *imsi);
 struct GprsMs *bts_get_ms_by_tlli(const struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli);
 struct GprsMs *bts_get_ms_by_imsi(const struct gprs_rlcmac_bts *bts, const char *imsi);
 
@@ -379,7 +371,6 @@ void bts_set_max_cs_ul(struct gprs_rlcmac_bts *bts, uint8_t cs_ul);
 void bts_set_max_mcs_dl(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl);
 void bts_set_max_mcs_ul(struct gprs_rlcmac_bts *bts, uint8_t mcs_ul);
 bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts *bts, enum CodingScheme cs);
-const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts);
 uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts);
 bool bts_all_pdch_allocated(const struct gprs_rlcmac_bts *bts);
 #ifdef __cplusplus

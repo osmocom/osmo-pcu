@@ -27,7 +27,6 @@
 #include <gprs_debug.h>
 #include <coding_scheme.h>
 #include <gprs_ms.h>
-#include <gprs_ms_storage.h>
 #include <pcu_l1_if.h>
 #include <rlc.h>
 #include <sba.h>
@@ -139,7 +138,7 @@ static void pdch_unreserve_all_ms_reserved_slots(struct gprs_rlcmac_pdch *pdch)
 	uint8_t ts_rm_mask = (~(1 << pdch->ts_no));
 	struct gprs_rlcmac_trx *trx = pdch->trx;
 
-	llist_for_each(tmp, bts_ms_list(trx->bts)) {
+	llist_for_each(tmp, &trx->bts->ms_list) {
 		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (ms->current_trx != trx)
 			continue;

@@ -28,7 +28,6 @@
 #include <gprs_debug.h>
 #include <gprs_ms.h>
 #include <pcu_utils.h>
-#include <gprs_ms_storage.h>
 #include <sba.h>
 #include <pdch.h>
 
