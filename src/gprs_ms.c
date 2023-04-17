@@ -229,7 +229,18 @@ void ms_unref(struct GprsMs *ms)
 
 static void ms_release_timer_start(struct GprsMs *ms)
 {
+	/* Immediate free():
+	 * Skip delaying free() through release timer if delay is configured to be 0.
+	 * This is useful for synced freed during unit tests.
+	 */
 	if (ms->delay == 0)
+		return;
+
+	/* Immediate free():
+	 * Skip delaying free() through release timer if TMSI is not
+	 * known, since those cannot really be reused.
+	 */
+	if (ms_tlli(ms) == GSM_RESERVED_TMSI)
 		return;
 
 	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
@@ -384,9 +395,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 	if (!ms->dl_tbf && !ms->ul_tbf) {
 		ms_set_reserved_slots(ms, NULL, 0, 0);
 		ms->first_common_ts = NULL;
-
-		if (ms_tlli(ms) != 0)
-			ms_release_timer_start(ms);
+		ms_release_timer_start(ms);
 	}
 
 	ms_update_status(ms);
