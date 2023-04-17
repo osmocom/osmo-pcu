@@ -244,7 +244,6 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 	while ((ms = llist_first_entry_or_null(&bts->ms_list, struct GprsMs, list))) {
 		ms_set_callback(ms, NULL);
 		ms_set_timeout(ms, 0);
-		llist_del(&ms->list);
 		bts_stat_item_dec(bts, STAT_MS_PRESENT);
 		talloc_free(ms);
 	}
@@ -1201,7 +1200,6 @@ bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts* bts, CodingScheme cs)
 
 static void bts_ms_idle_cb(struct GprsMs *ms)
 {
-	llist_del(&ms->list);
 	bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
 	if (ms_is_idle(ms))
 		talloc_free(ms);
@@ -1225,7 +1223,6 @@ GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts)
 
 	ms_set_callback(ms, &bts_ms_cb);
 	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
-	llist_add(&ms->list, &bts->ms_list);
 
 	bts_stat_item_inc(bts, STAT_MS_PRESENT);
 	return ms;

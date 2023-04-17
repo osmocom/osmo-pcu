@@ -61,8 +61,13 @@ MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddbb, partly confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
+MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Destroying MS object
+MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 Creating MS object
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbeef, partly confirmed
 Creating MS object
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbef0, partly confirmed
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xdeadbef0)
+MS(TLLI-0xdeadbeef:TA-220:MSCLS-0-0) Destroying MS object
+MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL) Destroying MS object
+MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xdeadbef0)

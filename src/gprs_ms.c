@@ -110,6 +110,8 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 
 	talloc_set_destructor(ms, ms_talloc_destructor);
 
+	llist_add(&ms->list, &bts->ms_list);
+
 	ms->bts = bts;
 	ms->cb = gprs_default_cb;
 	ms->tlli = GSM_RESERVED_TMSI;
@@ -119,7 +121,6 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	ms->current_cs_ul = UNKNOWN;
 	ms->current_cs_dl = UNKNOWN;
 	ms->is_idle = true;
-	INIT_LLIST_HEAD(&ms->list);
 	INIT_LLIST_HEAD(&ms->old_tbfs);
 
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
@@ -157,6 +158,8 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	struct llist_item *pos, *tmp;
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Destroying MS object\n");
+
+	llist_del(&ms->list);
 
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 

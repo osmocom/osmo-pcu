@@ -457,6 +457,7 @@ static void test_ms_storage()
 	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
 
+	talloc_free(ms);
 	talloc_free(ul_tbf);
 	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
@@ -548,6 +549,7 @@ static void test_ms_cs_selection()
 
 	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms, ms_mode(ms))) == 2);
 
+	talloc_free(ms);
 	talloc_free(dl_tbf);
 	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
@@ -617,6 +619,8 @@ static void test_ms_mcs_mode()
 	ms_set_mode(ms2, GPRS);
 	dump_ms(ms2, "2: after mode set   ");
 
+	talloc_free(ms1);
+	talloc_free(ms2);
 	talloc_free(dl_tbf);
 	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
