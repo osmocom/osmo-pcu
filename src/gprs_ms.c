@@ -362,8 +362,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 
 	ms->ul_tbf = tbf;
 
-	if (tbf)
-		ms_release_timer_stop(ms);
+	ms_release_timer_stop(ms);
 
 	ms_unref(ms, __func__);
 }
@@ -382,14 +381,16 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 
 	ms->dl_tbf = tbf;
 
-	if (tbf)
-		ms_release_timer_stop(ms);
+	ms_release_timer_stop(ms);
 
 	ms_unref(ms, __func__);
 }
 
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
+	OSMO_ASSERT(ms);
+	OSMO_ASSERT(tbf);
+
 	if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
 		ms_attach_dl_tbf(ms, tbf_as_dl_tbf(tbf));
 	else
