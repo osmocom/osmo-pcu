@@ -75,7 +75,7 @@ PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=34, reason=UL_ASS): TBF(D
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=39 is still reserved!
 PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=39, reason=UL_ASS): TBF(DL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0x12345678)
 MS(TLLI-0x12345678:TA-220:MSCLS-0-0:DL) Destroying MS object
-MS(TLLI-0x12345678:TA-220:MSCLS-0-0) Detaching TBF: TBF(DL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0x12345678)
+MS(TLLI-0x12345678:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0x12345678)
 PDCH(bts=0,trx=0,ts=0) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=0) Reserving FN 104 for type SBA
 PDCH(bts=0,trx=0,ts=0) Reserving FN 117 for type SBA

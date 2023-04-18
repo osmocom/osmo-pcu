@@ -423,6 +423,9 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 	if (!ms_tbf_is_attached(ms, tbf))
 		return;
 
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
+	       tbf_name(tbf));
+
 	if (tbf == ul_tbf_as_tbf(ms->ul_tbf)) {
 		ms->ul_tbf = NULL;
 	} else if (tbf == dl_tbf_as_tbf(ms->dl_tbf)) {
@@ -432,9 +435,6 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 		 * is in ms->old_tbfs, no need to look it up again. */
 		llist_del(tbf_ms_list(tbf));
 	}
-
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
-	       tbf_name(tbf));
 
 	if (!ms->dl_tbf && !ms->ul_tbf) {
 		ms_set_reserved_slots(ms, NULL, 0, 0);
