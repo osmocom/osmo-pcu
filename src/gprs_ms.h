@@ -51,14 +51,8 @@ struct gprs_rlcmac_bts;
 struct gprs_rlcmac_trx;
 struct GprsMs;
 
-struct gpr_ms_callback {
-	void (*ms_idle)(struct GprsMs *);
-	void (*ms_active)(struct GprsMs *);
-};
-
 struct GprsMs {
 	struct llist_head list; /* list of all GprsMs */
-	struct gpr_ms_callback cb;
 	bool app_info_pending;
 
 	struct gprs_rlcmac_bts *bts;
@@ -84,7 +78,6 @@ struct GprsMs {
 	struct gprs_llc_queue llc_queue;
 	struct osmo_timer_list llc_timer;
 
-	bool is_idle;
 	struct osmo_use_count use_count;
 	struct osmo_timer_list timer;
 	unsigned delay;
@@ -140,8 +133,6 @@ static inline struct gprs_rlcmac_dl_tbf *ms_dl_tbf(const struct GprsMs *ms) {ret
 const char *ms_name(const struct GprsMs *ms);
 char *ms_name_buf(const struct GprsMs *ms, char *buf, unsigned int buf_size);
 
-void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb);
-
 int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif);
 bool ms_nacc_rts(const struct GprsMs *ms);
 struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf,
@@ -157,8 +148,7 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 static inline bool ms_is_idle(const struct GprsMs *ms)
 {
 	return !ms->ul_tbf && !ms->dl_tbf &&
-		llist_empty(&ms->old_tbfs) &&
-		osmo_use_count_total(&ms->use_count) == 0;
+		llist_empty(&ms->old_tbfs);
 }
 
 static inline struct gprs_llc_queue *ms_llc_queue(struct GprsMs *ms)
@@ -251,7 +241,7 @@ static inline struct gprs_rlcmac_trx *ms_current_trx(const struct GprsMs *ms)
 	return ms->current_trx;
 }
 
-#define MS_USE_RELEASE_TIMER "release_timer"
+#define MS_USE_TBF "tbf"
 #define ms_ref(ms, use) \
 	OSMO_ASSERT(osmo_use_count_get_put(&(ms)->use_count, use, 1) == 0)
 #define ms_unref(ms, use) \

@@ -242,7 +242,6 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 {
 	struct GprsMs *ms;
 	while ((ms = llist_first_entry_or_null(&bts->ms_list, struct GprsMs, list))) {
-		ms_set_callback(ms, NULL);
 		ms_set_timeout(ms, 0);
 		bts_stat_item_dec(bts, STAT_MS_PRESENT);
 		talloc_free(ms);

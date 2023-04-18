@@ -14805,12 +14805,12 @@ Going to test assignment with many connections, algorithm B
  TBF[30] class 31 reserves ....DDCD
  TBF[31] class 32 reserves ...DDCD.
  TBF[0] class 1 reserves ...C....
- TBF[1] class 2 reserves ...DC...
+ TBF[1] class 2 reserves ....DC..
  TBF[2] class 3 reserves ......DC
  TBF[3] class 4 reserves ...DCD..
- TBF[4] class 5 reserves ...CD...
+ TBF[4] class 5 reserves ......CD
  TBF[5] class 6 reserves ...CD...
- TBF[6] class 7 reserves ......CD
+ TBF[6] class 7 reserves .....CD.
  TBF[7] class 8 reserves ....DDCD
  TBF[8] class 9 reserves ...DCD..
  TBF[9] class 10 reserves .....DCD

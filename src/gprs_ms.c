@@ -61,7 +61,7 @@ static int64_t now_msec()
 	return (int64_t)(ts.tv_sec) * 1000 + ts.tv_nsec / 1000000;
 }
 
-static void ms_update_status(struct GprsMs *ms);
+static void ms_becomes_idle(struct GprsMs *ms);
 
 static int ms_use_cb(struct osmo_use_count_entry *e, int32_t old_use_count, const char *file, int line)
 {
@@ -90,36 +90,20 @@ static int ms_use_cb(struct osmo_use_count_entry *e, int32_t old_use_count, cons
 	if (e->count < 0)
 		return -ERANGE;
 
-	if (total == 0)
-		ms_update_status(ms);
+	if (total == 0) {
+		OSMO_ASSERT(ms_is_idle(ms));
+		ms_becomes_idle(ms);
+	}
 	return 0;
 }
-
-void gprs_default_cb_ms_idle(struct GprsMs *ms)
-{
-	if (ms_is_idle(ms))
-		talloc_free(ms);
-}
-
-void gprs_default_cb_ms_active(struct GprsMs *ms)
-{
-	/* do nothing */
-}
-
-static struct gpr_ms_callback gprs_default_cb = {
-	.ms_idle = gprs_default_cb_ms_idle,
-	.ms_active = gprs_default_cb_ms_active,
-};
 
 static void ms_release_timer_cb(void *data)
 {
 	struct GprsMs *ms = (struct GprsMs *) data;
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Release timer expired\n");
 
-	if (ms->timer.data) {
-		ms->timer.data = NULL;
-		ms_unref(ms, MS_USE_RELEASE_TIMER);
-	}
+	/* Finally free the MS after being idle for a while according to config */
+	talloc_free(ms);
 }
 
 static void ms_llc_timer_cb(void *_ms)
@@ -149,14 +133,12 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	bts_stat_item_inc(bts, STAT_MS_PRESENT);
 
 	ms->bts = bts;
-	ms->cb = gprs_default_cb;
 	ms->tlli = GSM_RESERVED_TMSI;
 	ms->new_ul_tlli = GSM_RESERVED_TMSI;
 	ms->new_dl_tlli = GSM_RESERVED_TMSI;
 	ms->ta = GSM48_TA_INVALID;
 	ms->current_cs_ul = UNKNOWN;
 	ms->current_cs_dl = UNKNOWN;
-	ms->is_idle = true;
 	INIT_LLIST_HEAD(&ms->old_tbfs);
 
 	ms->use_count = (struct osmo_use_count){
@@ -169,7 +151,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object\n");
 
 	ms->imsi[0] = '\0';
-	osmo_timer_setup(&ms->timer, ms_release_timer_cb, NULL);
+	osmo_timer_setup(&ms->timer, ms_release_timer_cb, ms);
 	llc_queue_init(&ms->llc_queue, ms);
 	memset(&ms->llc_timer, 0, sizeof(ms->llc_timer));
 	osmo_timer_setup(&ms->llc_timer, ms_llc_timer_cb, ms);
@@ -232,69 +214,42 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	return 0;
 }
 
-
-void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb)
+/* MS has no attached TBFs anymore. */
+static void ms_becomes_idle(struct GprsMs *ms)
 {
-	if (cb)
-		ms->cb = *cb;
-	else
-		ms->cb = gprs_default_cb;
-}
+	ms_set_reserved_slots(ms, NULL, 0, 0);
+	ms->first_common_ts = NULL;
 
-static void ms_update_status(struct GprsMs *ms)
-{
-	if (osmo_use_count_total(&ms->use_count) > 0)
-		return;
-
-	if (ms_is_idle(ms) && !ms->is_idle) {
-		ms->is_idle = true;
-		ms->cb.ms_idle(ms);
-		/* this can be deleted by now, do not access it */
-		return;
-	}
-
-	if (!ms_is_idle(ms) && ms->is_idle) {
-		ms->is_idle = false;
-		ms->cb.ms_active(ms);
-	}
-}
-
-static void ms_release_timer_start(struct GprsMs *ms)
-{
 	/* Immediate free():
 	 * Skip delaying free() through release timer if delay is configured to be 0.
 	 * This is useful for synced freed during unit tests.
 	 */
-	if (ms->delay == 0)
+	if (ms->delay == 0) {
+		talloc_free(ms);
 		return;
+	}
 
 	/* Immediate free():
 	 * Skip delaying free() through release timer if TMSI is not
 	 * known, since those cannot really be reused.
 	 */
-	if (ms_tlli(ms) == GSM_RESERVED_TMSI)
+	if (ms_tlli(ms) == GSM_RESERVED_TMSI) {
+		talloc_free(ms);
 		return;
-
-	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
-
-	if (!ms->timer.data) {
-		ms_ref(ms, MS_USE_RELEASE_TIMER);
-		ms->timer.data = ms;
 	}
 
+	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
 	osmo_timer_schedule(&ms->timer, ms->delay, 0);
 }
 
-static void ms_release_timer_stop(struct GprsMs *ms)
+static void ms_becomes_active(struct GprsMs *ms)
 {
-	if (!ms->timer.data)
+	if (!osmo_timer_pending(&ms->timer))
 		return;
 
 	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Cancel scheduled MS release\n");
 
 	osmo_timer_del(&ms->timer);
-	ms->timer.data = NULL;
-	ms_unref(ms, MS_USE_RELEASE_TIMER);
 }
 
 void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
@@ -374,32 +329,24 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 {
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
-	ms_ref(ms, __func__);
-
 	if (ms->ul_tbf)
 		llist_add_tail(tbf_ms_list(ul_tbf_as_tbf(ms->ul_tbf)), &ms->old_tbfs);
 
 	ms->ul_tbf = tbf;
 
-	ms_release_timer_stop(ms);
-
-	ms_unref(ms, __func__);
+	ms_ref(ms, MS_USE_TBF);
 }
 
 static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 {
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
-	ms_ref(ms, __func__);
-
 	if (ms->dl_tbf)
 		llist_add_tail(tbf_ms_list(dl_tbf_as_tbf(ms->dl_tbf)), &ms->old_tbfs);
 
 	ms->dl_tbf = tbf;
 
-	ms_release_timer_stop(ms);
-
-	ms_unref(ms, __func__);
+	ms_ref(ms, MS_USE_TBF);
 }
 
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
@@ -412,6 +359,8 @@ void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 		ms_attach_dl_tbf(ms, tbf_as_dl_tbf(tbf));
 	else
 		ms_attach_ul_tbf(ms, tbf_as_ul_tbf(tbf));
+
+	ms_becomes_active(ms);
 }
 
 void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
@@ -436,21 +385,35 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 		llist_del(tbf_ms_list(tbf));
 	}
 
-	if (!ms->dl_tbf && !ms->ul_tbf) {
-		ms_set_reserved_slots(ms, NULL, 0, 0);
-		ms->first_common_ts = NULL;
-		ms_release_timer_start(ms);
-	}
-
-	ms_update_status(ms);
+	ms_unref(ms, MS_USE_TBF);
 }
 
+/* Cleans up old MS being merged into a new one. Should be called with a
+ms_ref() taken to avoid use-after-free. */
 void ms_reset(struct GprsMs *ms)
 {
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Clearing MS object\n");
+	struct llist_item *pos;
+	struct gprs_rlcmac_tbf *tbf;
 
-	ms_release_timer_stop(ms);
+	/* free immediately when it becomes idle: */
+	ms->delay = 0;
 
+	tbf = ul_tbf_as_tbf(ms_ul_tbf(ms));
+	if (tbf && !tbf_timers_pending(tbf, T_MAX))
+		tbf_free(tbf);
+	tbf = dl_tbf_as_tbf(ms_dl_tbf(ms));
+	if (tbf && !tbf_timers_pending(tbf, T_MAX))
+		tbf_free(tbf);
+
+	llist_for_each_entry(pos, &ms->old_tbfs, list) {
+		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
+		if (!tbf_timers_pending(tbf, T_MAX))
+			tbf_free(tbf);
+	}
+
+	/* Flag it with invalid data so that it cannot be looked up anymore and
+	* shows up specially if listed in VTY: */
 	ms->tlli = GSM_RESERVED_TMSI;
 	ms->new_dl_tlli = ms->tlli;
 	ms->new_ul_tlli = ms->tlli;
@@ -507,12 +470,6 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 	llc_queue_move_and_merge(&ms->llc_queue, &old_ms->llc_queue);
 
 	/* Clean up the old MS object */
-	/* TODO: Use timer? */
-	if (ms_ul_tbf(old_ms) && !tbf_timers_pending((struct gprs_rlcmac_tbf *)ms_ul_tbf(old_ms), T_MAX))
-			tbf_free((struct gprs_rlcmac_tbf *)ms_ul_tbf(old_ms));
-	if (ms_dl_tbf(old_ms) && !tbf_timers_pending((struct gprs_rlcmac_tbf *)ms_dl_tbf(old_ms), T_MAX))
-			tbf_free((struct gprs_rlcmac_tbf *)ms_dl_tbf(old_ms));
-
 	ms_reset(old_ms);
 
 	ms_unref(old_ms, __func__);

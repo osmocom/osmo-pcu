@@ -120,96 +120,6 @@ static void test_ms_state()
 	printf("=== end %s ===\n", __func__);
 }
 
-static enum {CB_UNKNOWN, CB_IS_IDLE, CB_IS_ACTIVE} last_cb = CB_UNKNOWN;
-static void ms_idle_cb(struct GprsMs *ms)
-{
-	OSMO_ASSERT(ms_is_idle(ms));
-	printf("  ms_idle() was called\n");
-	last_cb = CB_IS_IDLE;
-}
-static void ms_active_cb(struct GprsMs *ms)
-{
-	OSMO_ASSERT(!ms_is_idle(ms));
-	printf("  ms_active() was called\n");
-	last_cb = CB_IS_ACTIVE;
-}
-static struct gpr_ms_callback ms_cb = {
-	.ms_idle = ms_idle_cb,
-	.ms_active = ms_active_cb
-};
-static void test_ms_callback()
-{
-	uint32_t tlli = 0xffeeddbb;
-	gprs_rlcmac_dl_tbf *dl_tbf;
-	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
-	GprsMs *ms;
-	last_cb = CB_UNKNOWN;
-
-	printf("=== start %s ===\n", __func__);
-
-	ms = ms_alloc(bts);
-	ms_set_tlli(ms, tlli);
-	ms_set_callback(ms, &ms_cb);
-
-	OSMO_ASSERT(ms_is_idle(ms));
-
-	dl_tbf = alloc_dl_tbf(bts, ms);
-	ul_tbf = alloc_ul_tbf(bts, ms);
-
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
-
-	ms_attach_tbf(ms, ul_tbf);
-	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
-	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
-	OSMO_ASSERT(last_cb == CB_IS_ACTIVE);
-
-	last_cb = CB_UNKNOWN;
-
-	ms_attach_tbf(ms, dl_tbf);
-	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
-	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
-
-	ms_detach_tbf(ms, ul_tbf);
-	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
-	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
-
-	ms_detach_tbf(ms, dl_tbf);
-	OSMO_ASSERT(ms_is_idle(ms));
-	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
-	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
-	OSMO_ASSERT(last_cb == CB_IS_IDLE);
-
-	last_cb = CB_UNKNOWN;
-	talloc_free(ms);
-
-	talloc_free(dl_tbf);
-	talloc_free(ul_tbf);
-	talloc_free(bts);
-	printf("=== end %s ===\n", __func__);
-}
-
-static bool was_idle;
-static void ms_replace_tbf_idle_cb(struct GprsMs *ms)
-{
-	OSMO_ASSERT(ms_is_idle(ms));
-	printf("  ms_idle() was called\n");
-	was_idle = true;
-}
-static void ms_replace_tbf_active_cb(struct GprsMs *ms)
-{
-	OSMO_ASSERT(!ms_is_idle(ms));
-	printf("  ms_active() was called\n");
-}
-static struct gpr_ms_callback ms_replace_tbf_cb = {
-	.ms_idle = ms_replace_tbf_idle_cb,
-	.ms_active = ms_replace_tbf_active_cb
-};
 static void test_ms_replace_tbf()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -222,10 +132,8 @@ static void test_ms_replace_tbf()
 
 	ms = ms_alloc(bts);
 	ms_confirm_tlli(ms, tlli);
-	ms_set_callback(ms, &ms_replace_tbf_cb);
 
 	OSMO_ASSERT(ms_is_idle(ms));
-	was_idle = false;
 
 	dl_tbf[0] = alloc_dl_tbf(bts, ms);
 	dl_tbf[1] = alloc_dl_tbf(bts, ms);
@@ -236,44 +144,34 @@ static void test_ms_replace_tbf()
 	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[0]);
 	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(!was_idle);
 
 	ms_attach_tbf(ms, dl_tbf[1]);
 	OSMO_ASSERT(!ms_is_idle(ms));
 	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
 	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(!was_idle);
 
 	ms_attach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
 	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(!was_idle);
 
 	ms_detach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
 	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
 	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(!was_idle);
 
 	ms_detach_tbf(ms, dl_tbf[0]);
 	OSMO_ASSERT(!ms_is_idle(ms));
 	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
 	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(!was_idle);
 
 	ms_detach_tbf(ms, dl_tbf[1]);
-	OSMO_ASSERT(ms_is_idle(ms));
-	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
-	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
-	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
-	OSMO_ASSERT(was_idle);
-
-	talloc_free(ms);
+	/* MS is gone now: */
+	OSMO_ASSERT(bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI) == NULL);
 
 	talloc_free(dl_tbf[0]);
 	talloc_free(dl_tbf[1]);
@@ -470,13 +368,11 @@ static void test_ms_timeout()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
-	last_cb = CB_UNKNOWN;
 
 	printf("=== start %s ===\n", __func__);
 
 	ms = ms_alloc(bts);
 	ms_set_tlli(ms, tlli);
-	ms_set_callback(ms, &ms_cb);
 	ms_set_timeout(ms, 1);
 
 	OSMO_ASSERT(ms_is_idle(ms));
@@ -484,34 +380,27 @@ static void test_ms_timeout()
 	dl_tbf = alloc_dl_tbf(bts, ms);
 	ul_tbf = alloc_ul_tbf(bts, ms);
 
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
-
 	ms_attach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(last_cb == CB_IS_ACTIVE);
-
-	last_cb = CB_UNKNOWN;
 
 	ms_attach_tbf(ms, dl_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
 	ms_detach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
 	ms_detach_tbf(ms, dl_tbf);
-	OSMO_ASSERT(!ms_is_idle(ms));
-	OSMO_ASSERT(last_cb == CB_UNKNOWN);
+	/* test MS still exists and it's idle: */
+	OSMO_ASSERT(bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI) != NULL);
+	OSMO_ASSERT(ms_is_idle(ms));
+	OSMO_ASSERT(osmo_timer_pending(&ms->timer));
 
 	usleep(1100000);
 	osmo_timers_update();
 
-	OSMO_ASSERT(ms_is_idle(ms));
-	OSMO_ASSERT(last_cb == CB_IS_IDLE);
+	/* MS is gone now: */
+	OSMO_ASSERT(bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI) == NULL);
 
-	last_cb = CB_UNKNOWN;
-	talloc_free(ms);
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
 	talloc_free(bts);
@@ -651,7 +540,6 @@ int main(int argc, char **argv)
 	osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S);
 
 	test_ms_state();
-	test_ms_callback();
 	test_ms_replace_tbf();
 	test_ms_change_tlli();
 	test_ms_storage();
