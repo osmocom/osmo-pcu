@@ -63,10 +63,10 @@ MS(IMSI-001001987654321:TLLI-0xffeeddbb:TA-220:MSCLS-0-0): + ms_attach_ul_tbf: n
 MS(IMSI-001001987654321:TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL): - ms_attach_ul_tbf: now used by 0 (-)
 MS(IMSI-001001987654321:TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Detaching TBF: TBF(UL:STATE-NEW:GPRS:IMSI-001001987654321:TLLI-0xffeeddbb)
 MS(IMSI-001001987654321:TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
-MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:STATE-NEW:GPRS)
+MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:STATE-NEW:GPRS:IMSI-001001987654322:TLLI-0xffeeddbc)
 MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0): + ms_attach_ul_tbf: now used by 1 (ms_attach_ul_tbf)
 MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0:UL): - ms_attach_ul_tbf: now used by 0 (-)
-MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Detaching TBF: TBF(UL:STATE-NEW:GPRS)
+MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Detaching TBF: TBF(UL:STATE-NEW:GPRS:IMSI-001001987654322:TLLI-0xffeeddbc)
 MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbb, not yet confirmed

@@ -348,11 +348,30 @@ void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
 	}
 }
 
+/* If a TBF is attached to an MS, it is either in ms->{dl,ul}_tbf or in ms->old_tbfs list */
+static bool ms_tbf_is_attached(const struct GprsMs *ms, const struct gprs_rlcmac_tbf *tbf)
+{
+	const struct llist_item *pos;
+	OSMO_ASSERT(ms);
+	OSMO_ASSERT(tbf);
+	OSMO_ASSERT(tbf_ms(tbf) == ms);
+
+	if (tbf == ul_tbf_as_tbf_const(ms->ul_tbf))
+		return true;
+
+	if (tbf == dl_tbf_as_tbf_const(ms->dl_tbf))
+		return true;
+
+	llist_for_each_entry(pos, &ms->old_tbfs, list) {
+		const struct gprs_rlcmac_tbf *tmp_tbf = (struct gprs_rlcmac_tbf *)pos->entry;
+		if (tmp_tbf == tbf)
+			return true;
+	}
+	return false;
+}
+
 static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 {
-	if (ms->ul_tbf == tbf)
-		return;
-
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	ms_ref(ms, __func__);
@@ -369,9 +388,6 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 
 static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 {
-	if (ms->dl_tbf == tbf)
-		return;
-
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	ms_ref(ms, __func__);
@@ -390,6 +406,7 @@ void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(ms);
 	OSMO_ASSERT(tbf);
+	OSMO_ASSERT(!ms_tbf_is_attached(ms, tbf));
 
 	if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
 		ms_attach_dl_tbf(ms, tbf_as_dl_tbf(tbf));
@@ -399,33 +416,25 @@ void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 
 void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
-	if (tbf == (struct gprs_rlcmac_tbf *)(ms->ul_tbf)) {
+	OSMO_ASSERT(tbf_ms(tbf) == ms);
+
+	/* In general this should not happen, but it can happen if during TBF
+	 * allocation something fails before tbf->setup() called ms_attach_tbf(). */
+	if (!ms_tbf_is_attached(ms, tbf))
+		return;
+
+	if (tbf == ul_tbf_as_tbf(ms->ul_tbf)) {
 		ms->ul_tbf = NULL;
-	} else if (tbf == (struct gprs_rlcmac_tbf *)(ms->dl_tbf)) {
+	} else if (tbf == dl_tbf_as_tbf(ms->dl_tbf)) {
 		ms->dl_tbf = NULL;
 	} else {
-		bool found = false;
-
-		struct llist_item *pos, *tmp;
-		llist_for_each_entry_safe(pos, tmp, &ms->old_tbfs, list) {
-			struct gprs_rlcmac_tbf *tmp_tbf = (struct gprs_rlcmac_tbf *)pos->entry;
-			if (tmp_tbf == tbf) {
-				llist_del(&pos->list);
-				found = true;
-				break;
-			}
-		}
-
-		/* Protect against recursive calls via set_ms() */
-		if (!found)
-			return;
+		/* We know from ms_tbf_is_attached()==true check above that tbf
+		 * is in ms->old_tbfs, no need to look it up again. */
+		llist_del(tbf_ms_list(tbf));
 	}
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
 	       tbf_name(tbf));
-
-	if (tbf_ms(tbf) == ms)
-		tbf_set_ms(tbf, NULL);
 
 	if (!ms->dl_tbf && !ms->ul_tbf) {
 		ms_set_reserved_slots(ms, NULL, 0, 0);

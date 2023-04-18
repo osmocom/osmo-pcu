@@ -443,7 +443,7 @@ static void test_ms_storage()
 	OSMO_ASSERT(ms != NULL);
 	ul_tbf = alloc_ul_tbf(bts, ms);
 	ms_attach_tbf(ms, ul_tbf);
-	ms_detach_tbf(ms, ul_tbf);
+	tbf_set_ms(ul_tbf, NULL);
 	ms = bts_get_ms_by_tlli(bts, tlli + 0, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
 	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
@@ -452,8 +452,8 @@ static void test_ms_storage()
 	/* delete ms */
 	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
-	ms_attach_tbf(ms, ul_tbf);
-	ms_detach_tbf(ms, ul_tbf);
+	tbf_set_ms(ul_tbf, ms);
+	tbf_set_ms(ul_tbf, NULL);
 	ms = bts_get_ms_by_tlli(bts, tlli + 1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms == NULL);
 
