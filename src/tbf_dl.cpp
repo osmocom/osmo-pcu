@@ -95,8 +95,8 @@ gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	dl_loss_lost(0),
 	dl_loss_received(0)
 {
-	timespecclear(&dl_bw_tv);
-	timespecclear(&dl_loss_tv);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &dl_bw_tv);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &dl_loss_tv);
 }
 
 static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
@@ -153,9 +153,6 @@ struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 
 	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)tbf), &tbf->trx->dl_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ALLOCATED);
-
-	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_bw_tv);
-	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_loss_tv);
 
 	return tbf;
 }
