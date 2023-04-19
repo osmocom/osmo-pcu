@@ -131,16 +131,6 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 	if (tbf->is_egprs_enabled())
 		tbf->set_window_size();
 
-	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf,
-					&tbf_ul_egprs_ctrg_desc, tbf->m_ctrs->idx);
-	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf,
-					&tbf_ul_gprs_ctrg_desc, tbf->m_ctrs->idx);
-	if (!tbf->m_ul_egprs_ctrs || !tbf->m_ul_gprs_ctrs) {
-		LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate TBF UL counters\n");
-		talloc_free(tbf);
-		return NULL;
-	}
-
 	llist_add_tail(tbf_trx_list(tbf), &tbf->trx->ul_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ALLOCATED);
 
@@ -168,17 +158,6 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc_rejected(struct gprs_rlcmac_bts *bts, st
 	/* The only one TS is the common, control TS */
 	ms_set_first_common_ts(ms, pdch);
 	tbf_assign_control_ts(ul_tbf);
-	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-						       &tbf_ul_egprs_ctrg_desc,
-						       ul_tbf->m_ctrs->idx);
-	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-						      &tbf_ul_gprs_ctrg_desc,
-						      ul_tbf->m_ctrs->idx);
-	if (!ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
-		LOGPTBF(ul_tbf, LOGL_ERROR, "Could not allocate TBF UL rate counters\n");
-		talloc_free(ul_tbf);
-		return NULL;
-	}
 	tbf_update_state_fsm_name(ul_tbf);
 
 	ms_attach_tbf(ms, ul_tbf);
@@ -205,6 +184,11 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	memset(&ul_ack_fsm, 0, sizeof(ul_ack_fsm));
 	ul_ack_fsm.tbf = this;
 	ul_ack_fsm.fi = osmo_fsm_inst_alloc(&tbf_ul_ack_fsm, this, &ul_ack_fsm, LOGL_INFO, NULL);
+
+	m_ul_egprs_ctrs = rate_ctr_group_alloc(this, &tbf_ul_egprs_ctrg_desc, m_ctrs->idx);
+	OSMO_ASSERT(m_ul_egprs_ctrs);
+	m_ul_gprs_ctrs = rate_ctr_group_alloc(this, &tbf_ul_gprs_ctrg_desc, m_ctrs->idx);
+	OSMO_ASSERT(m_ul_gprs_ctrs);
 }
 
 /*
