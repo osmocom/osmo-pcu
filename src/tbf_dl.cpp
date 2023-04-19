@@ -788,8 +788,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		m_last_dl_poll_fn = fn;
 
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx or
-	 * when last polled DL ACK/NACK was lost. */
-	if (need_poll_for_dl_ack_nack()) {
+	 * when last polled DL ACK/NACK was lost. Always do so in the control TS. */
+	if (tbf_is_control_ts(dl_tbf_as_tbf(this), pdch) &&
+	    need_poll_for_dl_ack_nack()) {
 		if (m_dl_ack_requested) {
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because it was requested explicitly "
