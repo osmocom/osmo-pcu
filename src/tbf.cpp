@@ -127,6 +127,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_name_buf[0] = '\0';
 
 	m_created_ts = time(NULL);
+	/* set timestamp */
+	osmo_clock_gettime(CLOCK_MONOTONIC, &meas.rssi_tv);
 }
 
 
@@ -585,9 +587,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	}
 	/* assign initial control ts */
 	tbf_assign_control_ts(this);
-
-	/* set timestamp */
-	osmo_clock_gettime(CLOCK_MONOTONIC, &meas.rssi_tv);
 
 	LOGPTBF(this, LOGL_INFO,
 		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
