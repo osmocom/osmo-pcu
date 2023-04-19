@@ -79,6 +79,13 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
+	[DMS] = {
+		.name = "DMS",
+		.color = "\033[1;34m",
+		.description = "Mobile Station (MS)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 	[DTBF] = {
 		.name = "DTBF",
 		.color = "\033[1;34m",

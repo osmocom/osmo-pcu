@@ -82,7 +82,7 @@ static int ms_use_cb(struct osmo_use_count_entry *e, int32_t old_use_count, cons
 		level = LOGL_DEBUG;
 
 
-	LOGPSRC(DRLCMAC, level, file, line, "%s: %s %s: now used by %s\n",
+	LOGPSRC(DMS, level, file, line, "%s: %s %s: now used by %s\n",
 		ms_name(ms),
 		(e->count - old_use_count) > 0 ? "+" : "-", e->use,
 		(osmo_use_count_to_str_buf(buf, sizeof(buf), &ms->use_count), buf));
@@ -100,7 +100,7 @@ static int ms_use_cb(struct osmo_use_count_entry *e, int32_t old_use_count, cons
 static void ms_release_timer_cb(void *data)
 {
 	struct GprsMs *ms = (struct GprsMs *) data;
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Release timer expired\n");
+	LOGPMS(ms, DMS, LOGL_INFO, "Release timer expired\n");
 
 	/* Finally free the MS after being idle for a while according to config */
 	talloc_free(ms);
@@ -148,7 +148,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, const char *use_ref)
 
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
 
-	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object\n");
+	LOGP(DMS, LOGL_INFO, "Creating MS object\n");
 
 	ms->imsi[0] = '\0';
 	osmo_timer_setup(&ms->timer, ms_release_timer_cb, ms);
@@ -184,7 +184,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 {
 	struct llist_item *pos, *tmp;
 
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Destroying MS object\n");
+	LOGPMS(ms, DMS, LOGL_INFO, "Destroying MS object\n");
 
 	bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
 	llist_del(&ms->list);
@@ -240,7 +240,7 @@ static void ms_becomes_idle(struct GprsMs *ms)
 		return;
 	}
 
-	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
+	LOGPMS(ms, DMS, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
 	osmo_timer_schedule(&ms->timer, ms->delay, 0);
 }
 
@@ -249,7 +249,7 @@ static void ms_becomes_active(struct GprsMs *ms)
 	if (!osmo_timer_pending(&ms->timer))
 		return;
 
-	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Cancel scheduled MS release\n");
+	LOGPMS(ms, DMS, LOGL_DEBUG, "Cancel scheduled MS release\n");
 
 	osmo_timer_del(&ms->timer);
 }
@@ -329,7 +329,7 @@ static bool ms_tbf_is_attached(const struct GprsMs *ms, const struct gprs_rlcmac
 
 static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 {
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
+	LOGPMS(ms, DMS, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	if (ms->ul_tbf)
 		llist_add_tail(tbf_ms_list(ul_tbf_as_tbf(ms->ul_tbf)), &ms->old_tbfs);
@@ -341,7 +341,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 
 static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 {
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
+	LOGPMS(ms, DMS, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	if (ms->dl_tbf)
 		llist_add_tail(tbf_ms_list(dl_tbf_as_tbf(ms->dl_tbf)), &ms->old_tbfs);
@@ -374,7 +374,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 	if (!ms_tbf_is_attached(ms, tbf))
 		return;
 
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
+	LOGPMS(ms, DMS, LOGL_INFO, "Detaching TBF: %s\n",
 	       tbf_name(tbf));
 
 	if (tbf == ul_tbf_as_tbf(ms->ul_tbf)) {
@@ -394,7 +394,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 ms_ref() taken to avoid use-after-free. */
 void ms_reset(struct GprsMs *ms)
 {
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Clearing MS object\n");
+	LOGPMS(ms, DMS, LOGL_INFO, "Clearing MS object\n");
 	struct llist_item *pos;
 	struct gprs_rlcmac_tbf *tbf;
 
@@ -458,7 +458,7 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 
 	ms_name_buf(old_ms, old_ms_name, sizeof(old_ms_name));
 
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Merge MS: %s\n", old_ms_name);
+	LOGPMS(ms, DMS, LOGL_INFO, "Merge MS: %s\n", old_ms_name);
 
 	if (strlen(ms_imsi(ms)) == 0 && strlen(ms_imsi(old_ms)) != 0)
 		osmo_strlcpy(ms->imsi, ms_imsi(old_ms), sizeof(ms->imsi));
@@ -498,7 +498,7 @@ void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 		return;
 
 	if (tlli != ms->new_dl_tlli) {
-		LOGP(DRLCMAC, LOGL_INFO,
+		LOGP(DMS, LOGL_INFO,
 			"Modifying MS object, UL TLLI: 0x%08x -> 0x%08x, "
 			"not yet confirmed\n",
 			ms_tlli(ms), tlli);
@@ -506,7 +506,7 @@ void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 		return;
 	}
 
-	LOGP(DRLCMAC, LOGL_INFO,
+	LOGP(DMS, LOGL_INFO,
 		"Modifying MS object, TLLI: 0x%08x -> 0x%08x, "
 		"already confirmed partly\n",
 		ms->tlli, tlli);
@@ -524,7 +524,7 @@ bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli)
 		/* The MS has not sent a message with the new TLLI, which may
 		 * happen according to the spec [TODO: add reference]. */
 
-		LOGP(DRLCMAC, LOGL_INFO,
+		LOGP(DMS, LOGL_INFO,
 			"The MS object cannot fully confirm an unexpected TLLI: 0x%08x, "
 			"partly confirmed\n", tlli);
 		/* Use the network's idea of TLLI as candidate, this does not
@@ -533,7 +533,7 @@ bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli)
 		return false;
 	}
 
-	LOGP(DRLCMAC, LOGL_INFO,
+	LOGP(DMS, LOGL_INFO,
 		"Modifying MS object, TLLI: 0x%08x confirmed\n", tlli);
 
 	ms_apply_tlli_change(ms, tlli);
@@ -544,12 +544,12 @@ bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli)
 void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 {
 	if (!imsi) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Expected IMSI!\n");
+		LOGP(DMS, LOGL_ERROR, "Expected IMSI!\n");
 		return;
 	}
 
 	if (imsi[0] && strlen(imsi) < 3) {
-		LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI '%s'!\n",
+		LOGP(DMS, LOGL_ERROR, "No valid IMSI '%s'!\n",
 			imsi);
 		return;
 	}
@@ -557,7 +557,7 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 	if (strcmp(imsi, ms->imsi) == 0)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO,
+	LOGP(DMS, LOGL_INFO,
 		"Modifying MS object, TLLI = 0x%08x, IMSI '%s' -> '%s'\n",
 		ms_tlli(ms), ms->imsi, imsi);
 
@@ -570,7 +570,7 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 		* different IMSI */
 		OSMO_ASSERT(old_ms != ms);
 
-		LOGPMS(ms, DRLCMAC, LOGL_NOTICE,
+		LOGPMS(ms, DMS, LOGL_NOTICE,
 		       "IMSI '%s' was already assigned to another "
 		       "MS object: TLLI = 0x%08x, that IMSI will be removed\n",
 		       imsi, ms_tlli(old_ms));
@@ -595,12 +595,12 @@ void ms_set_ta(struct GprsMs *ms, uint8_t ta_)
 		return;
 
 	if (gsm48_ta_is_valid(ta_)) {
-		LOGP(DRLCMAC, LOGL_INFO,
+		LOGP(DMS, LOGL_INFO,
 		     "Modifying MS object, TLLI = 0x%08x, TA %d -> %d\n",
 		     ms_tlli(ms), ms->ta, ta_);
 		ms->ta = ta_;
 	} else
-		LOGP(DRLCMAC, LOGL_NOTICE,
+		LOGP(DMS, LOGL_NOTICE,
 		     "MS object, TLLI = 0x%08x, invalid TA %d rejected (old "
 		     "value %d kept)\n", ms_tlli(ms), ta_, ms->ta);
 }
@@ -610,7 +610,7 @@ void ms_set_ms_class(struct GprsMs *ms, uint8_t ms_class_)
 	if (ms_class_ == ms->ms_class)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO,
+	LOGP(DMS, LOGL_INFO,
 		"Modifying MS object, TLLI = 0x%08x, MS class %d -> %d\n",
 		ms_tlli(ms), ms->ms_class, ms_class_);
 
@@ -622,14 +622,14 @@ void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_)
 	if (ms_class_ == ms->egprs_ms_class)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO,
+	LOGP(DMS, LOGL_INFO,
 		"Modifying MS object, TLLI = 0x%08x, EGPRS MS class %d -> %d\n",
 		ms_tlli(ms), ms->egprs_ms_class, ms_class_);
 
 	ms->egprs_ms_class = ms_class_;
 
 	if (!bts_max_mcs_ul(ms->bts) || !bts_max_mcs_dl(ms->bts)) {
-		LOGPMS(ms, DRLCMAC, LOGL_DEBUG,
+		LOGPMS(ms, DMS, LOGL_DEBUG,
 		       "Avoid enabling EGPRS because use of MCS is disabled: ul=%u dl=%u\n",
 			bts_max_mcs_ul(ms->bts), bts_max_mcs_dl(ms->bts));
 		return;
@@ -643,7 +643,7 @@ void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_)
 	} else {
 		ms_set_mode(ms, EGPRS);
 	}
-	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms_mode(ms)));
+	LOGPMS(ms, DMS, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms_mode(ms)));
 }
 
 void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int error_rate)
@@ -882,7 +882,7 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mc
 	}
 
 	if (orig_cs != cs)
-		LOGPMS(ms, DRLCMACDL, LOGL_INFO, "MS (mode=%s) suggests transmitting "
+		LOGPMS(ms, DMS, LOGL_INFO, "MS (mode=%s) suggests transmitting "
 			"DL %s, downgrade to %s in order to match TBF & scheduler requirements\n",
 			mode_name(ms_mode(ms)), mcs_name(orig_cs), mcs_name(cs));
 

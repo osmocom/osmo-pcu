@@ -317,7 +317,7 @@ int main(int argc, char **argv)
 	log_set_log_level(osmo_stderr_target, LOGL_DEBUG);
 	log_set_print_category_hex(osmo_stderr_target, 0);
 	log_set_print_category(osmo_stderr_target, 0);
-	log_parse_category_mask(osmo_stderr_target, "DPCU,1:DRLCMAC,1:DRLCMACUL,1");
+	log_parse_category_mask(osmo_stderr_target, "DPCU,1:DRLCMAC,1:DRLCMACUL,1:DMS,1");
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 

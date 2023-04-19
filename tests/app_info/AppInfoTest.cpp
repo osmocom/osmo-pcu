@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 	log_set_print_filename2(osmo_stderr_target, LOG_FILENAME_NONE);
 	log_set_print_category(osmo_stderr_target, 0);
 	log_set_print_category_hex(osmo_stderr_target, 0);
-	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1");
+	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1:DMS,3");
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 	bts_alloc(the_pcu, 0);

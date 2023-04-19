@@ -3470,7 +3470,7 @@ int main(int argc, char **argv)
 	log_set_print_category_hex(osmo_stderr_target, 0);
 	log_parse_category_mask(osmo_stderr_target, "DRLCMAC,1:DRLCMACDATA,3:DRLCMACDL,3:DRLCMACUL,3:"
 				"DRLCMACSCHED,1:DRLCMACMEAS,3:DNS,3:DLBSSGP,3:DPCU,5:"
-				"DL1IF,6:DTBF,1:DTBFUL,1:DTBFDL,1:DLGLOBAL,2:");
+				"DL1IF,6:DMS,1:DTBF,1:DTBFUL,1:DTBFDL,1:DLGLOBAL,2:");
 	osmo_fsm_log_addr(false);
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
