@@ -85,7 +85,7 @@ static void test_ms_state()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, __func__);
 	ms_set_tlli(ms, tlli);
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -104,6 +104,9 @@ static void test_ms_state()
 
 	OSMO_ASSERT(ms_tbf(ms, GPRS_RLCMAC_UL_TBF) == ul_tbf);
 	OSMO_ASSERT(ms_tbf(ms, GPRS_RLCMAC_DL_TBF) == dl_tbf);
+
+	/* The MS is kept alive references by the TBFs: */
+	ms_unref(ms, __func__);
 
 	ms_detach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -130,7 +133,7 @@ static void test_ms_replace_tbf()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, __func__);
 	ms_confirm_tlli(ms, tlli);
 
 	OSMO_ASSERT(ms_is_idle(ms));
@@ -156,6 +159,8 @@ static void test_ms_replace_tbf()
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
 	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
+
+	ms_unref(ms, __func__);
 
 	ms_detach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -190,7 +195,7 @@ static void test_ms_change_tlli()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, __func__);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -267,7 +272,9 @@ static void test_ms_change_tlli()
 	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
 	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
-	talloc_free(ms);
+	/* This frees the MS: */
+	ms_unref(ms, __func__);
+
 	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
@@ -278,7 +285,7 @@ static GprsMs *prepare_ms(struct gprs_rlcmac_bts *bts, uint32_t tlli, enum gprs_
 	if (ms)
 		return ms;
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms_set_tlli(ms, tlli);
@@ -371,7 +378,7 @@ static void test_ms_timeout()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, __func__);
 	ms_set_tlli(ms, tlli);
 	ms_set_timeout(ms, 1);
 
@@ -385,6 +392,9 @@ static void test_ms_timeout()
 
 	ms_attach_tbf(ms, dl_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
+
+	/* MS is kept alive by TBFs referencing it: */
+	ms_unref(ms, __func__);
 
 	ms_detach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -422,13 +432,15 @@ static void test_ms_cs_selection()
 	the_pcu->vty.cs_downgrade_threshold = 0;
 	the_pcu->vty.cs_adj_lower_limit = 0;
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, __func__);
 	ms_confirm_tlli(ms, tlli);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = alloc_dl_tbf(bts, ms);
 	ms_attach_tbf(ms, dl_tbf);
+
+	ms_unref(ms, __func__);
 
 	OSMO_ASSERT(!ms_is_idle(ms));
 
@@ -463,7 +475,7 @@ static void test_ms_mcs_mode()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms1 = ms_alloc(bts);
+	ms1 = ms_alloc(bts, __func__);
 	ms_confirm_tlli(ms1, tlli);
 	dump_ms(ms1, "1: no BTS defaults  ");
 
@@ -471,7 +483,7 @@ static void test_ms_mcs_mode()
 	bts->initial_cs_ul = 1;
 	the_pcu->vty.cs_downgrade_threshold = 0;
 
-	ms2 = ms_alloc(bts);
+	ms2 = ms_alloc(bts,__func__);
 	ms_confirm_tlli(ms2, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
 

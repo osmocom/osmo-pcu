@@ -122,7 +122,7 @@ static void ms_llc_timer_cb(void *_ms)
 }
 
 static int ms_talloc_destructor(struct GprsMs *ms);
-struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
+struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, const char *use_ref)
 {
 	struct GprsMs *ms = talloc_zero(tall_pcu_ctx, struct GprsMs);
 	OSMO_ASSERT(bts);
@@ -172,6 +172,8 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts)
 
 	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
 
+	if (use_ref)
+		ms_ref(ms, use_ref);
 	return ms;
 free_ret:
 	talloc_free(ms);

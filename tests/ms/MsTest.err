@@ -1,16 +1,16 @@
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_state: now used by 1 (test_ms_state)
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbb, not yet confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL): + tbf: now used by 1 (tbf)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL:DL) Detaching TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_replace_tbf: now used by 1 (test_ms_replace_tbf)
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddbb, partly confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL): + tbf: now used by 1 (tbf)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Attaching UL TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL:DL) Detaching TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
@@ -19,6 +19,7 @@ MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLL
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_change_tlli: now used by 1 (test_ms_change_tlli)
 Modifying MS object, UL TLLI: 0xffffffff -> 0xff001111, not yet confirmed
 Modifying MS object, TLLI: 0xff001111 confirmed
 Modifying MS object, UL TLLI: 0xff001111 -> 0xaa000000, not yet confirmed
@@ -34,6 +35,7 @@ Modifying MS object, UL TLLI: 0xff001111 -> 0xaa000000, not yet confirmed
 Modifying MS object, TLLI: 0xaa000000 confirmed
 The MS object cannot fully confirm an unexpected TLLI: 0xff001111, partly confirmed
 Modifying MS object, TLLI: 0xaa000000 -> 0xff001111, already confirmed partly
+MS(TLLI-0xff001111:TA-220:MSCLS-0-0): - test_ms_change_tlli: now used by 0 (-)
 MS(TLLI-0xff001111:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbb, not yet confirmed
@@ -52,9 +54,9 @@ MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0:UL) Detaching TBF: TBF(
 MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(IMSI-001001987654322:TLLI-0xffeeddbc:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_timeout: now used by 1 (test_ms_timeout)
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbb, not yet confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL): + tbf: now used by 1 (tbf)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL:DL) Detaching TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
@@ -62,19 +64,19 @@ MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Release timer expired
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_cs_selection: now used by 1 (test_ms_cs_selection)
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddbb, partly confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL): + tbf: now used by 1 (tbf)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Destroying MS object
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_mcs_mode: now used by 1 (test_ms_mcs_mode)
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbeef, partly confirmed
 Creating MS object
+MS(TA-220:MSCLS-0-0): + test_ms_mcs_mode: now used by 1 (test_ms_mcs_mode)
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbef0, partly confirmed
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xdeadbef0)
-MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL): + tbf: now used by 1 (tbf)
 MS(TLLI-0xdeadbeef:TA-220:MSCLS-0-0) Destroying MS object
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL) Destroying MS object
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xdeadbef0)
-MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)

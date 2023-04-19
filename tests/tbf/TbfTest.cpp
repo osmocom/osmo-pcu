@@ -122,7 +122,7 @@ static void test_tbf_tlli_update()
 	/*
 	 * Make a uplink and downlink allocation
 	 */
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	gprs_rlcmac_tbf *dl_tbf = dl_tbf_alloc(bts,
 						ms, 0, false);
 	OSMO_ASSERT(dl_tbf != NULL);
@@ -205,7 +205,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 	GprsMs *ms;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
@@ -2346,7 +2346,7 @@ static void test_tbf_ws()
 	gprs_bssgp_init(bts, 4234, 4234, 1, 1, false, 0, 0, 0);
 
 	/* Does no support EGPRS */
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
 
@@ -2355,7 +2355,7 @@ static void test_tbf_ws()
 	/* EGPRS-only */
 
 	/* Does support EGPRS */
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, ms_class);
 	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
@@ -2397,7 +2397,7 @@ static void test_tbf_update_ws(void)
 	/* EGPRS-only */
 
 	/* Does support EGPRS */
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, ms_class);
 	dl_tbf = dl_tbf_alloc(bts, ms, 0, true);
@@ -2476,7 +2476,7 @@ static void test_ms_merge_dl_tbf_different_trx(void)
 	trx0->pdch[2].enable();
 	trx0->pdch[3].enable();
 
-	second_ms = ms_alloc(bts);
+	second_ms = ms_alloc(bts, NULL);
 	ms_set_tlli(second_ms, new_tlli);
 	ul_tbf = ul_tbf_alloc(bts, second_ms, 0, true);
 	OSMO_ASSERT(ul_tbf != NULL);
@@ -3335,7 +3335,7 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 
 	int rc = 0;
 
-	ms = ms_alloc(bts);
+	ms = ms_alloc(bts, NULL);
 	ms_set_tlli(ms, tlli);
 	ul_tbf = ms_new_ul_tbf_rejected_pacch(ms, pdch);
 

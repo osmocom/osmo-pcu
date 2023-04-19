@@ -90,11 +90,11 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms1 = ms_alloc(bts);
+	ms1 = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms1, 10);
 	ms_set_egprs_ms_class(ms1, 11);
 	tbf1 = dl_tbf_alloc(bts, ms1, 0, false);
-	ms2 = ms_alloc(bts);
+	ms2 = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms2, 12);
 	ms_set_egprs_ms_class(ms2, 13);
 	tbf2 = dl_tbf_alloc(bts, ms2, 0, false);

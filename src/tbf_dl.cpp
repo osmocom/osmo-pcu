@@ -201,27 +201,31 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 {
 	int rc;
 	GprsMs *ms, *ms_old;
+	bool ms_allocated = false;
 
 	/* check for existing TBF */
 	ms = bts_get_ms(bts, tlli, tlli_old, imsi);
 
 	/* If we got MS by TLLI above let's see if we already have another MS
 	 * object identified by IMSI and merge them */
-	if (ms && !ms_imsi_is_valid(ms) && imsi) {
-		ms_old = bts_get_ms_by_imsi(bts, imsi);
-		if (ms_old && ms_old != ms) {
-			/* The TLLI has changed (RAU), so there are two MS
-			 * objects for the same MS */
-			LOGP(DTBF, LOGL_NOTICE,
-			     "There is a new MS object for the same MS: (0x%08x, '%s') -> (0x%08x, '%s')\n",
-			     ms_tlli(ms_old), ms_imsi(ms_old), ms_tlli(ms), ms_imsi(ms));
-			ms_merge_and_clear_ms(ms, ms_old);
-			/* old_ms may no longer be available here */
+	if (ms) {
+		if (!ms_imsi_is_valid(ms) && imsi) {
+			ms_old = bts_get_ms_by_imsi(bts, imsi);
+			if (ms_old && ms_old != ms) {
+				/* The TLLI has changed (RAU), so there are two MS
+				* objects for the same MS */
+				LOGP(DTBF, LOGL_NOTICE,
+				"There is a new MS object for the same MS: (0x%08x, '%s') -> (0x%08x, '%s')\n",
+				ms_tlli(ms_old), ms_imsi(ms_old), ms_tlli(ms), ms_imsi(ms));
+				ms_merge_and_clear_ms(ms, ms_old);
+				/* old_ms may no longer be available here */
+			}
 		}
+	} else {
+		ms = ms_alloc(bts, __func__);
+		/* Remember we have to unref the alloc reference at the end: */
+		ms_allocated = true;
 	}
-
-	if (!ms)
-		ms = ms_alloc(bts);
 	if (imsi)
 		ms_set_imsi(ms, imsi);
 	ms_confirm_tlli(ms, tlli);
@@ -233,9 +237,12 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	}
 
 	rc = ms_append_llc_dl_data(ms, delay_csec, data, len);
-	if (rc < 0)
-		return rc;
-	return 0;
+	if (ms_allocated) {
+		ms_unref(ms, __func__);
+		/* Here "ms" may be freed if ms_append_llc_dl_data() failed to
+		 * allocate a DL TBF and it has no more TBFs attached */
+	}
+	return rc;
 }
 
 bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()

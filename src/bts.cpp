@@ -1006,9 +1006,13 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_TWO_PHASE);
 	} else {
-		GprsMs *ms = ms_alloc(bts);
+		GprsMs *ms = ms_alloc(bts, __func__);
 		ms_set_egprs_ms_class(ms, chan_req.egprs_mslot_class);
 		tbf = ms_new_ul_tbf_assigned_agch(ms);
+		/* Here either tbf was created and it holds a ref to MS, or tbf
+		 * creation failed and MS will end up without references and being
+		 * freed: */
+		ms_unref(ms, __func__);
 		if (!tbf) {
 			/* Send RR Immediate Assignment Reject */
 			rc = -EBUSY;

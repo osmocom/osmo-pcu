@@ -665,7 +665,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		uint32_t tlli = request->ID.u.TLLI;
 		ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
-			ms = ms_alloc(bts);
+			/* A reference is already hold immediately below in all cases, no
+			 * need to hold and extra one, pass use_ref=NULL: */
+			ms = ms_alloc(bts, NULL);
 			ms_set_tlli(ms, tlli);
 		}
 	} else if (request->ID.u.Global_TFI.UnionType) { /* ID_TYPE = DL_TFI */
@@ -852,13 +854,16 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 	struct gprs_rlcmac_sba *sba;
 	struct pdch_ulc_node *poll;
 	GprsMs *ms;
+	bool ms_allocated = false;
 
 	ms = bts_get_ms_by_tlli(bts(), report->TLLI, GSM_RESERVED_TMSI);
 	if (!ms) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "MS send measurement "
 			"but TLLI 0x%08x is unknown\n", report->TLLI);
-		ms = ms_alloc(bts());
+		ms = ms_alloc(bts(), __func__);
 		ms_set_tlli(ms, report->TLLI);
+		/* Track that we need to free ref at the end: */
+		ms_allocated = true;
 	}
 	if ((poll = pdch_ulc_get_node(ulc, fn))) {
 		switch (poll->type) {
@@ -879,6 +884,8 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 		}
 	}
 	gprs_rlcmac_meas_rep(ms, report);
+	if (ms_allocated)
+		ms_unref(ms, __func__);
 }
 
 void gprs_rlcmac_pdch::rcv_cell_change_notification(Packet_Cell_Change_Notification_t *notif,
