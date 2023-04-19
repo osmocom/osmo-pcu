@@ -168,14 +168,13 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc_rejected(struct gprs_rlcmac_bts *bts, st
 	/* The only one TS is the common, control TS */
 	ms_set_first_common_ts(ms, pdch);
 	tbf_assign_control_ts(ul_tbf);
-	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
 	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
 						       &tbf_ul_egprs_ctrg_desc,
 						       ul_tbf->m_ctrs->idx);
 	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
 						      &tbf_ul_gprs_ctrg_desc,
 						      ul_tbf->m_ctrs->idx);
-	if (!ul_tbf->m_ctrs || !ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
+	if (!ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
 		LOGPTBF(ul_tbf, LOGL_ERROR, "Could not allocate TBF UL rate counters\n");
 		talloc_free(ul_tbf);
 		return NULL;

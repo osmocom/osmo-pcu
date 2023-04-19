@@ -129,6 +129,9 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_created_ts = time(NULL);
 	/* set timestamp */
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meas.rssi_tv);
+
+	m_ctrs = rate_ctr_group_alloc(this, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
+	OSMO_ASSERT(m_ctrs);
 }
 
 
@@ -591,12 +594,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	LOGPTBF(this, LOGL_INFO,
 		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
 		this->trx->trx_no, ul_slots(), dl_slots());
-
-	m_ctrs = rate_ctr_group_alloc(this, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
-	if (!m_ctrs) {
-		LOGPTBF(this, LOGL_ERROR, "Couldn't allocate TBF counters\n");
-		return -1;
-	}
 
 	tbf_update_state_fsm_name(this);
 
