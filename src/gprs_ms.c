@@ -1232,7 +1232,7 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 	} else {
 		/* Check if we can create a DL TBF to start sending the enqueued
 		 * data. Otherwise it will be triggered later when it is reachable
-		* again. */
+		 * again. */
 		if (ms_is_reachable_for_dl_ass(ms)) {
 			if (ms_ul_tbf(ms))
 				rc = ms_new_dl_tbf_assigned_on_pacch(ms, ul_tbf_as_tbf(ms_ul_tbf(ms)));
