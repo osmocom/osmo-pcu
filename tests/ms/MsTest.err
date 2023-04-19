@@ -61,6 +61,7 @@ MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL) Attaching DL TBF: TBF(DL:STATE-NEW:GPRS:
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:UL:DL) Detaching TBF: TBF(UL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:STATE-NEW:GPRS:TLLI-0xffeeddbb)
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
+MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Schedule MS release in 1 secs
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Release timer expired
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object

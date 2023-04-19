@@ -240,7 +240,7 @@ static void ms_becomes_idle(struct GprsMs *ms)
 		return;
 	}
 
-	LOGPMS(ms, DMS, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
+	LOGPMS(ms, DMS, LOGL_INFO, "Schedule MS release in %u secs\n", ms->delay);
 	osmo_timer_schedule(&ms->timer, ms->delay, 0);
 }
 
