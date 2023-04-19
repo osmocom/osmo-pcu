@@ -575,9 +575,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
 	int rc;
 
-	if (ms_mode(m_ms) != GPRS)
-		enable_egprs();
-
 	/* select algorithm */
 	rc = the_pcu->alloc_algorithm(bts, this, single_slot, use_trx);
 	/* if no resource */

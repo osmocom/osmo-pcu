@@ -9771,15 +9771,15 @@ UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_TBF{NEW}: Allocated
 UL_ACK_TBF{NONE}: Allocated
-TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3) Setting Control TS PDCH(bts=0,trx=0,ts=7)
-MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11) Attaching UL TBF: TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3)
+TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3) Setting Control TS PDCH(bts=0,trx=0,ts=7)
+MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11) Attaching UL TBF: TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3)
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_request,tbf)
-UL_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3){NEW}: Received Event ASSIGN_ADD_PACCH
-TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3) set ass. type PACCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0--1:STATE-ASSIGN:GPRS:TLLI-0xffeeddd3) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-UL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3){NONE}: Received Event SCHED_ASS_REJ
-UL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:GPRS:TLLI-0xffeeddd3){NONE}: state_chg to SEND_ASS_REJ
+UL_TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3){NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3) set ass. type PACCH [prev CCCH:0, PACCH:0]
+UL_TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0--1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd3) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+UL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3){NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF(UL:TFI-0-0--1:STATE-NEW:EGPRS:TLLI-0xffeeddd3){NONE}: state_chg to SEND_ASS_REJ
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2)
@@ -9798,7 +9798,7 @@ TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc) Scheduled UL Assignment pol
 UL_ASS_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS:TLLI-0xffeeddcc){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:STATE-ASSIGN:EGPRS:TLLI-0xffeeddcc)
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL) Destroying MS object
-MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL) Detaching TBF: TBF(UL:TFI-0-0--1:STATE-ASSIGN:GPRS:TLLI-0xffeeddd3)
+MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL) Detaching TBF: TBF(UL:TFI-0-0--1:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd3)
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11): - tbf: now used by 0 (-)
 MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL) Destroying MS object
 MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL) Detaching TBF: TBF(UL:TFI-0-0-6:STATE-ASSIGN:EGPRS:TLLI-0xffeeddd2)

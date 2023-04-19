@@ -183,6 +183,11 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	state_fsm.dl_tbf = this;
 	state_fi = osmo_fsm_inst_alloc(&tbf_dl_fsm, this, &state_fsm, LOGL_INFO, NULL);
 	OSMO_ASSERT(state_fi);
+
+	/* This has to be called in child constructor because enable_egprs()
+	 * uses the window() virtual function which is dependent on subclass. */
+	if (ms_mode(m_ms) != GPRS)
+		enable_egprs();
 }
 
 /**

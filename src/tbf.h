@@ -254,13 +254,13 @@ struct gprs_rlcmac_tbf {
 
 protected:
 	void merge_and_clear_ms(GprsMs *old_ms);
+	void enable_egprs(void);
 
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
 	struct GprsMs *m_ms;
 private:
-	void enable_egprs();
 	bool m_egprs_enabled;
 	struct osmo_timer_list Tarr[T_MAX];
 	uint8_t Narr[N_MAX];

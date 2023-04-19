@@ -189,6 +189,11 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	OSMO_ASSERT(m_ul_egprs_ctrs);
 	m_ul_gprs_ctrs = rate_ctr_group_alloc(this, &tbf_ul_gprs_ctrg_desc, m_ctrs->idx);
 	OSMO_ASSERT(m_ul_gprs_ctrs);
+
+	/* This has to be called in child constructor because enable_egprs()
+	 * uses the window() virtual function which is dependent on subclass. */
+	if (ms_mode(m_ms) != GPRS)
+		enable_egprs();
 }
 
 /*
