@@ -29,6 +29,7 @@
 #include <gprs_ms.h>
 #include <llc.h>
 #include "pcu_utils.h"
+#include "alloc_algo.h"
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -454,29 +455,39 @@ void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf)
 	bts_snd_dl_ass(ms->bts, tbf);
 }
 
-int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *tbf)
+int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
 {
 	int rc;
-	struct gprs_rlcmac_trx *trx = tbf_get_trx(tbf);
+	struct gprs_rlcmac_tbf *tbf = dl_tbf_as_tbf(dl_tbf);
+	struct gprs_rlcmac_trx *trx = tbf_get_trx(dl_tbf);
 	struct gprs_rlcmac_bts *bts = trx->bts;
 
-	LOGPTBFDL(tbf, LOGL_DEBUG, "Upgrade to multislot\n");
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "Upgrade to multislot\n");
 
-	tbf_unlink_pdch(tbf);
-	rc = the_pcu->alloc_algorithm(bts, dl_tbf_as_tbf(tbf), false, -1);
+	tbf_unlink_pdch(dl_tbf);
+
+	const struct alloc_resources_req req = {
+		.bts = bts,
+		.ms = tbf->ms(),
+		.direction = tbf_direction(tbf),
+		.single = false,
+		.use_trx = -1,
+		.tbf = tbf,
+	};
+	rc = the_pcu->alloc_algorithm(&req);
 	/* if no resource */
 	if (rc < 0) {
-		LOGPTBFDL(tbf, LOGL_ERROR, "No resources allocated during upgrade to multislot!\n");
+		LOGPTBFDL(dl_tbf, LOGL_ERROR, "No resources allocated during upgrade to multislot!\n");
 		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
 		return rc;
 	}
 
-	if (tbf_is_egprs_enabled(dl_tbf_as_tbf(tbf)))
-		tbf->set_window_size();
+	if (tbf_is_egprs_enabled(tbf))
+		dl_tbf->set_window_size();
 	tbf_update_state_fsm_name(tbf);
 
 	/* Now trigger the assignment using the pre-existing TBF: */
-	dl_tbf_trigger_ass_on_pacch(tbf, dl_tbf_as_tbf(tbf));
+	dl_tbf_trigger_ass_on_pacch(dl_tbf, tbf);
 	return 0;
 }
 

@@ -30,6 +30,7 @@
 #include <pcu_utils.h>
 #include <sba.h>
 #include <pdch.h>
+#include <alloc_algo.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -574,9 +575,17 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
 	int rc;
+	const struct alloc_resources_req req = {
+		.bts = bts,
+		.ms = this->ms(),
+		.direction = this->direction,
+		.single = single_slot,
+		.use_trx = use_trx,
+		.tbf = this,
+	};
 
 	/* select algorithm */
-	rc = the_pcu->alloc_algorithm(bts, this, single_slot, use_trx);
+	rc = the_pcu->alloc_algorithm(&req);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_NOTICE,

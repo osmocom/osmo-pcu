@@ -18,21 +18,37 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "tbf.h"
+
 struct gprs_rlcmac_bts;
+struct GprsMs;
 struct gprs_rlcmac_tbf;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
-		      int8_t use_trx);
+struct alloc_resources_req {
+	/* BTS where to allocate resources */
+	struct gprs_rlcmac_bts *bts;
+	/* MS for which to allocate resources */
+	struct GprsMs *ms;
+	/* Direction of the TBF for which we are allocating resources */
+	enum gprs_rlcmac_tbf_direction direction;
+	/* Whether to allocate only a single (1) TS */
+	bool single;
+	/* Whether to allocate on a specific TRX (>=0) or not (-1) */
+	int8_t use_trx;
+	/* FIXME: this will be removed in the future, tbf struct will be filled
+	 * in by caller of alloc_algorithm(). */
+	struct gprs_rlcmac_tbf *tbf;
+};
 
-int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
-		      int8_t use_trx);
+int alloc_algorithm_a(const struct alloc_resources_req *req);
 
-int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
-			    int8_t use_trx);
+int alloc_algorithm_b(const struct alloc_resources_req *req);
+
+int alloc_algorithm_dynamic(const struct alloc_resources_req *req);
 int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms_class);
 
 #ifdef __cplusplus

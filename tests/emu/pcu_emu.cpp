@@ -22,8 +22,9 @@
 extern "C" {
 #include <osmocom/core/talloc.h>
 #include <pcu_vty.h>
-#include <alloc_algo.h>
 }
+
+#include <alloc_algo.h>
 
 #include "gprs_tests.h"
 

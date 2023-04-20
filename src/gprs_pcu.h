@@ -66,10 +66,9 @@ enum pcu_gsmtap_category {
 struct gprs_rlcmac_bts;
 struct GprsMs;
 struct gprs_rlcmac_tbf;
+struct alloc_resources_req;
 
-typedef int (*alloc_algorithm_func_t)(struct gprs_rlcmac_bts *bts,
-				      struct gprs_rlcmac_tbf *tbf,
-				      bool single, int8_t use_tbf);
+typedef int (*alloc_algorithm_func_t)(const struct alloc_resources_req *req);
 
 struct gprs_pcu {
 

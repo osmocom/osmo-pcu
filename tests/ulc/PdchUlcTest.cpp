@@ -35,6 +35,7 @@ extern "C" {
 #include "bts.h"
 #include "sba.h"
 #include "pdch_ul_controller.h"
+#include "alloc_algo.h"
 
 /* globals used by the code */
 void *tall_pcu_ctx;
@@ -165,11 +166,10 @@ static void test_reserve_multiple()
 	printf("=== end: %s ===\n", __FUNCTION__);
 }
 
-int _alloc_algorithm_dummy(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf,
-			   bool single, int8_t use_tbf)
+int _alloc_algorithm_dummy(const struct alloc_resources_req *req)
 {
-	tbf->trx = &bts->trx[0];
-	ms_set_first_common_ts(tbf_ms(tbf), &tbf->trx->pdch[0]);
+	req->tbf->trx = &req->bts->trx[0];
+	ms_set_first_common_ts(tbf_ms(req->tbf), &req->tbf->trx->pdch[0]);
 	return 0;
 }
 
