@@ -60,6 +60,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_ul_tbf();
 	gprs_rlc_window *window();
+	void apply_allocated_resources(const struct alloc_resources_res *res);
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,

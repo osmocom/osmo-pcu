@@ -572,6 +572,33 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 	}
 }
 
+int gprs_rlcmac_tbf::alloc_algorithm(const struct alloc_resources_req *req)
+{
+	int rc;
+
+	/* select algorithm */
+	struct alloc_resources_res res = {};
+	rc = the_pcu->alloc_algorithm(req, &res);
+	if (rc < 0)
+		return rc;
+
+	/* The allocation will be successful, so the system state and tbf/ms
+	 * may be modified from now on. */
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(req->ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(req->ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms(), res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms(), res.first_common_ts);
+
+	/* Assign TRX,TS,TFI,USF to TBF: */
+	this->apply_allocated_resources(&res);
+
+	return 0;
+}
+
 int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
 	int rc;
@@ -581,11 +608,10 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 		.direction = this->direction,
 		.single = single_slot,
 		.use_trx = use_trx,
-		.tbf = this,
 	};
 
 	/* select algorithm */
-	rc = the_pcu->alloc_algorithm(&req);
+	rc = this->alloc_algorithm(&req);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_NOTICE,

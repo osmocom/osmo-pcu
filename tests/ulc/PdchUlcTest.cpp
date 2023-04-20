@@ -166,10 +166,11 @@ static void test_reserve_multiple()
 	printf("=== end: %s ===\n", __FUNCTION__);
 }
 
-int _alloc_algorithm_dummy(const struct alloc_resources_req *req)
+int _alloc_algorithm_dummy(const struct alloc_resources_req *req,
+			   struct alloc_resources_res *res)
 {
-	req->tbf->trx = &req->bts->trx[0];
-	ms_set_first_common_ts(tbf_ms(req->tbf), &req->tbf->trx->pdch[0]);
+	res->trx = &req->bts->trx[0];
+	res->first_common_ts = &res->trx->pdch[0];
 	return 0;
 }
 

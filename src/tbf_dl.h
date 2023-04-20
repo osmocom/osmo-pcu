@@ -46,6 +46,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_dl_tbf();
 	gprs_rlc_window *window();
+	void apply_allocated_resources(const struct alloc_resources_res *res);
 
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, const gprs_rlcmac_pdch *pdch,

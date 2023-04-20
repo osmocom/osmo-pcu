@@ -214,29 +214,6 @@ static int find_least_busy_pdch(const struct gprs_rlcmac_trx *trx, enum gprs_rlc
 	return min_ts;
 }
 
-static void attach_tbf_to_pdch(struct gprs_rlcmac_pdch *pdch,
-	struct gprs_rlcmac_tbf *tbf)
-{
-	if (tbf->pdch[pdch->ts_no])
-		tbf->pdch[pdch->ts_no]->detach_tbf(tbf);
-
-	tbf->pdch[pdch->ts_no] = pdch;
-	pdch->attach_tbf(tbf);
-}
-
-static void assign_uplink_tbf_usf(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_ul_tbf *tbf, uint8_t tfi, int8_t usf)
-{
-	tbf->m_tfi = tfi;
-	tbf->m_usf[pdch->ts_no] = usf;
-	attach_tbf_to_pdch(pdch, tbf);
-}
-
-static void assign_dlink_tbf(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_dl_tbf *tbf, uint8_t tfi)
-{
-	tbf->m_tfi = tfi;
-	attach_tbf_to_pdch(pdch, tbf);
-}
-
 static int find_trx(const struct alloc_resources_req *req)
 {
 	unsigned trx_no;
@@ -331,11 +308,12 @@ static int tfi_find_free(const struct alloc_resources_req *req, uint8_t *trx_no_
  * Assign single slot for uplink and downlink
  *
  *  \param[in] req Contains all the requested params
+ *  \param[out] res The resolution/response for the allocation request
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_a(const struct alloc_resources_req *req)
+int alloc_algorithm_a(const struct alloc_resources_req *req,
+		      struct alloc_resources_res *res)
 {
-	struct gprs_rlcmac_pdch *pdch;
 	int ts = -1;
 	uint8_t ul_slots, dl_slots;
 	int trx_no;
@@ -388,26 +366,15 @@ int alloc_algorithm_a(const struct alloc_resources_req *req)
 		return -EBUSY;
 	}
 
-	pdch = &trx->pdch[ts];
+	res->trx = trx;
+	res->first_common_ts = &trx->pdch[ts];
+	res->reserved_ul_slots = 1 << ts;
+	res->reserved_dl_slots = 1 << ts;
+	res->ass_slots_mask = 1 << ts;
+	res->upgrade_to_multislot = false;
+	res->tfi = tfi;
+	res->usf[ts] = usf;
 
-	/* The allocation will be successful, so the system state and tbf/ms
-	 * may be modified from now on. */
-	if (req->direction == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(req->tbf);
-		LOGPSL(req, LOGL_DEBUG, "Assign uplink TS=%d TFI=%d USF=%d\n", ts, tfi, usf);
-		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
-	} else {
-		struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(req->tbf);
-		LOGPSL(req, LOGL_DEBUG, "Assign downlink TS=%d TFI=%d\n", ts, tfi);
-		assign_dlink_tbf(pdch, dl_tbf, tfi);
-	}
-
-	req->tbf->trx = trx;
-	/* the only one TS is the common TS */
-	ms_set_reserved_slots(req->ms, trx, 1 << ts, 1 << ts);
-	ms_set_first_common_ts(req->ms, pdch);
-
-	req->tbf->upgrade_to_multislot = false;
 	bts_do_rate_ctr_inc(req->bts, CTR_TBF_ALLOC_ALGO_A);
 	return 0;
 }
@@ -766,76 +733,17 @@ static int allocate_usf(const gprs_rlcmac_trx *trx, uint8_t selected_ul_slots, u
 	return ul_slots;
 }
 
-/*! Update MS' reserved timeslots
- *
- *  \param[in,out] trx Pointer to TRX struct
- *  \param[in,out] ms_ Pointer to MS object
- *  \param[in] tbf_ Pointer to TBF struct
- *  \param[in] res_ul_slots Newly reserved UL slots
- *  \param[in] res_dl_slots Newly reserved DL slots
- */
-static void update_ms_reserved_slots(gprs_rlcmac_trx *trx, GprsMs *ms, uint8_t res_ul_slots, uint8_t res_dl_slots)
-{
-	if (res_ul_slots == ms_reserved_ul_slots(ms) && res_dl_slots == ms_reserved_dl_slots(ms))
-		return;
-
-	/* The reserved slots have changed, update the MS */
-	ms_set_reserved_slots(ms, trx, res_ul_slots, res_dl_slots);
-}
-
-/*! Assign given UL timeslots to UL TBF
- *
- *  \param[in,out] ul_tbf Pointer to UL TBF struct
- *  \param[in,out] trx Pointer to TRX object
- *  \param[in] ul_slots Set of slots to be assigned
- *  \param[in] tfi selected TFI
- *  \param[in] usf selected USF
- */
-static void assign_ul_tbf_slots(struct gprs_rlcmac_ul_tbf *ul_tbf, gprs_rlcmac_trx *trx, uint8_t ul_slots, int tfi,
-				int *usf)
-{
-	uint8_t ts;
-
-	for (ts = 0; ts < 8; ts++) {
-		if (!(ul_slots & (1 << ts)))
-			continue;
-
-		OSMO_ASSERT(usf[ts] >= 0);
-
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS %u\n", ts);
-		assign_uplink_tbf_usf(&trx->pdch[ts], ul_tbf, tfi, usf[ts]);
-	}
-}
-
-/*! Assign given DL timeslots to DL TBF
- *
- *  \param[in,out] dl_tbf Pointer to DL TBF struct
- *  \param[in,out] trx Pointer to TRX object
- *  \param[in] ul_slots Set of slots to be assigned
- *  \param[in] tfi selected TFI
- */
-static void assign_dl_tbf_slots(struct gprs_rlcmac_dl_tbf *dl_tbf, gprs_rlcmac_trx *trx, uint8_t dl_slots, int tfi)
-{
-	uint8_t ts;
-
-	for (ts = 0; ts < 8; ts++) {
-		if (!(dl_slots & (1 << ts)))
-			continue;
-
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS %u\n", ts);
-		assign_dlink_tbf(&trx->pdch[ts], dl_tbf, tfi);
-	}
-}
-
 /*! Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
  * Assign one uplink slot. (With free USF)
  *
  *  \param[in] req Contains all the requested params
+ *  \param[out] res The resolution/response for the allocation request
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_b(const struct alloc_resources_req *req)
+int alloc_algorithm_b(const struct alloc_resources_req *req,
+		      struct alloc_resources_res *res)
 {
 	uint8_t dl_slots;
 	uint8_t ul_slots;
@@ -845,14 +753,17 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
 	uint8_t slotcount = 0;
 	uint8_t reserve_count = 0, trx_no;
 	int first_ts;
-	int usf[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 	int rc;
 	int tfi;
+	unsigned int i;
 	gprs_rlcmac_trx *trx;
 	char slot_info[9] = { 0 };
 	struct gprs_rlcmac_pdch *first_common_ts = ms_first_common_ts(req->ms);
 
 	LOGPAL(req, "B", LOGL_DEBUG, "Alloc start\n");
+
+	for (i = 0; i < ARRAY_SIZE(res->usf); i++)
+		res->usf[i] = -1;
 
 	/* Step 1: Get current state from the MS object */
 
@@ -889,7 +800,7 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
 		dl_slots = rc;
 		count_slots(dl_slots, reserved_dl_slots, &slotcount, &reserve_count);
 	} else {
-		rc = allocate_usf(trx, rc, dl_slots, usf);
+		rc = allocate_usf(trx, rc, dl_slots, &res->usf[0]);
 		if (rc < 0)
 			return rc;
 
@@ -912,30 +823,27 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
 	}
 	first_common_ts = &trx->pdch[first_common_tn];
 
+	res->trx = trx;
+	res->first_common_ts = first_common_ts;
+	res->reserved_ul_slots = reserved_ul_slots;
+	res->reserved_dl_slots = reserved_dl_slots;
+	res->tfi = tfi;
+	/* res->usf is already filled in above */
 	if (req->single && slotcount) {
-		req->tbf->upgrade_to_multislot = (reserve_count > slotcount);
+		res->upgrade_to_multislot = (reserve_count > slotcount);
 		LOGPAL(req, "B", LOGL_INFO, "using single slot at TS %d\n", first_ts);
 	} else {
-		req->tbf->upgrade_to_multislot = false;
+		res->upgrade_to_multislot = false;
 		LOGPAL(req, "B", LOGL_INFO, "using %d slots\n", slotcount);
 	}
 
 	ts_format(slot_info, dl_slots, ul_slots);
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Available DL/UL slots: (TS=0)\"%s\"(TS=7)\n", slot_info);
 
-	/* The allocation will be successful, so the system state and tbf/ms
-	 * may be modified from now on. */
-
-	/* Step 4: Update MS and TBF and really allocate the resources */
-
-	update_ms_reserved_slots(trx, req->ms, reserved_ul_slots, reserved_dl_slots);
-	ms_set_first_common_ts(req->ms, first_common_ts);
-	req->tbf->trx = trx;
-
 	if (req->direction == GPRS_RLCMAC_DL_TBF)
-		assign_dl_tbf_slots(tbf_as_dl_tbf(req->tbf), trx, dl_slots, tfi);
+		res->ass_slots_mask = dl_slots;
 	else
-		assign_ul_tbf_slots(tbf_as_ul_tbf(req->tbf), trx, ul_slots, tfi, usf);
+		res->ass_slots_mask = ul_slots;
 
 	bts_do_rate_ctr_inc(req->bts, CTR_TBF_ALLOC_ALGO_B);
 
@@ -951,9 +859,11 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
  * goal is to provide the highest possible bandwidth per MS.
  *
  *  \param[in] req Contains all the requested params
+ *  \param[out] res The resolution/response for the allocation request
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_dynamic(const struct alloc_resources_req *req)
+int alloc_algorithm_dynamic(const struct alloc_resources_req *req,
+			    struct alloc_resources_res *res)
 {
 	int rc;
 
@@ -965,7 +875,7 @@ int alloc_algorithm_dynamic(const struct alloc_resources_req *req)
 	}
 
 	if (!req->bts->multislot_disabled) {
-		rc = alloc_algorithm_b(req);
+		rc = alloc_algorithm_b(req, res);
 		if (rc >= 0)
 			return rc;
 
@@ -974,7 +884,7 @@ int alloc_algorithm_dynamic(const struct alloc_resources_req *req)
 		req->bts->multislot_disabled = 1;
 	}
 
-	return alloc_algorithm_a(req);
+	return alloc_algorithm_a(req, res);
 }
 
 int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms_class)

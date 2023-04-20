@@ -29,6 +29,7 @@
 #include <gprs_ms.h>
 #include <llc.h>
 #include "pcu_utils.h"
+#include "alloc_algo.h"
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -702,6 +703,30 @@ void gprs_rlcmac_ul_tbf::set_window_size()
 gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 {
 	return &m_window;
+}
+
+void gprs_rlcmac_ul_tbf::apply_allocated_resources(const struct alloc_resources_res *res)
+{
+	uint8_t ts;
+
+	this->trx = res->trx;
+	this->upgrade_to_multislot = res->upgrade_to_multislot;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+		OSMO_ASSERT(!this->pdch[pdch->ts_no]);
+		if (!(res->ass_slots_mask & (1 << ts)))
+			continue;
+		LOGPTBFUL(this, LOGL_DEBUG, "Assigning TS=%u TFI=%d USF=%u\n",
+			  ts, res->tfi, res->usf[ts]);
+		OSMO_ASSERT(res->usf[ts] >= 0);
+
+		this->m_tfi = res->tfi;
+		this->m_usf[pdch->ts_no] = res->usf[ts];
+
+		this->pdch[pdch->ts_no] = pdch;
+		pdch->attach_tbf(this);
+	}
 }
 
 void gprs_rlcmac_ul_tbf::usf_timeout()

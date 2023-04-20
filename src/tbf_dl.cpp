@@ -418,6 +418,28 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, const struct
 	return create_dl_acked_block(fn, pdch, bsn, bsn2);
 }
 
+void gprs_rlcmac_dl_tbf::apply_allocated_resources(const struct alloc_resources_res *res)
+{
+	uint8_t ts;
+
+	this->trx = res->trx;
+	this->upgrade_to_multislot = res->upgrade_to_multislot;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+		OSMO_ASSERT(!this->pdch[pdch->ts_no]);
+		if (!(res->ass_slots_mask & (1 << ts)))
+			continue;
+		LOGPTBFDL(this, LOGL_DEBUG, "Assigning TS=%u TFI=%d\n",
+			  ts, res->tfi);
+
+		this->m_tfi = res->tfi;
+
+		this->pdch[pdch->ts_no] = pdch;
+		pdch->attach_tbf(this);
+	}
+}
+
 /* old_tbf (UL TBF or DL TBF) will send a Pkt Dl Ass on PACCH to assign tbf.
  * Note: It is possible that "tbf == old_tbf" if the TBF is being updated. This can
  * happen when we first assign over PCH (only single slot is possible) and we want
@@ -472,9 +494,8 @@ int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
 		.direction = tbf_direction(tbf),
 		.single = false,
 		.use_trx = -1,
-		.tbf = tbf,
 	};
-	rc = the_pcu->alloc_algorithm(&req);
+	rc = dl_tbf->alloc_algorithm(&req);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBFDL(dl_tbf, LOGL_ERROR, "No resources allocated during upgrade to multislot!\n");

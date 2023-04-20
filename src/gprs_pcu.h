@@ -67,8 +67,10 @@ struct gprs_rlcmac_bts;
 struct GprsMs;
 struct gprs_rlcmac_tbf;
 struct alloc_resources_req;
+struct alloc_resources_res;
 
-typedef int (*alloc_algorithm_func_t)(const struct alloc_resources_req *req);
+typedef int (*alloc_algorithm_func_t)(const struct alloc_resources_req *req,
+				      struct alloc_resources_res *res);
 
 struct gprs_pcu {
 
