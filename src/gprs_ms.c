@@ -170,8 +170,6 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, const char *use_ref)
 	if (!ms->ctrs)
 		goto free_ret;
 
-	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
-
 	if (use_ref)
 		ms_ref(ms, use_ref);
 	return ms;
@@ -219,6 +217,8 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 /* MS has no attached TBFs anymore. */
 static void ms_becomes_idle(struct GprsMs *ms)
 {
+	unsigned long delay_rel_sec = osmo_tdef_get(ms->bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1);
+
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 	ms->first_common_ts = NULL;
 
@@ -226,7 +226,7 @@ static void ms_becomes_idle(struct GprsMs *ms)
 	 * Skip delaying free() through release timer if delay is configured to be 0.
 	 * This is useful for synced freed during unit tests.
 	 */
-	if (ms->delay == 0) {
+	if (delay_rel_sec == 0) {
 		talloc_free(ms);
 		return;
 	}
@@ -240,8 +240,8 @@ static void ms_becomes_idle(struct GprsMs *ms)
 		return;
 	}
 
-	LOGPMS(ms, DMS, LOGL_INFO, "Schedule MS release in %u secs\n", ms->delay);
-	osmo_timer_schedule(&ms->timer, ms->delay, 0);
+	LOGPMS(ms, DMS, LOGL_INFO, "Schedule MS release in %lu secs\n", delay_rel_sec);
+	osmo_timer_schedule(&ms->timer, delay_rel_sec, 0);
 }
 
 static void ms_becomes_active(struct GprsMs *ms)
@@ -398,9 +398,6 @@ void ms_reset(struct GprsMs *ms)
 	struct llist_item *pos;
 	struct gprs_rlcmac_tbf *tbf;
 
-	/* free immediately when it becomes idle: */
-	ms->delay = 0;
-
 	tbf = ul_tbf_as_tbf(ms_ul_tbf(ms));
 	if (tbf && !tbf_timers_pending(tbf, T_MAX))
 		tbf_free(tbf);
@@ -415,7 +412,8 @@ void ms_reset(struct GprsMs *ms)
 	}
 
 	/* Flag it with invalid data so that it cannot be looked up anymore and
-	* shows up specially if listed in VTY: */
+	* shows up specially if listed in VTY. Furthermore, it will also trigger
+	* immediate free() when it becomes idle: */
 	ms->tlli = GSM_RESERVED_TMSI;
 	ms->new_dl_tlli = ms->tlli;
 	ms->new_ul_tlli = ms->tlli;

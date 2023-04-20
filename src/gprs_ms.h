@@ -80,7 +80,6 @@ struct GprsMs {
 
 	struct osmo_use_count use_count;
 	struct osmo_timer_list timer;
-	unsigned delay;
 
 	int64_t last_cs_not_low;
 
@@ -214,11 +213,6 @@ static inline enum CodingScheme ms_current_cs_ul(const struct GprsMs *ms)
 static inline enum mcs_kind ms_mode(const struct GprsMs *ms)
 {
 	return ms->mode;
-}
-
-static inline void ms_set_timeout(struct GprsMs *ms, unsigned secs)
-{
-	ms->delay = secs;
 }
 
 static inline unsigned ms_nack_rate_dl(const struct GprsMs *ms)

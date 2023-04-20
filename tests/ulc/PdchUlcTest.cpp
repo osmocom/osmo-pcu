@@ -320,6 +320,7 @@ int main(int argc, char **argv)
 	log_parse_category_mask(osmo_stderr_target, "DPCU,1:DRLCMAC,1:DRLCMACUL,1:DMS,1");
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
 
 	test_reserve_multiple();
 	test_fn_wrap_around();

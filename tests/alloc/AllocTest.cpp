@@ -225,7 +225,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	ms = ms_alloc(bts, __func__);
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
-	ms_set_timeout(ms, 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
 	ul_tbf = ul_tbf_alloc(bts, ms, -1, true);
 	if (!ul_tbf) {
 		ms_unref(ms, __func__);
@@ -273,7 +273,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	ms = ms_alloc(bts, __func__);
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
-	ms_set_timeout(ms, 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
 	dl_tbf = dl_tbf_alloc(bts, ms, -1, true);
 	if (!dl_tbf) {
 		ms_unref(ms, __func__);
@@ -329,7 +329,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	ms = ms_alloc(bts, __func__);
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
-	ms_set_timeout(ms, 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
 	ul_tbf = ul_tbf_alloc(bts, ms, -1, false);
 	if (!ul_tbf) {
 		ms_unref(ms, __func__);

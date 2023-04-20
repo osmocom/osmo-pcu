@@ -241,11 +241,8 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 {
 	struct GprsMs *ms;
-	while ((ms = llist_first_entry_or_null(&bts->ms_list, struct GprsMs, list))) {
-		ms_set_timeout(ms, 0);
-		bts_stat_item_dec(bts, STAT_MS_PRESENT);
+	while ((ms = llist_first_entry_or_null(&bts->ms_list, struct GprsMs, list)))
 		talloc_free(ms);
-	}
 
 	gprs_bssgp_destroy(bts);
 

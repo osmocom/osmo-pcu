@@ -378,9 +378,10 @@ static void test_ms_timeout()
 
 	printf("=== start %s ===\n", __func__);
 
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 1, OSMO_TDEF_S) == 0);
+
 	ms = ms_alloc(bts, __func__);
 	ms_set_tlli(ms, tlli);
-	ms_set_timeout(ms, 1);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -415,6 +416,8 @@ static void test_ms_timeout()
 	talloc_free(ul_tbf);
 	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
+	/* Return the timer to the usually expected value 0 for other tests: */
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
 }
 
 static void test_ms_cs_selection()
