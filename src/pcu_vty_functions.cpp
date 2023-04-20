@@ -148,6 +148,16 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	uint8_t slots;
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms_tlli(ms), ms_imsi(ms), VTY_NEWLINE);
+	if (osmo_timer_pending(&ms->release_timer)) {
+		struct timeval tv_now, tv_res1, tv_res2;
+		osmo_gettimeofday(&tv_now, NULL);
+		timersub(&tv_now, &ms->tv_idle_start, &tv_res1);
+		osmo_timer_remaining(&ms->release_timer, &tv_now, &tv_res2);
+		vty_out(vty, "  State:                  IDLE for %lus, release in %lus%s",
+			tv_res1.tv_sec, tv_res2.tv_sec, VTY_NEWLINE);
+	} else {
+		vty_out(vty, "  State:                  ACTIVE%s", VTY_NEWLINE);
+	}
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms_ta(ms), VTY_NEWLINE);
 	vty_out(vty, "  Coding scheme uplink:   %s%s", mcs_name(ms_current_cs_ul(ms)),
 		VTY_NEWLINE);

@@ -80,6 +80,8 @@ struct GprsMs {
 
 	struct osmo_use_count use_count;
 	struct osmo_timer_list release_timer;
+	/* Time at which MS became idle and waiting to be released by release_timer: */
+	struct timeval tv_idle_start;
 
 	int64_t last_cs_not_low;
 

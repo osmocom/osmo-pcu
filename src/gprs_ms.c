@@ -219,6 +219,8 @@ static void ms_becomes_idle(struct GprsMs *ms)
 {
 	unsigned long delay_rel_sec = osmo_tdef_get(ms->bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1);
 
+	osmo_gettimeofday(&ms->tv_idle_start, NULL);
+
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 	ms->first_common_ts = NULL;
 
@@ -251,6 +253,7 @@ static void ms_becomes_active(struct GprsMs *ms)
 
 	LOGPMS(ms, DMS, LOGL_DEBUG, "Cancel scheduled MS release\n");
 
+	timerclear(&ms->tv_idle_start);
 	osmo_timer_del(&ms->release_timer);
 }
 
