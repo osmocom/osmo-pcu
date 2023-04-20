@@ -4159,7 +4159,7 @@ Slot Allocation (Algorithm B) for class 12
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
 Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
-- Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
+- Available DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
 PDCH(bts=0,trx=0,ts=2) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:GPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 - Assigning DL TS 3
@@ -4205,7 +4205,7 @@ Slot Allocation (Algorithm B) for class 12
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
 Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
-- Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
+- Available DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
 PDCH(bts=0,trx=0,ts=2) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 - Assigning DL TS 3
@@ -7551,7 +7551,7 @@ Slot Allocation (Algorithm B) for class 11
 Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
 Selected DL slots: (TS=0)"..ddDd.."(TS=7), single
 [DL] algo B <single> (suggested TRX: 0): using single slot at TS 4
-- Reserved DL/UL slots: (TS=0)"...DC..."(TS=7)
+- Available DL/UL slots: (TS=0)"...DC..."(TS=7)
 - Assigning DL TS 4
 PDCH(bts=0,trx=0,ts=4) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS) Setting Control TS PDCH(bts=0,trx=0,ts=4)
@@ -7567,6 +7567,7 @@ PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs
 Found first unallocated TRX=0 TFI=0
 Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: -1): using 4 slots
+- Available DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
 PDCH(bts=0,trx=0,ts=2) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 - Assigning DL TS 3
@@ -9976,7 +9977,7 @@ Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
 - Skipping TS 6, because num TBFs 0 >= 0
 Selected DL slots: (TS=0)".ddd.D.."(TS=7), single
 [DL] algo B <single> (suggested TRX: -1): using single slot at TS 5
-- Reserved DL/UL slots: (TS=0)"..D..CU."(TS=7)
+- Available DL/UL slots: (TS=0)"..D..CU."(TS=7)
 - Assigning DL TS 5
 PDCH(bts=0,trx=1,ts=5) Attaching TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(DL:TFI-0-1-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xa3c2f953) Setting Control TS PDCH(bts=0,trx=1,ts=5)
@@ -10014,7 +10015,7 @@ Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
 - Skipping TS 3, because num TBFs 0 >= 0
 Selected UL slots: (TS=0)"..U.uu.."(TS=7), single
 [UL] algo B <single> (suggested TRX: 0): using single slot at TS 2
-- Reserved DL/UL slots: (TS=0)"..C.DDD."(TS=7)
+- Available DL/UL slots: (TS=0)"..C.DDD."(TS=7)
 - Assigning UL TS 2
 PDCH(bts=0,trx=0,ts=2) Attaching TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS:TLLI-0xecc1f953) Setting Control TS PDCH(bts=0,trx=0,ts=2)
@@ -10047,6 +10048,7 @@ DL_TBF{NEW}: Allocated
 Found first unallocated TRX=0 TFI=0
 Selected DL slots: (TS=0)".DDDddd."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: 0): using 3 slots
+- Available DL/UL slots: (TS=0)"..C.DDD."(TS=7)
 - Assigning DL TS 1
 PDCH(bts=0,trx=0,ts=1) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:GPRS:IMSI-001001000000001:TLLI-0xecc1f953), 1 TBFs, USFs = 00, TFIs = 00000001.
 - Assigning DL TS 2

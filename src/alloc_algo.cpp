@@ -773,22 +773,14 @@ static int allocate_usf(const gprs_rlcmac_trx *trx, uint8_t selected_ul_slots, u
  *  \param[in] tbf_ Pointer to TBF struct
  *  \param[in] res_ul_slots Newly reserved UL slots
  *  \param[in] res_dl_slots Newly reserved DL slots
- *  \param[in] ul_slots available UL slots (for logging only)
- *  \param[in] dl_slots available DL slots (for logging only)
  */
-static void update_ms_reserved_slots(gprs_rlcmac_trx *trx, GprsMs *ms, uint8_t res_ul_slots, uint8_t res_dl_slots,
-				     uint8_t ul_slots, uint8_t dl_slots)
+static void update_ms_reserved_slots(gprs_rlcmac_trx *trx, GprsMs *ms, uint8_t res_ul_slots, uint8_t res_dl_slots)
 {
-	char slot_info[9] = { 0 };
-
 	if (res_ul_slots == ms_reserved_ul_slots(ms) && res_dl_slots == ms_reserved_dl_slots(ms))
 		return;
 
 	/* The reserved slots have changed, update the MS */
 	ms_set_reserved_slots(ms, trx, res_ul_slots, res_dl_slots);
-
-	ts_format(slot_info, dl_slots, ul_slots);
-	LOGP(DRLCMAC, LOGL_DEBUG, "- Reserved DL/UL slots: (TS=0)\"%s\"(TS=7)\n", slot_info);
 }
 
 /*! Assign given UL timeslots to UL TBF
@@ -857,6 +849,7 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
 	int rc;
 	int tfi;
 	gprs_rlcmac_trx *trx;
+	char slot_info[9] = { 0 };
 	struct gprs_rlcmac_pdch *first_common_ts = ms_first_common_ts(req->ms);
 
 	LOGPAL(req, "B", LOGL_DEBUG, "Alloc start\n");
@@ -927,12 +920,15 @@ int alloc_algorithm_b(const struct alloc_resources_req *req)
 		LOGPAL(req, "B", LOGL_INFO, "using %d slots\n", slotcount);
 	}
 
+	ts_format(slot_info, dl_slots, ul_slots);
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Available DL/UL slots: (TS=0)\"%s\"(TS=7)\n", slot_info);
+
 	/* The allocation will be successful, so the system state and tbf/ms
 	 * may be modified from now on. */
 
 	/* Step 4: Update MS and TBF and really allocate the resources */
 
-	update_ms_reserved_slots(trx, req->ms, reserved_ul_slots, reserved_dl_slots, ul_slots, dl_slots);
+	update_ms_reserved_slots(trx, req->ms, reserved_ul_slots, reserved_dl_slots);
 	ms_set_first_common_ts(req->ms, first_common_ts);
 	req->tbf->trx = trx;
 
