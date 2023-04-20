@@ -158,11 +158,6 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	} else {
 		vty_out(vty, "  State:                  ACTIVE%s", VTY_NEWLINE);
 	}
-	vty_out(vty, "  Timing advance (TA):    %d%s", ms_ta(ms), VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme uplink:   %s%s", mcs_name(ms_current_cs_ul(ms)),
-		VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme downlink: %s%s", mcs_name(ms_current_cs_dl(ms, ms_mode(ms))),
-		VTY_NEWLINE);
 	vty_out(vty, "  Mode:                   %s%s", mode_name(ms_mode(ms)), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms_ms_class(ms), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms_egprs_ms_class(ms), VTY_NEWLINE);
@@ -170,12 +165,17 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	slots = ms_current_pacch_slots(ms);
 	for (int i = 0; i < 8; i++)
 		if (slots & (1 << i))
-			vty_out(vty, "%d ", i);
+			vty_out(vty, "TS%d ", i);
 	vty_out(vty, "%s", VTY_NEWLINE);
-	vty_out(vty, "  LLC queue length:       %zd%s", llc_queue_size(ms_llc_queue(ms)),
+	vty_out(vty, "  DL LLC queue length:    %zd%s", llc_queue_size(ms_llc_queue(ms)),
 		VTY_NEWLINE);
-	vty_out(vty, "  LLC queue octets:       %zd%s", llc_queue_octets(ms_llc_queue(ms)),
+	vty_out(vty, "  DL LLC queue octets:    %zd%s", llc_queue_octets(ms_llc_queue(ms)),
 		VTY_NEWLINE);
+	vty_out(vty, "  DL Coding Scheme:       %s%s", mcs_name(ms_current_cs_dl(ms, ms_mode(ms))),
+		VTY_NEWLINE);
+	vty_out(vty, "  UL Coding Scheme:       %s%s", mcs_name(ms_current_cs_ul(ms)),
+		VTY_NEWLINE);
+	vty_out(vty, "  Timing advance (TA):    %d%s", ms_ta(ms), VTY_NEWLINE);
 	if (ms->l1_meas.have_rssi)
 		vty_out(vty, "  RSSI:                   %d dBm%s",
 			ms->l1_meas.rssi, VTY_NEWLINE);
@@ -192,7 +192,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		vty_out(vty, "  Downlink NACK rate:     %d %%%s",
 			ms_nack_rate_dl(ms), VTY_NEWLINE);
 	if (ms->l1_meas.have_ms_rx_qual)
-		vty_out(vty, "  MS RX quality:          %d %%%s",
+		vty_out(vty, "  MS Rx quality:          %d %%%s",
 			ms->l1_meas.ms_rx_qual, VTY_NEWLINE);
 	if (ms->l1_meas.have_ms_c_value)
 		vty_out(vty, "  MS C value:             %d dB%s",
@@ -206,25 +206,25 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 				i, ms->l1_meas.ts[i].ms_i_level, VTY_NEWLINE);
 	}
 	if (ms_ul_tbf(ms))
-		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
+		vty_out(vty, "  UL TBF:                 TFI=%d, state=%s%s",
 			ms_ul_tbf(ms)->tfi(),
 			ms_ul_tbf(ms)->state_name(),
 			VTY_NEWLINE);
 	if (ms_dl_tbf(ms)) {
-		vty_out(vty, "  Downlink TBF:           TFI=%d, state=%s%s",
+		vty_out(vty, "  DL TBF:                 TFI=%d, state=%s%s",
 			ms_dl_tbf(ms)->tfi(),
 			ms_dl_tbf(ms)->state_name(),
 			VTY_NEWLINE);
-		vty_out(vty, "  Current DL Throughput:  %d Kbps %s",
+		vty_out(vty, "  Current DL Throughput:  %d Kbps%s",
 			ms_dl_tbf(ms)->m_bw.dl_throughput,
 			VTY_NEWLINE);
 	}
 
 	llist_for_each_entry(i_tbf, &ms->old_tbfs, list) {
 		struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)i_tbf->entry;
-		vty_out(vty, "  Old %-19s TFI=%d, state=%s%s",
+		vty_out(vty, "  Old %s TBF: TFI=%d, state=%s%s",
 			tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF ?
-			"Uplink TBF:" : "Downlink TBF:",
+			"UL" : "DL",
 			tbf->tfi(),
 			tbf->state_name(),
 			VTY_NEWLINE);
