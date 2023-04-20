@@ -124,8 +124,8 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	if (!sum)
 		return -EINVAL;
 
-	LOGP(DRLCMACMEAS, LOGL_DEBUG, "DL Loss of TLLI 0x%08x: Received: %4d  "
-		"Lost: %4d  Sum: %4d\n", tbf->tlli(), received, lost, sum);
+	LOGP(DRLCMACMEAS, LOGL_DEBUG, "%s DL Loss: Received: %4d Lost: %4d  Sum: %4d\n",
+	     tbf_name(dl_tbf_as_tbf_const(tbf)), received, lost, sum);
 
 	tbf->m_bw.dl_loss_received += received;
 	tbf->m_bw.dl_loss_lost += lost;
@@ -154,9 +154,8 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf)
 	if (!sum)
 		return -EINVAL;
 
-	LOGP(DRLCMACMEAS, LOGL_DEBUG, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
-		"%d%%\n", tbf->imsi(), tbf->tlli(),
-		tbf->m_bw.dl_loss_lost * 100 / sum);
+	LOGP(DRLCMACMEAS, LOGL_DEBUG, "%s DL packet loss: %d%%\n",
+	     tbf_name(dl_tbf_as_tbf_const(tbf)), tbf->m_bw.dl_loss_lost * 100 / sum);
 
 	return 0;
 }
@@ -179,8 +178,8 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 		return 0;
 
 	tbf->m_bw.dl_throughput = (tbf->m_bw.dl_bw_octets << 10) / ((elapsed.tv_sec << 10) + (elapsed.tv_nsec >> 20));
-	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
-		"%d KBits/s\n", tbf->imsi(), tbf->tlli(), tbf->m_bw.dl_throughput);
+	LOGP(DRLCMACMEAS, LOGL_INFO, "%s DL Bandwitdh: %d KBits/s\n",
+	     tbf_name(dl_tbf_as_tbf_const(tbf)), tbf->m_bw.dl_throughput);
 
 	/* reset bandwidth values timestamp */
 	memcpy(bw_tv, &now_tv, sizeof(*bw_tv));
