@@ -151,7 +151,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, const char *use_ref)
 	LOGP(DMS, LOGL_INFO, "Creating MS object\n");
 
 	ms->imsi[0] = '\0';
-	osmo_timer_setup(&ms->timer, ms_release_timer_cb, ms);
+	osmo_timer_setup(&ms->release_timer, ms_release_timer_cb, ms);
 	llc_queue_init(&ms->llc_queue, ms);
 	memset(&ms->llc_timer, 0, sizeof(ms->llc_timer));
 	osmo_timer_setup(&ms->llc_timer, ms_llc_timer_cb, ms);
@@ -189,7 +189,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 
-	osmo_timer_del(&ms->timer);
+	osmo_timer_del(&ms->release_timer);
 
 	if (ms->ul_tbf) {
 		tbf_set_ms(ul_tbf_as_tbf(ms->ul_tbf), NULL);
@@ -241,17 +241,17 @@ static void ms_becomes_idle(struct GprsMs *ms)
 	}
 
 	LOGPMS(ms, DMS, LOGL_INFO, "Schedule MS release in %lu secs\n", delay_rel_sec);
-	osmo_timer_schedule(&ms->timer, delay_rel_sec, 0);
+	osmo_timer_schedule(&ms->release_timer, delay_rel_sec, 0);
 }
 
 static void ms_becomes_active(struct GprsMs *ms)
 {
-	if (!osmo_timer_pending(&ms->timer))
+	if (!osmo_timer_pending(&ms->release_timer))
 		return;
 
 	LOGPMS(ms, DMS, LOGL_DEBUG, "Cancel scheduled MS release\n");
 
-	osmo_timer_del(&ms->timer);
+	osmo_timer_del(&ms->release_timer);
 }
 
 void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)

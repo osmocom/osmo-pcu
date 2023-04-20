@@ -79,7 +79,7 @@ struct GprsMs {
 	struct osmo_timer_list llc_timer;
 
 	struct osmo_use_count use_count;
-	struct osmo_timer_list timer;
+	struct osmo_timer_list release_timer;
 
 	int64_t last_cs_not_low;
 

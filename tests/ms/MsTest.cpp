@@ -404,7 +404,7 @@ static void test_ms_timeout()
 	/* test MS still exists and it's idle: */
 	OSMO_ASSERT(bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI) != NULL);
 	OSMO_ASSERT(ms_is_idle(ms));
-	OSMO_ASSERT(osmo_timer_pending(&ms->timer));
+	OSMO_ASSERT(osmo_timer_pending(&ms->release_timer));
 
 	usleep(1100000);
 	osmo_timers_update();
