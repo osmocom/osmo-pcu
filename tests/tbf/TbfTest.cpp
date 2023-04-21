@@ -123,20 +123,19 @@ static void test_tbf_tlli_update()
 	 * Make a uplink and downlink allocation
 	 */
 	ms = ms_alloc(bts, NULL);
-	gprs_rlcmac_tbf *dl_tbf = dl_tbf_alloc(bts,
-						ms, 0, false);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	gprs_rlcmac_tbf *dl_tbf = ms_dl_tbf(ms);
 	OSMO_ASSERT(dl_tbf != NULL);
+	OSMO_ASSERT(dl_tbf->ms() == ms);
 	ms_confirm_tlli(ms, 0x2342);
 	dl_tbf->set_ta(4);
-	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
-	OSMO_ASSERT(dl_tbf->ms() == ms);
 
-	gprs_rlcmac_tbf *ul_tbf = ul_tbf_alloc(bts,
-						   ms, 0, false);
+	OSMO_ASSERT(ms_new_ul_tbf_assigned_pacch(ms, 0));
+
+	gprs_rlcmac_tbf *ul_tbf = ms_ul_tbf(ms);
 	OSMO_ASSERT(ul_tbf != NULL);
-	ms_update_announced_tlli(ms, 0x2342);
-	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 	OSMO_ASSERT(ul_tbf->ms() == ms);
+	ms_update_announced_tlli(ms, 0x2342);
 
 	OSMO_ASSERT(bts_get_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI) == ms);
 
@@ -211,7 +210,8 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 
 	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	dl_tbf = dl_tbf_alloc(bts, ms, trx_no, true);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	dl_tbf = ms_dl_tbf(ms);
 	OSMO_ASSERT(dl_tbf);
 	dl_tbf->set_ta(0);
 	check_tbf(dl_tbf);
@@ -2348,7 +2348,9 @@ static void test_tbf_ws()
 	/* Does no support EGPRS */
 	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
-	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	dl_tbf = ms_dl_tbf(ms);
+	OSMO_ASSERT(dl_tbf);
 
 	ws_check(dl_tbf, __func__, 4, 64, true);
 
@@ -2358,7 +2360,9 @@ static void test_tbf_ws()
 	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, ms_class);
-	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	dl_tbf = ms_dl_tbf(ms);
+	OSMO_ASSERT(dl_tbf);
 
 	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true);
 	fprintf(stderr, "=== end %s ===\n", __func__);
@@ -2400,7 +2404,9 @@ static void test_tbf_update_ws(void)
 	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, ms_class);
-	dl_tbf = dl_tbf_alloc(bts, ms, 0, true);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	dl_tbf = ms_dl_tbf(ms);
+	OSMO_ASSERT(dl_tbf);
 
 	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false);
 
@@ -2478,7 +2484,8 @@ static void test_ms_merge_dl_tbf_different_trx(void)
 
 	second_ms = ms_alloc(bts, NULL);
 	ms_set_tlli(second_ms, new_tlli);
-	ul_tbf = ul_tbf_alloc(bts, second_ms, 0, true);
+	OSMO_ASSERT(ms_new_ul_tbf_assigned_pacch(second_ms, 0));
+	ul_tbf = ms_ul_tbf(second_ms);
 	OSMO_ASSERT(ul_tbf != NULL);
 	ms_update_announced_tlli(second_ms, new_tlli);
 

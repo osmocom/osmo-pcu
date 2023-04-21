@@ -39,6 +39,10 @@ alloc_AllocTest_LDADD = \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LDADD) \
 	$(NULL)
+alloc_AllocTest_LDFLAGS = \
+	-Wl,--wrap=pcu_sock_send \
+	$(AM_LDFLAGS) \
+	$(NULL)
 
 alloc_MslotTest_SOURCES = alloc/MslotTest.cpp
 alloc_MslotTest_LDADD = \
@@ -154,6 +158,10 @@ app_info_AppInfoTest_LDADD = \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LDADD) \
+	$(NULL)
+app_info_AppInfoTest_LDFLAGS = \
+	-Wl,--wrap=pcu_sock_send \
+	$(AM_LDFLAGS) \
 	$(NULL)
 
 ulc_PdchUlcTest_SOURCES = ulc/PdchUlcTest.cpp

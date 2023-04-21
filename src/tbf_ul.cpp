@@ -105,10 +105,9 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 }
 
 /* Generic function to alloc a UL TBF, later configured to be assigned either over CCCH or PACCH */
-struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
-	int rc;
 
 	OSMO_ASSERT(ms != NULL);
 
@@ -121,51 +120,9 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 	talloc_set_destructor(tbf, ul_tbf_dtor);
 	new (tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
-	rc = tbf->setup(use_trx, single_slot);
-
-	/* if no resource */
-	if (rc < 0) {
-		talloc_free(tbf);
-		return NULL;
-	}
-
-	if (tbf->is_egprs_enabled())
-		tbf->set_window_size();
-
-	llist_add_tail(tbf_trx_list(tbf), &tbf->trx->ul_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ALLOCATED);
 
 	return tbf;
-}
-
-/* Create a temporary dummy TBF to Tx a ImmAssReject if allocating a new one during
- * packet resource Request failed. This is similar as tbf_alloc_ul() but without
- * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources
- * from Packet Resource Request we received. See TS 44.060 sec 7.1.3.2.1  */
-struct gprs_rlcmac_ul_tbf *ul_tbf_alloc_rejected(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
-						 struct gprs_rlcmac_pdch *pdch)
-{
-	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-	struct gprs_rlcmac_trx *trx = pdch->trx;
-	OSMO_ASSERT(ms);
-
-	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	if (!ul_tbf)
-		return ul_tbf;
-	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
-
-	ul_tbf->trx = trx;
-	/* The only one TS is the common, control TS */
-	ms_set_first_common_ts(ms, pdch);
-	tbf_assign_control_ts(ul_tbf);
-	tbf_update_state_fsm_name(ul_tbf);
-
-	ms_attach_tbf(ms, ul_tbf);
-	llist_add(tbf_trx_list(ul_tbf), &trx->ul_tbfs);
-	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
-
-	return ul_tbf;
 }
 
 gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
@@ -709,6 +666,11 @@ void gprs_rlcmac_ul_tbf::apply_allocated_resources(const struct alloc_resources_
 {
 	uint8_t ts;
 
+	if (this->trx)
+		llist_del(&this->m_trx_list.list);
+
+	llist_add(&this->m_trx_list.list, &res->trx->ul_tbfs);
+
 	this->trx = res->trx;
 	this->upgrade_to_multislot = res->upgrade_to_multislot;
 
@@ -727,6 +689,27 @@ void gprs_rlcmac_ul_tbf::apply_allocated_resources(const struct alloc_resources_
 		this->pdch[pdch->ts_no] = pdch;
 		pdch->attach_tbf(this);
 	}
+
+	/* assign initial control ts */
+	tbf_assign_control_ts(this);
+
+	/* res.ass_slots_mask == 0 -> special case for Rejected UL TBFs,
+	 * see ms_new_ul_tbf_rejected_pacch() */
+	if (res->ass_slots_mask != 0) {
+		LOGPTBF(this, LOGL_INFO,
+			"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
+			this->trx->trx_no, ul_slots(), dl_slots());
+
+		if (tbf_is_egprs_enabled(this))
+			this->set_window_size();
+	}
+
+	tbf_update_state_fsm_name(this);
+}
+
+void ul_tbf_apply_allocated_resources(struct gprs_rlcmac_ul_tbf *ul_tbf, const struct alloc_resources_res *res)
+{
+	ul_tbf->apply_allocated_resources(res);
 }
 
 void gprs_rlcmac_ul_tbf::usf_timeout()

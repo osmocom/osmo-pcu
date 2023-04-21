@@ -106,10 +106,9 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 	return 0;
 }
 
-struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
-	int rc;
 
 	OSMO_ASSERT(ms != NULL);
 
@@ -124,15 +123,7 @@ struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 	talloc_set_destructor(tbf, dl_tbf_dtor);
 	new (tbf) gprs_rlcmac_dl_tbf(bts, ms);
 
-	rc = tbf->setup(use_trx, single_slot);
-	/* if no resource */
-	if (rc < 0) {
-		talloc_free(tbf);
-		return NULL;
-	}
-
 	if (tbf->is_egprs_enabled()) {
-		tbf->set_window_size();
 		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf,
 							&tbf_dl_egprs_ctrg_desc,
 							tbf->m_ctrs->idx);
@@ -151,8 +142,6 @@ struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 			return NULL;
 		}
 	}
-
-	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)tbf), &tbf->trx->dl_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ALLOCATED);
 
 	return tbf;
@@ -422,6 +411,11 @@ void gprs_rlcmac_dl_tbf::apply_allocated_resources(const struct alloc_resources_
 {
 	uint8_t ts;
 
+	if (this->trx)
+		llist_del(&this->m_trx_list.list);
+
+	llist_add(&this->m_trx_list.list, &res->trx->dl_tbfs);
+
 	this->trx = res->trx;
 	this->upgrade_to_multislot = res->upgrade_to_multislot;
 
@@ -438,6 +432,23 @@ void gprs_rlcmac_dl_tbf::apply_allocated_resources(const struct alloc_resources_
 		this->pdch[pdch->ts_no] = pdch;
 		pdch->attach_tbf(this);
 	}
+
+	/* assign initial control ts */
+	tbf_assign_control_ts(this);
+
+	LOGPTBF(this, LOGL_INFO,
+		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
+		this->trx->trx_no, ul_slots(), dl_slots());
+
+	if (tbf_is_egprs_enabled(this))
+		this->set_window_size();
+
+	tbf_update_state_fsm_name(this);
+}
+
+void dl_tbf_apply_allocated_resources(struct gprs_rlcmac_dl_tbf *dl_tbf, const struct alloc_resources_res *res)
+{
+	dl_tbf->apply_allocated_resources(res);
 }
 
 /* old_tbf (UL TBF or DL TBF) will send a Pkt Dl Ass on PACCH to assign tbf.
@@ -483,6 +494,7 @@ int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
 	struct gprs_rlcmac_tbf *tbf = dl_tbf_as_tbf(dl_tbf);
 	struct gprs_rlcmac_trx *trx = tbf_get_trx(dl_tbf);
 	struct gprs_rlcmac_bts *bts = trx->bts;
+	struct GprsMs *ms = tbf->ms();
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "Upgrade to multislot\n");
 
@@ -490,12 +502,14 @@ int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
 
 	const struct alloc_resources_req req = {
 		.bts = bts,
-		.ms = tbf->ms(),
+		.ms = ms,
 		.direction = tbf_direction(tbf),
 		.single = false,
 		.use_trx = -1,
 	};
-	rc = dl_tbf->alloc_algorithm(&req);
+	struct alloc_resources_res res = {};
+
+	rc = the_pcu->alloc_algorithm(&req, &res);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBFDL(dl_tbf, LOGL_ERROR, "No resources allocated during upgrade to multislot!\n");
@@ -503,9 +517,18 @@ int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
 		return rc;
 	}
 
-	if (tbf_is_egprs_enabled(tbf))
-		dl_tbf->set_window_size();
-	tbf_update_state_fsm_name(tbf);
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	/* Apply allocated resources to TBF: */
+	dl_tbf_apply_allocated_resources(dl_tbf, &res);
+
+	/* Note: No need to call ms_attach_tbf(), tbf is already attached to the MS */
 
 	/* Now trigger the assignment using the pre-existing TBF: */
 	dl_tbf_trigger_ass_on_pacch(dl_tbf, tbf);

@@ -165,7 +165,6 @@ struct gprs_rlcmac_tbf {
 	virtual gprs_rlc_window *window() = 0;
 	virtual void apply_allocated_resources(const struct alloc_resources_res *res) = 0;
 
-	int setup(int8_t use_trx, bool single_slot);
 	bool state_is(enum tbf_fsm_states rhs) const;
 	bool state_is_not(enum tbf_fsm_states rhs) const;
 	bool dl_ass_state_is(enum tbf_dl_ass_fsm_states rhs) const;
@@ -213,8 +212,6 @@ struct gprs_rlcmac_tbf {
 
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
-
-	int alloc_algorithm(const struct alloc_resources_req *req);
 
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;

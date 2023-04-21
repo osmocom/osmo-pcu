@@ -171,6 +171,9 @@ int _alloc_algorithm_dummy(const struct alloc_resources_req *req,
 {
 	res->trx = &req->bts->trx[0];
 	res->first_common_ts = &res->trx->pdch[0];
+	res->reserved_ul_slots = 1 << 0;
+	res->reserved_dl_slots = 1 << 0;
+	res->ass_slots_mask = 1 << 0;
 	return 0;
 }
 
@@ -185,7 +188,9 @@ static void test_fn_wrap_around()
 	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct GprsMs *ms = ms_alloc(bts, NULL);
 	ms_confirm_tlli(ms, 0x12345678);
-	struct gprs_rlcmac_tbf *tbf1 = dl_tbf_alloc(bts, ms, 0, true);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	struct gprs_rlcmac_tbf *tbf1 = ms_dl_tbf(ms);
+	OSMO_ASSERT(tbf1);
 	struct gprs_rlcmac_pdch *pdch = &tbf1->trx->pdch[0];
 	int rc;
 	uint32_t fn, last_fn;

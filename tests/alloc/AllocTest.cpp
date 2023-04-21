@@ -40,16 +40,59 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
+/* override, requires '-Wl,--wrap=pcu_sock_send' */
+int __real_pcu_sock_send(struct msgb *msg);
+extern "C" int __wrap_pcu_sock_send(struct msgb *msg)
+{
+	return 0;
+}
+
 static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		GprsMs *ms, gprs_rlcmac_tbf_direction dir,
 		uint8_t use_trx, bool single_slot)
 {
 	OSMO_ASSERT(ms != NULL);
 
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		return ul_tbf_alloc(bts, ms, use_trx, single_slot);
-	else
-		return dl_tbf_alloc(bts, ms, use_trx, single_slot);
+	const struct alloc_resources_req req = {
+		.bts = bts,
+		.ms = ms,
+		.direction = dir,
+		.single = single_slot,
+		.use_trx = (int8_t)use_trx,
+	};
+	struct alloc_resources_res res = {};
+	int rc;
+
+	rc = the_pcu->alloc_algorithm(&req, &res);
+	if (rc < 0) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			req.use_trx, req.single);
+		bts_do_rate_ctr_inc(ms->bts, CTR_TBF_ALLOC_FAIL);
+		return NULL;
+	}
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	if (dir == GPRS_RLCMAC_UL_TBF) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
+		ul_tbf = ul_tbf_alloc(bts, ms);
+		ul_tbf_apply_allocated_resources(ul_tbf, &res);
+		ms_attach_tbf(ms, ul_tbf_as_tbf(ul_tbf));
+		return ul_tbf;
+	} else {
+		struct gprs_rlcmac_dl_tbf *dl_tbf;
+		dl_tbf = dl_tbf_alloc(bts, ms);
+		dl_tbf_apply_allocated_resources(dl_tbf, &res);
+		ms_attach_tbf(ms, dl_tbf_as_tbf(dl_tbf));
+		return dl_tbf;
+	}
 }
 
 static void check_tfi_usage(struct gprs_rlcmac_bts *bts)
@@ -226,7 +269,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
-	ul_tbf = ul_tbf_alloc(bts, ms, -1, true);
+	ul_tbf = (gprs_rlcmac_ul_tbf *)tbf_alloc(bts, ms, GPRS_RLCMAC_UL_TBF, -1, true);
 	if (!ul_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -238,7 +281,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	dump_assignment(ul_tbf, "UL", verbose);
 
 	/* assume final ack has not been sent */
-	dl_tbf = dl_tbf_alloc(bts, ms, ms_current_trx(ms)->trx_no, false);
+	dl_tbf = (gprs_rlcmac_dl_tbf *)tbf_alloc(bts, ms, GPRS_RLCMAC_DL_TBF, ms_current_trx(ms)->trx_no, false);
 	if (!dl_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -274,7 +317,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
-	dl_tbf = dl_tbf_alloc(bts, ms, -1, true);
+	dl_tbf = (gprs_rlcmac_dl_tbf *)tbf_alloc(bts, ms, GPRS_RLCMAC_DL_TBF, -1, true);
 	if (!dl_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -286,7 +329,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	dump_assignment(dl_tbf, "DL", verbose);
 
-	ul_tbf = ul_tbf_alloc(bts, ms, ms_current_trx(ms)->trx_no, false);
+	ul_tbf = (gprs_rlcmac_ul_tbf *)tbf_alloc(bts, ms, GPRS_RLCMAC_UL_TBF, ms_current_trx(ms)->trx_no, false);
 	if (!ul_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -330,7 +373,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	ms_set_ms_class(ms, ms_class);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) == 0);
-	ul_tbf = ul_tbf_alloc(bts, ms, -1, false);
+	ul_tbf = tbf_alloc(bts, ms, GPRS_RLCMAC_UL_TBF, -1, false);
 	if (!ul_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -342,7 +385,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	dump_assignment(ul_tbf, "UL", true);
 
 	/* assume final ack has not been sent */
-	dl_tbf = dl_tbf_alloc(bts, ms, trx_no, false);
+	dl_tbf = tbf_alloc(bts, ms, GPRS_RLCMAC_DL_TBF, trx_no, false);
 	if (!dl_tbf) {
 		ms_unref(ms, __func__);
 		return false;
@@ -490,7 +533,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	case TEST_MODE_UL_AND_DL:
 		if (ms_ul_tbf(old_ms))
 			tbf_free(ms_ul_tbf(old_ms));
-		tbf = ul_tbf_alloc(bts, old_ms, trx_no, false);
+		tbf = tbf_alloc(bts, old_ms, GPRS_RLCMAC_UL_TBF, trx_no, false);
 		if (tbf == NULL) {
 			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
 			ms_unref(old_ms, __func__);
@@ -502,7 +545,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	case TEST_MODE_DL_AND_UL:
 		if (ms_dl_tbf(old_ms))
 			tbf_free(ms_dl_tbf(old_ms));
-		tbf = dl_tbf_alloc(bts, old_ms, trx_no, false);
+		tbf = tbf_alloc(bts, old_ms, GPRS_RLCMAC_DL_TBF, trx_no, false);
 		if (tbf == NULL) {
 			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
 			ms_unref(old_ms, __func__);
@@ -789,7 +832,7 @@ static void test_2_consecutive_dl_tbfs()
 	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
-	dl_tbf1 = dl_tbf_alloc(bts, ms, 0, false);
+	dl_tbf1 = tbf_alloc(bts, ms, GPRS_RLCMAC_DL_TBF, 0, false);
 	OSMO_ASSERT(dl_tbf1);
 
 	for (int i = 0; i < 8; i++) {
@@ -802,7 +845,7 @@ static void test_2_consecutive_dl_tbfs()
 	ms = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
-	dl_tbf2 = dl_tbf_alloc(bts, ms, 0, false);
+	dl_tbf2 = tbf_alloc(bts, ms, GPRS_RLCMAC_DL_TBF, 0, false);
 	OSMO_ASSERT(dl_tbf2);
 
 	for (int i = 0; i < 8; i++) {

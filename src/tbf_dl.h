@@ -138,8 +138,7 @@ extern "C" {
 #endif
 struct gprs_rlcmac_bts;
 
-struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
-					int8_t use_trx, bool single_slot);
+struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms);
 
 struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf(struct gprs_rlcmac_tbf *tbf);
 const struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf_const(const struct gprs_rlcmac_tbf *tbf);
@@ -150,6 +149,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint8_t egprs_ms_class, const uint16_t delay_csec,
 		  const uint8_t *data, const uint16_t len);
 
+void dl_tbf_apply_allocated_resources(struct gprs_rlcmac_dl_tbf *dl_tbf, const struct alloc_resources_res *res);
 void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
 void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf);
 void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);

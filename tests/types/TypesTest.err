@@ -3,6 +3,8 @@ UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 TBF(DL:TFI-0-0-0:STATE-NEW:GPRS) Setting Control TS PDCH(bts=0,trx=0,ts=2)
 TBF(DL:TFI-0-0-0:STATE-NEW:GPRS) Allocated: trx = 0, ul_slots = 04, dl_slots = 04
+TBF(DL:TFI-0-0-0:STATE-ASSIGN:GPRS) TX: START Immediate Assignment Downlink (PCH)
+PCU socket not connected, dropping message
 MS(TA-220:MSCLS-1-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -10,6 +12,9 @@ UL_TBF{NEW}: Allocated
 UL_ACK_TBF{NONE}: Allocated
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS) Setting Control TS PDCH(bts=0,trx=0,ts=4)
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS){NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(UL:TFI-0-0-0:STATE-NEW:GPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:GPRS){NEW}: state_chg to ASSIGN
 MS(TA-220:MSCLS-1-1) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -18,6 +23,9 @@ UL_ACK_TBF{NONE}: Allocated
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Setting Control TS PDCH(bts=0,trx=0,ts=1)
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Allocated: trx = 0, ul_slots = 02, dl_slots = 00
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: state_chg to ASSIGN
 ############## test_egprs_ul_ack_nack
 MS(TA-220:MSCLS-1-1) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -27,6 +35,9 @@ UL_ACK_TBF{NONE}: Allocated
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Setting Control TS PDCH(bts=0,trx=0,ts=4)
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: Received Event ASSIGN_ADD_CCCH
+TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
+UL_TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS){NEW}: state_chg to FLOW
 ************** Test with empty window
 ************** Test with 1 lost packet
 ************** Test with compressed window

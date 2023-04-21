@@ -39,6 +39,14 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
+/* override, requires '-Wl,--wrap=pcu_sock_send' */
+int __real_pcu_sock_send(struct msgb *msg);
+extern "C" int __wrap_pcu_sock_send(struct msgb *msg)
+{
+	msgb_free(msg);
+	return 0;
+}
+
 void test_enc_zero_len() {
 	struct gsm_pcu_if_app_info_req req = {0, 0, {0}};
 
@@ -93,11 +101,16 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	ms1 = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms1, 10);
 	ms_set_egprs_ms_class(ms1, 11);
-	tbf1 = dl_tbf_alloc(bts, ms1, 0, false);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms1) == 0);
+	tbf1 = ms_dl_tbf(ms1);
+	OSMO_ASSERT(tbf1);
+
 	ms2 = ms_alloc(bts, NULL);
 	ms_set_ms_class(ms2, 12);
 	ms_set_egprs_ms_class(ms2, 13);
-	tbf2 = dl_tbf_alloc(bts, ms2, 0, false);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms2) == 0);
+	tbf2 = ms_dl_tbf(ms2);
+	OSMO_ASSERT(tbf2);
 
 	fprintf(stderr, "\n");
 }

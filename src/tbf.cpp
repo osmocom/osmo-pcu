@@ -222,8 +222,10 @@ void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 	 * confirmation from the MS and goes through the FLOW state. Hence, we
 	 * may have ULC pollings ongoing and we need to make sure we drop all
 	 * reserved nodes there: */
-	if (tbf->control_ts)
+	if (tbf->control_ts) {
 		pdch_ulc_release_tbf(tbf->control_ts->ulc, tbf);
+		tbf->control_ts = NULL;
+	}
 
 	/* Now simply detach from all attached PDCHs */
 	for (ts = 0; ts < 8; ts++) {
@@ -232,6 +234,12 @@ void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 
 		tbf->pdch[ts]->detach_tbf(tbf);
 		tbf->pdch[ts] = NULL;
+	}
+
+	/* Detach from TRX: */
+	if (tbf->trx) {
+		llist_del(tbf_trx_list(tbf));
+		tbf->trx = NULL;
 	}
 }
 
@@ -264,7 +272,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
-	llist_del(tbf_trx_list(tbf));
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
@@ -570,68 +577,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, reason %s unhandled!\n",
 			get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 	}
-}
-
-int gprs_rlcmac_tbf::alloc_algorithm(const struct alloc_resources_req *req)
-{
-	int rc;
-
-	/* select algorithm */
-	struct alloc_resources_res res = {};
-	rc = the_pcu->alloc_algorithm(req, &res);
-	if (rc < 0)
-		return rc;
-
-	/* The allocation will be successful, so the system state and tbf/ms
-	 * may be modified from now on. */
-
-	/* Update MS, really allocate the resources */
-	if (res.reserved_ul_slots != ms_reserved_ul_slots(req->ms) ||
-	    res.reserved_dl_slots != ms_reserved_dl_slots(req->ms)) {
-		/* The reserved slots have changed, update the MS */
-		ms_set_reserved_slots(ms(), res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
-	}
-	ms_set_first_common_ts(ms(), res.first_common_ts);
-
-	/* Assign TRX,TS,TFI,USF to TBF: */
-	this->apply_allocated_resources(&res);
-
-	return 0;
-}
-
-int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
-{
-	int rc;
-	const struct alloc_resources_req req = {
-		.bts = bts,
-		.ms = this->ms(),
-		.direction = this->direction,
-		.single = single_slot,
-		.use_trx = use_trx,
-	};
-
-	/* select algorithm */
-	rc = this->alloc_algorithm(&req);
-	/* if no resource */
-	if (rc < 0) {
-		LOGPTBF(this, LOGL_NOTICE,
-			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
-			use_trx, single_slot);
-		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
-		return -1;
-	}
-	/* assign initial control ts */
-	tbf_assign_control_ts(this);
-
-	LOGPTBF(this, LOGL_INFO,
-		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
-		this->trx->trx_no, ul_slots(), dl_slots());
-
-	tbf_update_state_fsm_name(this);
-
-	ms_attach_tbf(m_ms, this);
-
-	return 0;
 }
 
 const char *tbf_name(const gprs_rlcmac_tbf *tbf)

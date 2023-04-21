@@ -24,6 +24,7 @@
 #include "pcu_utils.h"
 #include "nacc_fsm.h"
 #include "tbf_ul_ack_fsm.h"
+#include "alloc_algo.h"
 
 #include <time.h>
 
@@ -1119,15 +1120,46 @@ static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
  */
 struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_t use_trx)
 {
-	const bool single_slot = false;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	const struct alloc_resources_req req = {
+		.bts = ms->bts,
+		.ms = ms,
+		.direction = GPRS_RLCMAC_UL_TBF,
+		.single = false,
+		.use_trx = use_trx,
+	};
+	struct alloc_resources_res res = {};
+	int rc;
 
-	ul_tbf = ul_tbf_alloc(ms->bts, ms, use_trx, single_slot);
+	rc = the_pcu->alloc_algorithm(&req, &res);
+	if (rc < 0) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			req.use_trx, req.single);
+		bts_do_rate_ctr_inc(ms->bts, CTR_TBF_ALLOC_FAIL);
+		return NULL;
+	}
+
+	ul_tbf = ul_tbf_alloc(ms->bts, ms);
 	if (!ul_tbf) {
-		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "ul_tbf_alloc() failed\n");
 		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	/* Apply allocated resources to TBF: */
+	ul_tbf_apply_allocated_resources(ul_tbf, &res);
+
+	ms_attach_tbf(ms, ul_tbf_as_tbf(ul_tbf));
+
 	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	/* Contention resolution is considered to be done since TLLI is known in MS */
 	return ul_tbf;
@@ -1137,30 +1169,79 @@ struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_
  * packet access", where MS requested only 1 PDCH TS (TS 44.018 Table 9.1.8.1). */
 struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms)
 {
-	const int8_t trx_no = -1;
-	const bool single_slot = true;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	const struct alloc_resources_req req = {
+		.bts = ms->bts,
+		.ms = ms,
+		.direction = GPRS_RLCMAC_UL_TBF,
+		.single = true,
+		.use_trx = -1,
+	};
+	struct alloc_resources_res res = {};
+	int rc;
 
-	ul_tbf = ul_tbf_alloc(ms->bts, ms, trx_no, single_slot);
+	rc = the_pcu->alloc_algorithm(&req, &res);
+	if (rc < 0) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			req.use_trx, req.single);
+		bts_do_rate_ctr_inc(ms->bts, CTR_TBF_ALLOC_FAIL);
+		return NULL;
+	}
+
+	ul_tbf = ul_tbf_alloc(ms->bts, ms);
 	if (!ul_tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "ul_tbf_alloc() failed\n");
 		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	/* Apply allocated resources to TBF: */
+	ul_tbf_apply_allocated_resources(ul_tbf, &res);
+
+	ms_attach_tbf(ms, ul_tbf_as_tbf(ul_tbf));
+
 	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_CCCH, NULL);
 	return ul_tbf;
 }
 
 /* Create a temporary dummy TBF to Tx a ImmAssReject if allocating a new one during
  * packet resource Request failed. This is similar as ul_tbf_alloc() but without
- * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources
+ * calling alloc_algo (in charge of TFI/USF allocation), and reusing resources
  * from Packet Resource Request we received. See TS 44.060 sec 7.1.3.2.1  */
 struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_rejected_pacch(struct GprsMs *ms, struct gprs_rlcmac_pdch *pdch)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
-	ul_tbf = ul_tbf_alloc_rejected(ms->bts, ms, pdch);
+	struct alloc_resources_res fake_res = {
+		.trx = pdch->trx,
+		.first_common_ts = pdch,
+		.reserved_ul_slots = 0,
+		.reserved_dl_slots = 0,
+		.ass_slots_mask = 0,
+		.upgrade_to_multislot = false,
+		.tfi = TBF_TFI_UNSET,
+		.usf = {0},
+	};
+	ul_tbf = ul_tbf_alloc(ms->bts, ms);
 	if (!ul_tbf)
 		return NULL;
+
+	/* The only one TS is the common, control TS */
+	ms_set_first_common_ts(ms, pdch);
+
+	/* Apply fake resources to TBF, to attach it to the proper TRX/PDCH: */
+	ul_tbf_apply_allocated_resources(ul_tbf, &fake_res);
+
+	ms_attach_tbf(ms, ul_tbf_as_tbf(ul_tbf));
+
 	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	osmo_fsm_inst_dispatch(tbf_ul_ass_fi(ul_tbf_as_tbf(ul_tbf)), TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 
@@ -1174,15 +1255,44 @@ struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_rejected_pacch(struct GprsMs *ms, struc
 int ms_new_dl_tbf_assigned_on_pacch(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
-	const int8_t trx_no = tbf_get_trx(tbf)->trx_no;
-	const bool single_slot = false;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	const struct alloc_resources_req req = {
+		.bts = ms->bts,
+		.ms = ms,
+		.direction = GPRS_RLCMAC_DL_TBF,
+		.single = false,
+		.use_trx = tbf_get_trx(tbf)->trx_no,
+	};
+	struct alloc_resources_res res = {};
+	int rc;
 
-	dl_tbf = dl_tbf_alloc(ms->bts, ms, trx_no, single_slot);
-	if (!dl_tbf) {
-		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+	rc = the_pcu->alloc_algorithm(&req, &res);
+	if (rc < 0) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			req.use_trx, req.single);
+		bts_do_rate_ctr_inc(ms->bts, CTR_TBF_ALLOC_FAIL);
 		return -EBUSY;
 	}
+
+	dl_tbf = dl_tbf_alloc(ms->bts, ms);
+	if (!dl_tbf) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "dl_tbf_alloc() failed\n");
+		return -1;
+	}
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	/* Apply allocated resources to TBF: */
+	dl_tbf_apply_allocated_resources(dl_tbf, &res);
+
+	ms_attach_tbf(ms, dl_tbf_as_tbf(dl_tbf));
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START (PACCH)\n");
 	dl_tbf_trigger_ass_on_pacch(dl_tbf, tbf);
@@ -1194,15 +1304,44 @@ int ms_new_dl_tbf_assigned_on_pacch(struct GprsMs *ms, struct gprs_rlcmac_tbf *t
  */
 int ms_new_dl_tbf_assigned_on_pch(struct GprsMs *ms)
 {
-	const int8_t trx_no = -1;
-	const bool single_slot = true;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	const struct alloc_resources_req req = {
+		.bts = ms->bts,
+		.ms = ms,
+		.direction = GPRS_RLCMAC_DL_TBF,
+		.single = true,
+		.use_trx = -1,
+	};
+	struct alloc_resources_res res = {};
+	int rc;
 
-	dl_tbf = dl_tbf_alloc(ms->bts, ms, trx_no, single_slot);
-	if (!dl_tbf) {
-		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+	rc = the_pcu->alloc_algorithm(&req, &res);
+	if (rc < 0) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			req.use_trx, req.single);
+		bts_do_rate_ctr_inc(ms->bts, CTR_TBF_ALLOC_FAIL);
 		return -EBUSY;
 	}
+
+	dl_tbf = dl_tbf_alloc(ms->bts, ms);
+	if (!dl_tbf) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "dl_tbf_alloc() failed\n");
+		return -1;
+	}
+
+	/* Update MS, really allocate the resources */
+	if (res.reserved_ul_slots != ms_reserved_ul_slots(ms) ||
+	    res.reserved_dl_slots != ms_reserved_dl_slots(ms)) {
+		/* The reserved slots have changed, update the MS */
+		ms_set_reserved_slots(ms, res.trx, res.reserved_ul_slots, res.reserved_dl_slots);
+	}
+	ms_set_first_common_ts(ms, res.first_common_ts);
+
+	/* Apply allocated resources to TBF: */
+	dl_tbf_apply_allocated_resources(dl_tbf, &res);
+
+	ms_attach_tbf(ms, dl_tbf_as_tbf(dl_tbf));
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START (PCH)\n");
 	dl_tbf_trigger_ass_on_pch(dl_tbf);
