@@ -47,3 +47,7 @@ struct er_ccu_descr {
 
 
 };
+
+struct er_trx_descr {
+       struct er_ccu_descr ts_ccu_descr[8];
+};

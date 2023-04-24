@@ -372,18 +372,22 @@ static int cs_hdr_from_len(uint8_t len)
 int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 		  uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len)
 {
-	struct er_ccu_descr *ccu_descr = obj;
+	struct er_trx_descr *trx_descr = obj;
+	struct er_ccu_descr *ccu_descr;
 	struct er_gprs_trau_frame trau_frame;
 	ubit_t trau_frame_encoded[ER_GPRS_TRAU_FRAME_LEN_64K];
 	struct gprs_rlcmac_bts *bts;
 	int rc;
 
 	/* Make sure that the CCU is synchronized and connected. */
-	if (!ccu_descr) {
-		LOGP(DL1IF, LOGL_ERROR, "PCU-DATA-IND: PDCH(ts=%u, arfcn=%u) no CCU context, tossing MAC block...\n",
+	if (!trx_descr) {
+		LOGP(DL1IF, LOGL_ERROR, "PCU-DATA-IND: PDCH(ts=%u, arfcn=%u) no TRX context, tossing MAC block...\n",
 		     ts, arfcn);
 		return -EINVAL;
 	}
+
+	ccu_descr = &trx_descr->ts_ccu_descr[ts];
+
 	if (!ccu_descr->link.ccu_connected) {
 		LOGPL1IF(ccu_descr, LOGL_NOTICE, "PCU-DATA-IND", "CCU not connected, tossing MAC block...\n");
 		return -EINVAL;
@@ -450,46 +454,56 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 void *l1if_open_pdch(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
-	struct er_ccu_descr *ccu_descr;
+	struct er_trx_descr *trx_descr;
+	unsigned int i;
 
 	/* Note: We do not have enough information to really open anything at
-	 * this point. We will just create the CCU context. */
+	 * this point. We will just create the TRX context and fill it wit basic
+	 * CCU context (one for each TS) */
 
-	ccu_descr = talloc_zero(tall_pcu_ctx, struct er_ccu_descr);
-	OSMO_ASSERT(ccu_descr);
-	ccu_descr->er_ccu_rx_cb = er_ccu_rx_cb;
-	ccu_descr->er_ccu_empty_cb = er_ccu_empty_cb;
-	ccu_descr->pcu.trx_no = trx_no;
-	ccu_descr->pcu.bts_nr = bts_nr;
+	trx_descr = talloc_zero(tall_pcu_ctx, struct er_trx_descr);
+	OSMO_ASSERT(trx_descr);
 
-	return ccu_descr;
+	for (i = 0; i < ARRAY_SIZE(trx_descr->ts_ccu_descr); i++) {
+		trx_descr->ts_ccu_descr[i].er_ccu_rx_cb = er_ccu_rx_cb;
+		trx_descr->ts_ccu_descr[i].er_ccu_empty_cb = er_ccu_empty_cb;
+		trx_descr->ts_ccu_descr[i].pcu.trx_no = trx_no;
+		trx_descr->ts_ccu_descr[i].pcu.bts_nr = bts_nr;
+		trx_descr->ts_ccu_descr[i].pcu.ts = i;
+	}
+
+	return trx_descr;
 }
 
 int l1if_close_pdch(void *obj)
 {
-	struct er_ccu_descr *ccu_descr = obj;
+	struct er_trx_descr *trx_descr = obj;
+	unsigned int i;
 
-	if (!ccu_descr) {
-		LOGP(DL1IF, LOGL_ERROR, "PCU-DATA-IND: no CCU context, cannot close unknown PDCH...\n");
+	if (!trx_descr) {
+		LOGP(DL1IF, LOGL_ERROR, "PCU-DATA-IND: no TRX context, cannot close unknown TRX...\n");
 		return -EINVAL;
 	}
 
-	er_ccu_if_close(ccu_descr);
-	talloc_free(ccu_descr);
+	for (i = 0; i < ARRAY_SIZE(trx_descr->ts_ccu_descr); i++)
+		er_ccu_if_close(&trx_descr->ts_ccu_descr[i]);
+
+	talloc_free(trx_descr);
 	return 0;
 }
 
 int l1if_connect_pdch(void *obj, uint8_t ts)
 {
-	struct er_ccu_descr *ccu_descr = obj;
+	struct er_trx_descr *trx_descr = obj;
+	struct er_ccu_descr *ccu_descr;
 	int rc;
 
-	if (!ccu_descr) {
-		LOGP(DL1IF, LOGL_ERROR, "SETUP: PDCH(ts=%u) no CCU context, PDCH never opened before?\n", ts);
+	if (!trx_descr) {
+		LOGP(DL1IF, LOGL_ERROR, "SETUP: PDCH(ts=%u) no CCU context, TRX never opened before?\n", ts);
 		return -EINVAL;
 	}
 
-	ccu_descr->pcu.ts = ts;
+	ccu_descr = &trx_descr->ts_ccu_descr[ts];
 
 	rc = pcu_l1if_get_e1_ccu_conn_pars(&ccu_descr->e1_conn_pars, ccu_descr->pcu.bts_nr, ccu_descr->pcu.trx_no,
 					   ccu_descr->pcu.ts);
@@ -507,12 +521,15 @@ int l1if_connect_pdch(void *obj, uint8_t ts)
 
 int l1if_disconnect_pdch(void *obj, uint8_t ts)
 {
-	struct er_ccu_descr *ccu_descr = obj;
+	struct er_trx_descr *trx_descr = obj;
+	struct er_ccu_descr *ccu_descr;
 
-	if (!ccu_descr) {
-		LOGP(DL1IF, LOGL_ERROR, "SETUP: PDCH(ts=%u) no CCU context, PDCH never opened before?\n", ts);
+	if (!trx_descr) {
+		LOGP(DL1IF, LOGL_ERROR, "SETUP: PDCH(ts=%u) no TRX context, TRX never opened before?\n", ts);
 		return -EINVAL;
 	}
+
+	ccu_descr = &trx_descr->ts_ccu_descr[ts];
 
 	er_ccu_if_close(ccu_descr);
 
