@@ -184,7 +184,7 @@ static int add_i460_subslot(void *ctx, struct er_ccu_descr *ccu_descr)
 	enum osmo_tray_sync_pat_id sync_pattern;
 
 	if (ccu_descr->link.schan) {
-		/* NOTE: This is a serious error: subslots should be removed when l1if_close_pdch() is called by the
+		/* NOTE: This is a serious error: subslots should be removed when l1if_close_trx() is called by the
 		 * PCU. This log line points towards a problem with the PDCH management inside the PCU! */
 		LOGPCCU(ccu_descr, LOGL_ERROR, "SETUP", "I.460 subslot is already configured -- will not touch it!\n");
 		return -EINVAL;

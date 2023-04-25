@@ -452,7 +452,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	return 0;
 }
 
-void *l1if_open_pdch(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
+void *l1if_open_trx(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
 	struct er_trx_descr *trx_descr;
 	unsigned int i;
@@ -475,7 +475,7 @@ void *l1if_open_pdch(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gs
 	return trx_descr;
 }
 
-int l1if_close_pdch(void *obj)
+int l1if_close_trx(void *obj)
 {
 	struct er_trx_descr *trx_descr = obj;
 	unsigned int i;

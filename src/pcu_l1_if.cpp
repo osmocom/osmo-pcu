@@ -884,7 +884,7 @@ bssgp_failed:
 			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx_nr,
 				info_ind->trx[trx_nr].hlayer1);
 				if (!bts->trx[trx_nr].fl1h)
-					bts->trx[trx_nr].fl1h = l1if_open_pdch(
+					bts->trx[trx_nr].fl1h = l1if_open_trx(
 						bts->nr, trx_nr,
 						info_ind->trx[trx_nr].hlayer1,
 						the_pcu->gsmtap);

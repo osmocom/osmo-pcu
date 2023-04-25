@@ -349,10 +349,10 @@ extern "C" {
 	} void l1if_disconnect_pdch() {
 		abort();
 	}
-	void l1if_close_pdch() {
+	void l1if_close_trx() {
 		abort();
 	}
-	void l1if_open_pdch() {
+	void l1if_open_trx() {
 		abort();
 	}
 }

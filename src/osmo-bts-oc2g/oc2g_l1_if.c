@@ -372,7 +372,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	return 0;
 }
 
-void *l1if_open_pdch(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
+void *l1if_open_trx(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
 	struct oc2gl1_hdl *fl1h;
 	int rc;
@@ -401,7 +401,7 @@ void *l1if_open_pdch(uint8_t bts_nr, uint8_t trx_no, uint32_t hlayer1, struct gs
 	return fl1h;
 }
 
-int l1if_close_pdch(void *obj)
+int l1if_close_trx(void *obj)
 {
 	struct oc2gl1_hdl *fl1h = obj;
 	if (fl1h)

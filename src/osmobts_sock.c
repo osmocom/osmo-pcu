@@ -111,7 +111,7 @@ static void pcu_sock_close(int lost)
 		for (trx = 0; trx < 8; trx++) {
 #ifdef ENABLE_DIRECT_PHY
 			if (bts->trx[trx].fl1h) {
-				l1if_close_pdch(bts->trx[trx].fl1h);
+				l1if_close_trx(bts->trx[trx].fl1h);
 				bts->trx[trx].fl1h = NULL;
 			}
 #endif
