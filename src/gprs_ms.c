@@ -409,7 +409,7 @@ static void ms_reset(struct GprsMs *ms)
 	if (tbf && !tbf_timers_pending(tbf, T_MAX))
 		tbf_free(tbf);
 
-	llist_for_each_entry(pos, &ms->old_tbfs, list) {
+	while ((pos = llist_first_entry_or_null(&ms->old_tbfs, struct llist_item, list))) {
 		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
 		if (!tbf_timers_pending(tbf, T_MAX))
 			tbf_free(tbf);
