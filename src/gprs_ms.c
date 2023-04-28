@@ -395,7 +395,8 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 }
 
 /* Cleans up old MS being merged into a new one. Should be called with a
-ms_ref() taken to avoid use-after-free. */
+ * ms_ref() taken to avoid use-after-free.
+ */
 static void ms_reset(struct GprsMs *ms)
 {
 	LOGPMS(ms, DMS, LOGL_INFO, "Clearing MS object\n");
