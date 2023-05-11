@@ -264,6 +264,7 @@ void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
 }
 
 #define IMSI_DIGITS_FOR_PAGING 3
+/* Send a MAC block via the paging channel. (See also comment below) */
 void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi)
 {
 	uint8_t data[IMSI_DIGITS_FOR_PAGING + GSM_MACBLOCK_LEN];
@@ -286,13 +287,11 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, sizeof(data));
 }
 
-/* Send a block via the paging channel and require a confirmation by the receiving end */
-void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi, uint32_t tlli)
+/* Send a MAC block via the paging channel. This will (obviously) only work for MAC blocks that contain an
+ * IMMEDIATE ASSIGNMENT or a PAGING COMMAND message. In case the MAC block contains an IMMEDIATE ASSIGNMENT
+ * message, the receiving end is required to confirm when the IMMEDIATE ASSIGNMENT has been sent. */
+void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t tlli)
 {
-	/* NOTE: This is in practice only used to transmit IMMEDIATE ASSIGNMENT messages through the paging channel and
-	 * it is not guaranteed to work with other message types. The prepended TLLI will be used as an identifier in
-	 * the confirmation message. */
-
 	struct gsm_pcu_if_pch_dt pch_dt = { 0 };
 
 	pch_dt.tlli = tlli;

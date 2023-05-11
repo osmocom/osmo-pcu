@@ -147,8 +147,6 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len);
 void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int len);
-
-void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi, uint32_t tlli);
 #endif
 
 #ifdef __cplusplus
@@ -158,6 +156,7 @@ struct gprs_rlcmac_bts;
 
 int pcu_tx_neigh_addr_res_req(struct gprs_rlcmac_bts *bts, const struct neigh_cache_entry_key *neigh_key);
 void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi);
+void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t tlli);
 
 int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length);
 int pcu_l1if_open(void);
