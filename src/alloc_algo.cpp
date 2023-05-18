@@ -3,7 +3,7 @@
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  * Copyright (C) 2013 by Holger Hans Peter Freyther
- * Copyright (C) 2022 by sysmocom - s.m.f.c. GmbH <info@sysmocom.de>
+ * Copyright (C) 2022 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
