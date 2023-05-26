@@ -1,5 +1,7 @@
 [Unit]
 Description=Osmocom osmo-pcu
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
