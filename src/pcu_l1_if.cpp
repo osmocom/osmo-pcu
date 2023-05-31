@@ -630,7 +630,7 @@ extern "C" int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr
 		.ra = 0x00,
 		.trx_nr = trx_nr,
 		.ts_nr = ts_nr,
-		.rfn = fn,
+		.rfn = fn2rfn(fn),
 		.qta = qta,
 	};
 
@@ -640,11 +640,22 @@ extern "C" int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr
 static int pcu_rx_rach_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(bts);
+	uint32_t current_fn = bts_current_frame_number(bts);
+	uint16_t rfn;
 
-	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
-		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
-		rach_ind->ra, rach_ind->fn, current_fn, rach_ind->is_11bit);
+	/* Note: If a BSC is sending a RACH req to us, it is actually forwarding it to
+	 * us from BTS as a result of receiving an RFN (Fn % 42432) over RSL
+	 * (see 3GPP TS 48.058, section 9.3.19).
+	 * If a BTS is sending a RACH req to us, it may contain a full FN
+	 * (current osmo-bts does that) instead of an RFN.
+	 * For consistency, and taking into account the BSC case limitations,
+	 * work always with RFNs here:
+	 */
+	rfn = fn2rfn(rach_ind->fn);
+
+	LOGP(DL1IF, LOGL_INFO,
+	     "RACH request received: sapi=%d qta=%d, ra=0x%02x, fn=%u (rfn=%u), cur_fn=%d, is_11bit=%d\n",
+	     rach_ind->sapi, rach_ind->qta, rach_ind->ra, rach_ind->fn, rfn, current_fn, rach_ind->is_11bit);
 
 	if (OSMO_UNLIKELY(rach_ind->fn > GSM_TDMA_HYPERFRAME - 1)) {
 		LOGP(DL1IF, LOGL_ERROR, "RACH request contains fn=%u that exceeds valid limits (0-%u) -- ignored!\n",
@@ -658,7 +669,7 @@ static int pcu_rx_rach_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 		.ra = rach_ind->ra,
 		.trx_nr = rach_ind->trx_nr,
 		.ts_nr = rach_ind->ts_nr,
-		.rfn = rach_ind->fn,
+		.rfn = rfn,
 		.qta = rach_ind->qta,
 	};
 

@@ -52,7 +52,6 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
-#define RFN_MODULUS 42432
 #define RFN_THRESHOLD RFN_MODULUS / 2
 
 extern void *tall_pcu_ctx;
@@ -744,25 +743,13 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn)
 	uint32_t m_cur_rfn;
 	uint32_t fn_rounded;
 
-	/* make sure RFN does not exceed the maximum possible value of a valid
-	 * GSM frame number. */
-	OSMO_ASSERT(rfn < GSM_MAX_FN);
-
-	/* Note: If a BTS is sending in a rach request it will be fully aware
-	 * of the frame number. If the PCU is used in a BSC-co-located setup.
-	 * The BSC will forward the incoming RACH request. The RACH request
-	 * only contains the relative frame number (Fn % 42432) in its request
-	 * reference. This PCU implementation has to fit both scenarios, so
-	 * we need to assume that Fn is a relative frame number. */
-
 	/* Ensure that all following calculations are performed with the
 	 * relative frame number */
-	if (rfn >= RFN_MODULUS)
-		return rfn;
+	OSMO_ASSERT(rfn < RFN_MODULUS);
 
 	/* Compute an internal relative frame number from the full internal
 	   frame number */
-	m_cur_rfn = bts->cur_fn % RFN_MODULUS;
+	m_cur_rfn = fn2rfn(bts->cur_fn);
 
 	/* Compute a "rounded" version of the internal frame number, which
 	 * exactly fits in the RFN_MODULUS raster */

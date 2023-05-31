@@ -84,6 +84,12 @@ static inline uint8_t pcu_lsb(uint8_t x)
 	return x & -x;
 }
 
+#define RFN_MODULUS 42432
+static inline uint16_t fn2rfn(uint32_t fn)
+{
+	return fn % RFN_MODULUS;
+}
+
 /* Used to store a C++ class in a llist used by C code */
 struct llist_item {
 	struct llist_head list; /* item used by llist */

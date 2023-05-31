@@ -80,7 +80,7 @@ static int bts_handle_rach(struct gprs_rlcmac_bts *bts, uint16_t ra, uint32_t Fn
 		.ra = ra,
 		.trx_nr = 0,
 		.ts_nr = 0,
-		.rfn = Fn,
+		.rfn = fn2rfn(Fn),
 		.qta = qta,
 	};
 
