@@ -18,7 +18,7 @@ show_rbb: IIRRIIIR
 	06 3f 10 0d 23 6d 7f 03 18 23 00 46 a0 08 00 17 44 0b 2b 2b 2b 2b 2b 
 assignment reject: 06 3a 10 7f 06 36 14 7f 06 36 14 7f 06 36 14 7f 06 36 14 c0 2b 2b 
 assignment reject: 06 3a 10 70 06 36 14 70 06 36 14 70 06 36 14 70 06 36 14 0b 2b 2b 
-Testing LBS utility...
+Testing LSB utility...
  0 ........: {0}   0
  1 .......1: {1}   1
  2 ......1.: {1}   2

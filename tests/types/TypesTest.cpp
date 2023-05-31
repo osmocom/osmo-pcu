@@ -937,10 +937,10 @@ static void test_lsb()
 {
 	uint8_t u = 0;
 
-	printf("Testing LBS utility...\n");
+	printf("Testing LSB utility...\n");
 
 	do {
-		uint8_t x = pcu_lsb(u); /* equivalent of (1 << ffs(u)) / 2 */
+		uint8_t x = pcu_lsb(u);
 		printf("%2X " OSMO_BIT_SPEC ": {%d} %3d\n",
 		       u, OSMO_BIT_PRINT(u), pcu_bitcount(u), x);
 		u++;

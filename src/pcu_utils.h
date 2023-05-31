@@ -72,6 +72,9 @@ inline unsigned int pcu_bitcount(unsigned long long x)
 	return __builtin_popcountll(x);
 }
 
+/* Trim all 1 bits except the Least Significat Bit, which is kept.
+ * equivalent of (1 << ffs(u)) / 2
+ */
 static inline uint8_t pcu_lsb(uint8_t x)
 {
 	return x & -x;
