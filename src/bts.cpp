@@ -1058,7 +1058,7 @@ static uint32_t ptcch_slot_map[PTCCH_TAI_NUM] = {
 
 int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 {
-	uint32_t fn416 = bts_rfn_to_fn(bts, rip->rfn) % 416;
+	uint16_t fn416 = rip->rfn % 416;
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ss;
 
