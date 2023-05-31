@@ -63,22 +63,22 @@ static int write_alpha_gamma(bitvec *dest, uint8_t alpha, uint8_t gamma)
 }
 
 /* TBF_STARTING_TIME -- same as 3GPP TS 44.018 §10.5.2.38 Starting Time without tag: */
-static int write_tbf_start_time(bitvec *dest, uint32_t fn)
+static int write_tbf_start_time(bitvec *dest, uint16_t rfn)
 {
 	int rc;
 
 	/* Set values according to 3GPP TS 44.018 Table 10.5.2.38.1 */
 
 	/* T1' */
-	rc = bitvec_set_u64(dest, (fn / (26 * 51)) % 32, 5, false);
+	rc = bitvec_set_u64(dest, (rfn / (26 * 51)) % 32, 5, false);
 	CHECK(rc);
 
 	/* T3  */
-	rc = bitvec_set_u64(dest, fn % 51, 6, false);
+	rc = bitvec_set_u64(dest, rfn % 51, 6, false);
 	CHECK(rc);
 
 	/* T2  */
-	rc = bitvec_set_u64(dest, fn % 26, 5, false);
+	rc = bitvec_set_u64(dest, rfn % 26, 5, false);
 	CHECK(rc);
 
 	return rc;
@@ -180,7 +180,7 @@ static inline void write_ta_ie(bitvec *dest, unsigned& wp,
 }
 
 static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, bool polling, bool ta_valid,
-				  uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+				  uint16_t rfn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	int rc = 0;
 
@@ -213,7 +213,7 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 
 	if (polling) {
 		SET_1(dest);
-		rc = write_tbf_start_time(dest, fn);
+		rc = write_tbf_start_time(dest, rfn);
 		CHECK(rc);
 	} else
 		SET_0(dest);
@@ -235,7 +235,7 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 }
 
 /* 3GPP TS 44.018 Table 10.5.2.16.1 < Packet Uplink Assignment > -- Single Block Allocation */
-static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, uint8_t gamma)
+static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t rfn, uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
@@ -248,7 +248,7 @@ static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, ui
 	SET_0(dest);
 	SET_1(dest);
 
-	rc = write_tbf_start_time(dest, fn);
+	rc = write_tbf_start_time(dest, rfn);
 	CHECK(rc);
 
 	 /* No P0 nor PR_MODE */
@@ -292,7 +292,7 @@ static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest,
 	return rc;
 }
 
-static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t alpha, uint8_t gamma)
+static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t rfn, uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
@@ -301,7 +301,7 @@ static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t al
 	rc = write_alpha_gamma(dest, alpha, gamma);
 	CHECK(rc);
 
-	rc = write_tbf_start_time(dest, fn);
+	rc = write_tbf_start_time(dest, rfn);
 	CHECK(rc);
 
 	SET_0(dest); /* NUMBER OF RADIO BLOCKS ALLOCATED: */
@@ -358,7 +358,7 @@ static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec 
  * see GSM 44.018, 9.1.20 + 10.5.2.30
  */
 int Encoding::write_immediate_assignment_reject(bitvec *dest, uint16_t ra,
-	uint32_t ref_fn, enum ph_burst_type burst_type, uint8_t t3142)
+	uint16_t ref_rfn, enum ph_burst_type burst_type, uint8_t t3142)
 {
 	unsigned wp = 0;
 	int plen;
@@ -394,9 +394,9 @@ int Encoding::write_immediate_assignment_reject(bitvec *dest, uint16_t ra,
 		}
 
 		bitvec_write_field(dest, &wp,
-					(ref_fn / (26 * 51)) % 32, 5); // T1'
-		bitvec_write_field(dest, &wp, ref_fn % 51, 6);          // T3
-		bitvec_write_field(dest, &wp, ref_fn % 26, 5);          // T2
+					(ref_rfn / (26 * 51)) % 32, 5); // T1'
+		bitvec_write_field(dest, &wp, ref_rfn % 51, 6);          // T3
+		bitvec_write_field(dest, &wp, ref_rfn % 26, 5);          // T2
 
 		/* 10.5.2.43 Wait Indication */
 		bitvec_write_field(dest, &wp, t3142, 8);
@@ -437,8 +437,8 @@ int Encoding::write_immediate_assignment(
 	const struct gprs_rlcmac_pdch *pdch,
 	const struct gprs_rlcmac_tbf *tbf,
 	bitvec * dest, bool downlink, uint16_t ra,
-	uint32_t ref_fn, uint8_t ta,
-	uint8_t usf, bool polling, uint32_t fn, uint8_t alpha,
+	uint16_t ref_rfn, uint8_t ta,
+	uint8_t usf, bool polling, uint16_t rfn, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, enum ph_burst_type burst_type)
 {
 	unsigned wp = 0;
@@ -480,9 +480,9 @@ int Encoding::write_immediate_assignment(
 		bitvec_write_field(dest, &wp, ra, 8);	/* RACH value */
 	}
 
-	bitvec_write_field(dest, &wp, (ref_fn / (26 * 51)) % 32, 5); // T1'
-	bitvec_write_field(dest, &wp, ref_fn % 51, 6);               // T3
-	bitvec_write_field(dest, &wp, ref_fn % 26, 5);               // T2
+	bitvec_write_field(dest, &wp, (ref_rfn / (26 * 51)) % 32, 5); // T1'
+	bitvec_write_field(dest, &wp, ref_rfn % 51, 6);               // T3
+	bitvec_write_field(dest, &wp, ref_rfn % 26, 5);               // T2
 
 	// 10.5.2.40 Timing Advance
 	bitvec_write_field(dest, &wp, 0x0, 2); // spare
@@ -508,7 +508,7 @@ int Encoding::write_immediate_assignment(
 	if (downlink) {
 		OSMO_ASSERT(tbf_as_dl_tbf_const(tbf) != NULL);
 
-		rc = write_ia_rest_downlink(tbf_as_dl_tbf_const(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
+		rc = write_ia_rest_downlink(tbf_as_dl_tbf_const(tbf), dest, polling, gsm48_ta_is_valid(ta), rfn, alpha, gamma,
 					    ta_idx);
 	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) || (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
 		SET_L(dest); SET_H(dest); // "LH"
@@ -521,7 +521,7 @@ int Encoding::write_immediate_assignment(
 		if (tbf_as_ul_tbf_const(tbf) != NULL)
 			rc = write_ia_rest_egprs_uplink_sba(tbf_as_ul_tbf_const(tbf), dest, usf, alpha, gamma, ta_idx);
 		else
-			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
+			rc = write_ia_rest_egprs_uplink_mba(dest, rfn, alpha, gamma);
 	} else {
 		OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
 
@@ -531,7 +531,7 @@ int Encoding::write_immediate_assignment(
 		if (tbf_as_ul_tbf_const(tbf) != NULL)
 			rc = write_ia_rest_uplink_mba(tbf_as_ul_tbf_const(tbf), dest, usf, alpha, gamma, ta_idx);
 		else
-			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma);
+			rc = write_ia_rest_uplink_sba(dest, rfn, alpha, gamma);
 	}
 
 	if (rc < 0) {

@@ -753,7 +753,7 @@ static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_ty
 	struct msgb *m = msgb_alloc(80, "test");
 	bool poll = true;
 	uint16_t ra = 13;
-	uint32_t ref_fn = 24, fn = 11;
+	uint32_t ref_rfn = 24, rfn = 11;
 	int8_t ta_idx = 0;
 
 	/* HACK: tbf can be NULL, so we cannot use tbf->trx here */
@@ -766,8 +766,8 @@ static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_ty
 	bitvec_unhex(immediate_assignment, DUMMY_VEC);
 	plen = Encoding::write_immediate_assignment(&trx.pdch[5], tbf,
 						    immediate_assignment,
-						    dl, ra, ref_fn, ta, usf,
-						    poll, fn, alpha, gamma, ta_idx, bt);
+						    dl, ra, ref_rfn, ta, usf,
+						    poll, rfn, alpha, gamma, ta_idx, bt);
 	printf("[%u] %s Immediate Assignment <%s>:\n\t%s\n", plen, dl ? "DL" : "UL", kind,
 	       osmo_hexdump(immediate_assignment->data, sz));
 

@@ -46,15 +46,15 @@ public:
 			const struct gprs_rlcmac_pdch *pdch,
 			const struct gprs_rlcmac_tbf *tbf,
 			bitvec * dest, bool downlink, uint16_t ra,
-			uint32_t ref_fn, uint8_t ta,
+			uint16_t ref_rfn, uint8_t ta,
 			uint8_t usf, bool polling,
-			uint32_t fn, uint8_t alpha, uint8_t gamma,
+			uint16_t rfn, uint8_t alpha, uint8_t gamma,
 			int8_t ta_idx,
 			enum ph_burst_type burst_type);
 
 	static int write_immediate_assignment_reject(
 			bitvec *dest, uint16_t ra,
-			uint32_t ref_fn,
+			uint16_t ref_rfn,
 			enum ph_burst_type burst_type,
 			uint8_t t3142
 		);

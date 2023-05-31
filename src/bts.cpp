@@ -1022,7 +1022,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	     trx->trx_no, trx->arfcn & ~ARFCN_FLAG_MASK,
 	     pdch->ts_no, ta, pdch->tsc, tbf ? tbf->tfi() : -1, usf);
 	plen = Encoding::write_immediate_assignment(pdch, tbf, bv,
-		false, rip->ra, Fn, ta, usf, false, sb_fn,
+		false, rip->ra, rip->rfn, ta, usf, false, fn2rfn(sb_fn),
 		bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 		rip->burst_type);
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
@@ -1038,7 +1038,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 send_imm_ass_rej:
 	LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
 	plen = Encoding::write_immediate_assignment_reject(
-		bv, rip->ra, Fn, rip->burst_type,
+		bv, rip->ra, rip->rfn, rip->burst_type,
 		(uint8_t)osmo_tdef_get(bts->T_defs_bts, 3142, OSMO_TDEF_S, -1));
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
 	if (plen >= 0)
@@ -1118,7 +1118,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 	     tbf->trx->trx_no, tbf->trx->arfcn, pdch->ts_no, tbf->ta());
 	plen = Encoding::write_immediate_assignment(pdch,
 						    tbf, immediate_assignment, true, 125,
-						    GSM_TDMA_FN_SUM(pdch->last_rts_fn, 21216),
+						    fn2rfn(GSM_TDMA_FN_SUM(pdch->last_rts_fn, 21216)),
 						    tbf->ta(), 7, false, 0,
 						    bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
