@@ -67,17 +67,10 @@ static inline unsigned fn_next_block(unsigned fn)
 	return fn % GSM_MAX_FN;
 }
 
-#ifdef __cplusplus
-template <typename T>
-inline unsigned int pcu_bitcount(T x)
+inline unsigned int pcu_bitcount(unsigned long long x)
 {
-	unsigned int count = 0;
-	for (count = 0; x; count += 1)
-		x &= x - 1;
-
-	return count;
+	return __builtin_popcountll(x);
 }
-#endif
 
 static inline uint8_t pcu_lsb(uint8_t x)
 {
