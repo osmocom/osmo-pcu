@@ -740,20 +740,27 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 /* Determine the full frame number from a relative frame number */
 uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn)
 {
-	uint32_t m_cur_rfn;
+	uint32_t m_cur_fn, m_cur_rfn;
 	uint32_t fn_rounded;
 
 	/* Ensure that all following calculations are performed with the
 	 * relative frame number */
 	OSMO_ASSERT(rfn < RFN_MODULUS);
 
+	m_cur_fn = bts_current_frame_number(bts);
+	if (m_cur_fn == FN_UNSET) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Unable to calculate full FN from RFN %u: Current FN not known!\n",
+		     rfn);
+		return rfn;
+	}
+
 	/* Compute an internal relative frame number from the full internal
 	   frame number */
-	m_cur_rfn = fn2rfn(bts->cur_fn);
+	m_cur_rfn = fn2rfn(m_cur_fn);
 
 	/* Compute a "rounded" version of the internal frame number, which
 	 * exactly fits in the RFN_MODULUS raster */
-	fn_rounded = GSM_TDMA_FN_SUB(bts->cur_fn, m_cur_rfn);
+	fn_rounded = GSM_TDMA_FN_SUB(m_cur_fn, m_cur_rfn);
 
 	/* If the delta between the internal and the external relative frame
 	 * number exceeds a certain limit, we need to assume that the incoming
@@ -762,7 +769,7 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn)
 	if (GSM_TDMA_FN_DIFF(rfn, m_cur_rfn) > RFN_THRESHOLD) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previous modulus %u cycle, wrapping...\n",
-		     rfn, bts->cur_fn, RFN_MODULUS);
+		     rfn, m_cur_fn, RFN_MODULUS);
 		if (fn_rounded < RFN_MODULUS) {
 			LOGP(DRLCMAC, LOGL_DEBUG,
 			"Cornercase detected: wrapping crosses %u border\n",
