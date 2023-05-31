@@ -596,8 +596,7 @@ const char *gprs_rlcmac_tbf::name(bool enclousure) const
 		OSMO_STRBUF_PRINTF(sb, ":TFI-%u-%u-%d",
 				   this->trx->bts->nr, this->trx->trx_no, tfi);
 	}
-	OSMO_STRBUF_PRINTF(sb, ":STATE-%s:%sGPRS",
-			   state_name(), is_egprs_enabled() ? "E" : "");
+	OSMO_STRBUF_PRINTF(sb, ":%c", is_egprs_enabled() ? 'E' : 'G');
 	if (m_ms) {
 		uint32_t tlli = ms_tlli(m_ms);
 		if (ms_imsi_is_valid(m_ms))
@@ -606,7 +605,7 @@ const char *gprs_rlcmac_tbf::name(bool enclousure) const
 			OSMO_STRBUF_PRINTF(sb, ":TLLI-0x%08x", tlli);
 	}
 	if (enclousure)
-		OSMO_STRBUF_PRINTF(sb, ")");
+		OSMO_STRBUF_PRINTF(sb, "){%s}", state_name());
 	return m_name_buf;
 }
 
