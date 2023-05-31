@@ -631,6 +631,7 @@ extern "C" int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr
 		.trx_nr = trx_nr,
 		.ts_nr = ts_nr,
 		.rfn = fn2rfn(fn),
+		.fn = fn,
 		.qta = qta,
 	};
 
@@ -670,6 +671,7 @@ static int pcu_rx_rach_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 		.trx_nr = rach_ind->trx_nr,
 		.ts_nr = rach_ind->ts_nr,
 		.rfn = rfn,
+		.fn = bts_rfn_to_fn(bts, rfn),
 		.qta = rach_ind->qta,
 	};
 

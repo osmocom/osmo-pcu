@@ -531,7 +531,7 @@ void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
 	}
 
 	bts_send_gsmtap_meas(bts, categ, true, rip->trx_nr, rip->ts_nr, channel,
-			 bts_rfn_to_fn(bts, rip->rfn), ra_buf,
+			 rip->fn, ra_buf,
 			 rip->is_11bit ? 2 : 1, &meas);
 }
 
@@ -943,15 +943,13 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	if (rip->is_11bit)
 		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_11BIT);
 
-	/* Determine full frame number */
-	uint32_t Fn = bts_rfn_to_fn(bts, rip->rfn);
 	uint8_t ta = qta2ta(rip->qta);
 
 	bts_send_gsmtap_rach(bts, PCU_GSMTAP_C_UL_RACH, GSMTAP_CHANNEL_RACH, rip);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests Uplink resource on CCCH/RACH: "
 	     "ra=0x%02x (%d bit) Fn=%u qta=%d\n", rip->ra,
-	     rip->is_11bit ? 11 : 8, Fn, rip->qta);
+	     rip->is_11bit ? 11 : 8, rip->fn, rip->qta);
 
 	/* Parse [EGPRS Packet] Channel Request from RACH.ind */
 	rc = parse_rach_ind(rip, &chan_req);

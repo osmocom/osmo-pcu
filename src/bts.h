@@ -197,6 +197,7 @@ struct rach_ind_params {
 	uint8_t trx_nr;
 	uint8_t ts_nr;
 	uint16_t rfn;
+	uint32_t fn;
 	int16_t qta;
 };
 
