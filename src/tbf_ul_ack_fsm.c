@@ -64,11 +64,11 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	int rc;
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
-	struct gprs_rlcmac_ul_tbf *tbf = ctx->tbf;
-	struct GprsMs *ms = tbf_ms(ul_tbf_as_tbf(tbf));
+	struct gprs_rlcmac_tbf *tbf = ul_tbf_as_tbf(ctx->tbf);
+	struct GprsMs *ms = tbf_ms(tbf);
 
 	if (final) {
-		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->pdch, d->fn, &new_poll_fn, &rrbp);
+		rc = tbf_check_polling(tbf, d->pdch, d->fn, &new_poll_fn, &rrbp);
 		if (rc < 0)
 			return NULL;
 	}
@@ -99,11 +99,11 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	 * PACKET UPLINK ACK/NACK"
 	 */
 	if (ms_tlli(ms) != GSM_RESERVED_TMSI && !ul_tbf_contention_resolution_done(ctx->tbf))
-		osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ctx->tbf)), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
+		osmo_fsm_inst_dispatch(tbf_state_fi(tbf), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
 
 	if (final) {
-		tbf_set_polling(ul_tbf_as_tbf(tbf), d->pdch, new_poll_fn, PDCH_ULC_POLL_UL_ACK);
-		LOGPTBFUL(tbf, LOGL_DEBUG,
+		tbf_set_polling(tbf, d->pdch, new_poll_fn, PDCH_ULC_POLL_UL_ACK);
+		LOGPTBFUL(ctx->tbf, LOGL_DEBUG,
 			"Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
 			new_poll_fn, d->pdch->ts_no);
 	}
