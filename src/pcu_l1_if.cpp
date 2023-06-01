@@ -1036,10 +1036,8 @@ static int pcu_rx_e1_ccu_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_i
 
 static int pcu_rx_time_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_time_ind *time_ind)
 {
-	uint8_t fn13 = time_ind->fn % 13;
-
 	/* omit frame numbers not starting at a MAC block */
-	if (fn13 != 0 && fn13 != 4 && fn13 != 8)
+	if (!fn_valid(time_ind->fn))
 		return 0;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n", time_ind->fn % 52);
