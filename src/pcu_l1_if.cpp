@@ -341,6 +341,9 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 {
 	int rc;
 
+	/* First of all, update TDMA clock: */
+	bts_set_current_frame_number(bts, fn);
+
 	if (!pdch->is_enabled()) {
 		LOGPDCH(pdch, DL1IF, LOGL_INFO, "Received DATA.ind (PDTCH) on disabled TS\n");
 		return -EINVAL;

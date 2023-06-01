@@ -2248,7 +2248,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2359,7 +2358,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2412,7 +2410,6 @@ PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type POLL
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
-Detected FN jump! 2654275 -> 2654288 (expected 2654279, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
@@ -2550,7 +2547,6 @@ UL_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654361 but previous FN=2654353 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654353): TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} N3101 3 => 4 (< MAX 10)
-Detected FN jump! 2654361 -> 2654353 (expected 2654366, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654353 Rx UL DATA from unexpected TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){FLOW}
 TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){FLOW} UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
@@ -2678,7 +2674,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2737,7 +2732,7 @@ PDCH(bts=0,trx=0,ts=7) Reserving FN 2654327 for type SBA
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-Detected FN jump! 2654275 -> 2654327 (expected 2654279, delta 52)
+Detected FN jump! 2654283 -> 2654327 (expected 2654288, delta 44)
 PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:DL): + rcv_resource_request: now used by 2 (tbf,rcv_resource_request)
@@ -2824,7 +2819,6 @@ DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW}: Received Event ASSI
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-Detected FN jump! 2654340 -> 2654331 (expected 2654344, delta 9)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654331 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2905,7 +2899,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2986,7 +2979,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654275
+TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654283
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -3096,7 +3089,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -3189,7 +3181,6 @@ PDCH(bts=0,trx=0,ts=7) Reserving FN 2654288 for type POLL
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
-Detected FN jump! 2654275 -> 2654288 (expected 2654279, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
@@ -4335,7 +4326,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -4454,7 +4444,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -5023,7 +5012,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-2): 0f 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 112 -> 8 (expected 117, delta 104)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5188,17 +5176,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 99 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=99, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=99, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 19, MCS-2): 0f c0 04 12 20 fe 03 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 8 -> 91 (expected 13, delta 83)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 91)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 91)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -5292,7 +5279,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-3): 0f 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 91 -> 8 (expected 95, delta 83)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5417,17 +5403,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 78 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=78, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=78, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 14, MCS-3): 0f 80 03 06 7c fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 00 
-Detected FN jump! 8 -> 69 (expected 13, delta 61)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 69)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 69)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -5521,7 +5506,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-4): 0f 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 69 -> 8 (expected 73, delta 61)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5630,17 +5614,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 69 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=69, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=69, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 12, MCS-4): 0f 00 03 00 70 fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
-Detected FN jump! 8 -> 60 (expected 13, delta 52)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 60)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 60)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -5734,7 +5717,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 60 -> 8 (expected 65, delta 52)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5827,17 +5809,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 60 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=60, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=60, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 8 -> 52 (expected 13, delta 44)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 52)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 52)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -5931,7 +5912,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 52 -> 8 (expected 56, delta 44)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -6000,17 +5980,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 47 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=47, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=47, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 7, MCS-6): 0f c0 01 00 e2 7f 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 ca ca ca 0a 
-Detected FN jump! 8 -> 39 (expected 13, delta 31)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 39)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 39)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -6105,7 +6084,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 39 -> 8 (expected 43, delta 31)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -6182,17 +6160,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 43 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=43, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=43, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 10, MCS-5): 0f 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 8 -> 34 (expected 13, delta 26)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 34)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 34)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -6288,7 +6265,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-8): 0f 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
-Detected FN jump! 34 -> 8 (expected 39, delta 26)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -6355,17 +6331,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 39 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=39, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=39, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 8, MCS-8): 0f 00 02 00 60 20 fd 07 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 f4 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
-Detected FN jump! 8 -> 30 (expected 13, delta 22)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 30)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 30)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -6460,7 +6435,6 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 17 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=17, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
-Detected FN jump! 30 -> 8 (expected 34, delta 22)
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -6517,17 +6491,16 @@ PDCH(bts=0,trx=0,ts=4) Reserving FN 34 for type POLL
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled DL Acknowledgement polling on PACCH (FN=34, TS=4)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Scheduled Ack/Nack polling on FN=34, TS=4
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} msg block (BSN 6, MCS-9): 0f 80 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 80 f8 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 02 
-Detected FN jump! 8 -> 26 (expected 13, delta 18)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ASS): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 26)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 0 => 1 (< MAX 8)
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 DL_ASS_TBF(DL:TFI-0-0-0:E){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 26)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event DL_ACKNACK_MISS
@@ -7625,7 +7598,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -7847,7 +7819,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -8308,7 +8279,6 @@ UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
-Detected FN jump! 2654283 -> 2654275 (expected 2654288, delta 8)
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
