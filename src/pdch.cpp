@@ -344,19 +344,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	poll = pdch_ulc_get_node(ulc, fn);
 	if (!poll || poll->type != PDCH_ULC_NODE_TBF_POLL) {
-		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
-			fn, tlli, trx_no(), ts_no);
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with unknown FN=%u TLLI=0x%08x\n",
+			fn, tlli);
 		ms = bts_get_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 		if (ms)
 			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-				"unknown TBF corresponds to MS with IMSI %s, TA %d, "
-				"uTBF (TFI=%d, state=%s), dTBF (TFI=%d, state=%s)\n",
-				ms_imsi(ms), ms_ta(ms),
-				ms_ul_tbf(ms) ? ms_ul_tbf(ms)->tfi() : 0,
-				ms_ul_tbf(ms) ? ms_ul_tbf(ms)->state_name() : "None",
-				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->tfi() : 0,
-				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
+				"unknown TBF corresponds to %s\n", ms_name(ms));
 		return;
 	}
 	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
