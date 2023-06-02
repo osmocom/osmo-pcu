@@ -748,7 +748,7 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, uint32_t rfn)
 	OSMO_ASSERT(rfn < RFN_MODULUS);
 
 	m_cur_fn = bts_current_frame_number(bts);
-	if (m_cur_fn == FN_UNSET) {
+	if (OSMO_UNLIKELY(m_cur_fn == FN_UNSET)) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Unable to calculate full FN from RFN %u: Current FN not known!\n",
 		     rfn);
 		return rfn;
