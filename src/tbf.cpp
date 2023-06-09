@@ -316,6 +316,9 @@ void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
 	case N3103:
 		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
 		break;
+	case N3105:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_DL_TBF);
+		break;
 	default:
 		break;
 	}
@@ -342,6 +345,7 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 		chk = bts->n3103;
 		break;
 	case N3105:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_DL_TBF);
 		chk = bts->n3105;
 		break;
 	default:
@@ -513,7 +517,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
-		if (n_inc(N3105)) {
+		if (this->direction == GPRS_RLCMAC_DL_TBF && n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_FAILED);
@@ -532,7 +536,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
-		if (n_inc(N3105)) {
+		if (this->direction == GPRS_RLCMAC_DL_TBF && n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_FAILED);

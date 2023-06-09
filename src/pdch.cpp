@@ -391,8 +391,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
 		pdch_ulc_release_fn(ulc, fn);
-		/* reset N3105 */
-		tbf->n_reset(N3105);
+		if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
+			tbf->n_reset(N3105);
 		osmo_fsm_inst_dispatch(tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
 
 		new_tbf = ms_ul_tbf(ms);
@@ -422,8 +422,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
 		pdch_ulc_release_fn(ulc, fn);
-		/* reset N3105 */
-		tbf->n_reset(N3105);
+		if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
+			tbf->n_reset(N3105);
 		osmo_fsm_inst_dispatch(tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
 
 		new_tbf = ms_dl_tbf(ms);

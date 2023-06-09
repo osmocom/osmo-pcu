@@ -9658,7 +9658,6 @@ MS(TLLI-0xffeeddcd:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 56)
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -9715,7 +9714,6 @@ MS(TLLI-0xffeeddce:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 60)
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} N3105 1 => 2 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -9772,7 +9770,6 @@ MS(TLLI-0xffeeddcf:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 65)
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: state_chg to SEND_ASS
@@ -9829,7 +9826,6 @@ MS(TLLI-0xffeeddd0:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 69)
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} N3105 2 => 3 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -9886,7 +9882,6 @@ MS(TLLI-0xffeeddd1:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN}
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 73)
-TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){WAIT_ACK}: state_chg to SEND_ASS
@@ -9943,7 +9938,6 @@ MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 78)
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} N3105 1 => 2 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: state_chg to SEND_ASS
@@ -9997,7 +9991,6 @@ MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN}
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 82)
-TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){WAIT_ACK}: state_chg to SEND_ASS

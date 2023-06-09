@@ -152,12 +152,6 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		}
 		tbf_ul_fsm_state_chg(fi, TBF_ST_FLOW);
 		break;
-	case TBF_EV_MAX_N3105:
-		/* We are going to release, so abort any Pkt Ul Ass pending to be scheduled: */
-		osmo_fsm_inst_dispatch(tbf_ul_ass_fi(ctx->tbf), TBF_UL_ASS_EV_ABORT, NULL);
-		ctx->T_release = 3195;
-		tbf_ul_fsm_state_chg(fi, TBF_ST_RELEASING);
-		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -197,10 +191,6 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		break;
 	case TBF_EV_MAX_N3101:
 		ctx->T_release = 3169;
-		tbf_ul_fsm_state_chg(fi, TBF_ST_RELEASING);
-		break;
-	case TBF_EV_MAX_N3105:
-		ctx->T_release = 3195;
 		tbf_ul_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -246,10 +236,6 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		ctx->T_release = 3169;
 		tbf_ul_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
-	case TBF_EV_MAX_N3105:
-		ctx->T_release = 3195;
-		tbf_ul_fsm_state_chg(fi, TBF_ST_RELEASING);
-		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -278,11 +264,6 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	switch (event) {
-	case TBF_EV_MAX_N3105:
-		/* This may be received here if the TBF had several polls
-		 * allocated concurrently and several failed each increasing N3105
-		 * over MAX_N3015. We are already releasing, ignore.*/
-		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -320,8 +301,7 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
 			X(TBF_EV_ASSIGN_ADD_PACCH) |
-			X(TBF_EV_ASSIGN_ACK_PACCH) |
-			X(TBF_EV_MAX_N3105),
+			X(TBF_EV_ASSIGN_ACK_PACCH),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_FINISHED),
@@ -334,8 +314,7 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 			X(TBF_EV_FIRST_UL_DATA_RECVD) |
 			X(TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS) |
 			X(TBF_EV_LAST_UL_DATA_RECVD) |
-			X(TBF_EV_MAX_N3101) |
-			X(TBF_EV_MAX_N3105),
+			X(TBF_EV_MAX_N3101),
 		.out_state_mask =
 			X(TBF_ST_ASSIGN) |
 			X(TBF_ST_FINISHED) |
@@ -347,18 +326,15 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS) |
 			X(TBF_EV_FINAL_UL_ACK_CONFIRMED) |
-			X(TBF_EV_MAX_N3103) |
-			X(TBF_EV_MAX_N3105),
+			X(TBF_EV_MAX_N3103),
 		.out_state_mask =
 			X(TBF_ST_RELEASING),
 		.name = "FINISHED",
 		.action = st_finished,
 	},
 	[TBF_ST_RELEASING] = {
-		.in_event_mask =
-			X(TBF_EV_MAX_N3105),
-		.out_state_mask =
-			0,
+		.in_event_mask = 0,
+		.out_state_mask = 0,
 		.name = "RELEASING",
 		.action = st_releasing,
 		.onenter = st_releasing_on_enter,
