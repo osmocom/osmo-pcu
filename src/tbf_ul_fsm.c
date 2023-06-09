@@ -171,7 +171,6 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 	switch (event) {
 	case TBF_EV_FIRST_UL_DATA_RECVD:
-		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF);
 		/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
 		 * the network side when the network receives an RLC data block that
 		 * comprises the TLLI value that identifies the mobile station and the
@@ -222,7 +221,6 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		ul_tbf_contention_resolution_success(tbf_as_ul_tbf(ctx->tbf));
 		break;
 	case TBF_EV_FINAL_UL_ACK_CONFIRMED:
-		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF);
 		new_ul_tbf_requested = (bool)data;
 		/* Ref the MS, otherwise it may be freed after ul_tbf is
 		 * detached when sending event below. */

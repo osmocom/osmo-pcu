@@ -244,10 +244,8 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
-
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
-		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		break;
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
@@ -309,10 +307,8 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 
 static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
-	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
-		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* Ignore, we don't care about missed DL ACK/NACK poll timeouts
 		 * anymore, we are already releasing the TBF */
 		break;
