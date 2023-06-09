@@ -31,20 +31,20 @@
 
 static const struct osmo_tdef_state_timeout tbf_dl_fsm_timeouts[32] = {
 	[TBF_ST_NEW] = {},
-	[TBF_ST_ASSIGN] = { },
-	[TBF_ST_FLOW] = { },
+	[TBF_ST_ASSIGN] = {},
+	[TBF_ST_FLOW] = {},
 	[TBF_ST_FINISHED] = {},
-	[TBF_ST_WAIT_RELEASE] = {},
+	[TBF_ST_WAIT_RELEASE] = { .T = 3193 },
 	[TBF_ST_RELEASING] = {},
 };
 
-/* Transition to a state, using the T timer defined in tbf_fsm_timeouts.
- * The actual timeout value is in turn obtained from conn->T_defs.
- * Assumes local variable fi exists. */
+/* Transition to a state, using the T timer defined in tbf_dl_fsm_timeouts.
+ * The actual timeout value is in turn obtained from T_defs_bts.
+ */
 #define tbf_dl_fsm_state_chg(fi, NEXT_STATE) \
 	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
 				     tbf_dl_fsm_timeouts, \
-				     the_pcu->T_defs, \
+				     tbf_ms(((struct tbf_dl_fsm_ctx *)(fi->priv))->tbf)->bts->T_defs_bts, \
 				     -1)
 
 static void mod_ass_type(struct tbf_dl_fsm_ctx *ctx, uint8_t t, bool set)
@@ -267,15 +267,6 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
-	unsigned long val_s, val_ms, val_us;
-
-	fi->T = 3193;
-	val_ms = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, fi->T, OSMO_TDEF_MS, -1);
-	val_s = val_ms / 1000;
-	val_us = (val_ms % 1000) * 1000;
-	LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %lu microsec\n",
-		  fi->T, val_s, val_us);
-	osmo_timer_schedule(&fi->timer, val_s, val_us);
 
 	mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
 }
