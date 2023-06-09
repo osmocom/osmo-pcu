@@ -313,6 +313,9 @@ void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
 	case N3101:
 		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
 		break;
+	case N3103:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
+		break;
 	default:
 		break;
 	}
@@ -335,6 +338,7 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 		chk = bts->n3101;
 		break;
 	case N3103:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
 		chk = bts->n3103;
 		break;
 	case N3105:
