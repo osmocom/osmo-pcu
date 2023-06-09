@@ -70,7 +70,6 @@ struct tbf_ul_fsm_ctx {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 	};
 	uint32_t state_flags;
-	unsigned int T_release; /* Timer to be used to end release: T3169 or T3195 */
 };
 
 extern struct osmo_fsm tbf_dl_fsm;
