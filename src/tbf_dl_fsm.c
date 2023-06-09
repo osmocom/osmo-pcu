@@ -375,8 +375,7 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
 			X(TBF_EV_ASSIGN_ADD_PACCH),
 		.out_state_mask =
-			X(TBF_ST_ASSIGN) |
-			X(TBF_ST_RELEASING),
+			X(TBF_ST_ASSIGN),
 		.name = "NEW",
 		.action = st_new,
 	},

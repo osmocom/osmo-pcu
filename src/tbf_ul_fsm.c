@@ -312,8 +312,7 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 			X(TBF_EV_ASSIGN_ADD_PACCH),
 		.out_state_mask =
 			X(TBF_ST_ASSIGN) |
-			X(TBF_ST_FLOW) |
-			X(TBF_ST_RELEASING),
+			X(TBF_ST_FLOW),
 		.name = "NEW",
 		.action = st_new,
 	},
@@ -325,8 +324,7 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
-			X(TBF_ST_FINISHED) |
-			X(TBF_ST_RELEASING),
+			X(TBF_ST_FINISHED),
 		.name = "ASSIGN",
 		.action = st_assign,
 		.onenter = st_assign_on_enter,
