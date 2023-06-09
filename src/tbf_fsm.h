@@ -62,7 +62,6 @@ struct tbf_dl_fsm_ctx {
 		struct gprs_rlcmac_dl_tbf *dl_tbf;
 	};
 	uint32_t state_flags;
-	unsigned int T_release; /* Timer to be used to end release: T3169 or T3195 */
 };
 
 struct tbf_ul_fsm_ctx {

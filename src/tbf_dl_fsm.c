@@ -35,7 +35,7 @@ static const struct osmo_tdef_state_timeout tbf_dl_fsm_timeouts[32] = {
 	[TBF_ST_FLOW] = {},
 	[TBF_ST_FINISHED] = {},
 	[TBF_ST_WAIT_RELEASE] = { .T = 3193 },
-	[TBF_ST_RELEASING] = {},
+	[TBF_ST_RELEASING] = { .T = 3195 },
 };
 
 /* Transition to a state, using the T timer defined in tbf_dl_fsm_timeouts.
@@ -192,7 +192,6 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	case TBF_EV_MAX_N3105:
 		/* We are going to release, so abort any Pkt Ul Ass pending to be scheduled: */
 		osmo_fsm_inst_dispatch(tbf_ul_ass_fi(ctx->tbf), TBF_UL_ASS_EV_ABORT, NULL);
-		ctx->T_release = 3195;
 		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -233,7 +232,6 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_MAX_N3105:
-		ctx->T_release = 3195;
 		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -243,7 +241,6 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
-	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
 		break;
@@ -254,7 +251,6 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_MAX_N3105:
-		ctx->T_release = 3195;
 		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -271,13 +267,11 @@ static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_sta
 
 static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
-	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* ignore, duplicate ACK, we already know about since we are in WAIT_RELEASE */
 		break;
 	case TBF_EV_MAX_N3105:
-		ctx->T_release = 3195;
 		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -287,22 +281,10 @@ static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data
 
 static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
-	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
-	unsigned long val;
-
-	if (!ctx->T_release)
-		return;
-
-	/* In  general we should end up here with an assigned timer in ctx->T_release. Possible values are:
-	* T3195: Wait for reuse of TFI(s) when there is no response from the MS
-	*	 (radio failure or cell change) for this TBF/MBMS radio bearer.
-	* T3169: Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid.
+	/* T3195 has been set entering this state: Wait for reuse of TFI(s) when
+	*  there is no response from the MS (radio failure or cell change) for this
+	*  TBF/MBMS radio bearer. Upon timeout, the timer_cb does tbf_free().
 	*/
-	val = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, ctx->T_release, OSMO_TDEF_S, -1);
-	fi->T = ctx->T_release;
-	LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
-		  ctx->T_release, val, 0);
-	osmo_timer_schedule(&fi->timer, val, 0);
 }
 
 static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
@@ -358,7 +340,6 @@ static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
 	case -2001:
 		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
 		/* fall-through */
-	case 3169:
 	case 3193:
 	case 3195:
 		tbf_free(ctx->tbf);
