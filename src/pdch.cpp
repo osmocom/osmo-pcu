@@ -356,9 +356,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf = poll->tbf_poll.poll_tbf;
 	reason = poll->tbf_poll.reason;
 
-	/* Reset N3101 counter: */
-	tbf->n_reset(N3101);
-
 	ms_update_announced_tlli(tbf->ms(), tlli);
 	/* Gather MS from TBF again, since it may be NULL or may have been merged during ms_update_announced_tlli */
 	ms = tbf->ms();
@@ -499,9 +496,6 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		return;
 	}
 
-	/* Reset N3101 counter: */
-	tbf->n_reset(N3101);
-
 	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Downlink Ack/Nack\n");
@@ -569,8 +563,6 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		return;
 	}
 
-	/* Reset N3101 counter: */
-	tbf->n_reset(N3101);
 	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG,
@@ -670,8 +662,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
 		}
-		/* Reset N3101 counter: */
-		dl_tbf->n_reset(N3101);
 		ms = tbf_ms(dl_tbf_as_tbf(dl_tbf));
 		dl_tbf = NULL;
 	} else { /* ID_TYPE = UL_TFI */
@@ -681,8 +671,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
 		}
-		/* Reset N3101 counter: */
-		ul_tbf->n_reset(N3101);
 		ms = tbf_ms(ul_tbf_as_tbf(ul_tbf));
 		ul_tbf = NULL;
 	}

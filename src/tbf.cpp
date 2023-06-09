@@ -307,10 +307,14 @@ void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 
 void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
 {
-	if (n >= N_MAX) {
-		LOGPTBF(this, LOGL_ERROR, "attempting to reset unknown counter %s\n",
-			get_value_string(tbf_counters_names, n));
-		return;
+	OSMO_ASSERT(n < N_MAX);
+
+	switch(n) {
+	case N3101:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
+		break;
+	default:
+		break;
 	}
 
 	Narr[n] = 0;
@@ -321,16 +325,13 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 {
 	uint8_t chk;
 
-	if (n >= N_MAX) {
-		LOGPTBF(this, LOGL_ERROR, "attempting to increment unknown counter %s\n",
-			get_value_string(tbf_counters_names, n));
-		return true;
-	}
+	OSMO_ASSERT(n < N_MAX);
 
 	Narr[n]++;
 
 	switch(n) {
 	case N3101:
+		OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
 		chk = bts->n3101;
 		break;
 	case N3103:
