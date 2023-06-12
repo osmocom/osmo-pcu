@@ -164,6 +164,7 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_last_dl_poll_fn(-1),
 	m_last_dl_poll_ack_lost(false),
 	m_last_dl_drained_fn(-1),
+	m_first_dl_ack_rcvd(false),
 	m_dl_gprs_ctrs(NULL),
 	m_dl_egprs_ctrs(NULL)
 {
@@ -1080,7 +1081,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	int rc;
 	LOGPTBFDL(this, LOGL_DEBUG, "downlink acknowledge\n");
 
-	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	m_first_dl_ack_rcvd = true;
 	m_last_dl_poll_ack_lost = false;
 
 	/* reset N3105 */
@@ -1112,6 +1113,11 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 
 void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *dl_tbf) {
 	dl_tbf->request_dl_ack();
+}
+
+bool dl_tbf_first_dl_ack_rcvd(const struct gprs_rlcmac_dl_tbf *tbf)
+{
+	return tbf->m_first_dl_ack_rcvd;
 }
 
 /* Does this DL TBF require to poll the MS for DL ACK/NACK? */

@@ -75,6 +75,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	 * MS polled during DL ACK/NACK with RRBP set in "m_last_dl_poll_fn": */
 	bool m_last_dl_poll_ack_lost;
 	int32_t m_last_dl_drained_fn;
+	/* Whether we receive at least one PKT DL ACK/NACK from MS since this DL TBF was assigned: */
+	bool m_first_dl_ack_rcvd;
 
 	struct BandWidth {
 		struct timespec dl_bw_tv; /* timestamp for dl bw calculation */
@@ -156,6 +158,7 @@ void dl_tbf_apply_allocated_resources(struct gprs_rlcmac_dl_tbf *dl_tbf, const s
 void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
 void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf);
 void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
+bool dl_tbf_first_dl_ack_rcvd(const struct gprs_rlcmac_dl_tbf *tbf);
 int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *tbf);
 
 static inline struct gprs_rlcmac_tbf *dl_tbf_as_tbf(struct gprs_rlcmac_dl_tbf *dl_tbf)

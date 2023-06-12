@@ -885,7 +885,7 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)
 			OSMO_STRBUF_PRINTF(sb, "Assignment was on CCCH|");
 		if (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
 			OSMO_STRBUF_PRINTF(sb, "Assignment was on PACCH|");
-		if (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))
+		if (dl_tbf->m_first_dl_ack_rcvd)
 			OSMO_STRBUF_PRINTF(sb, "Downlink ACK was received|");
 		else
 			OSMO_STRBUF_PRINTF(sb, "No downlink ACK received yet|");

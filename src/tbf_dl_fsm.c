@@ -208,8 +208,8 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * don't even know if the MS successfully received the Imm Ass on
 		 * CCCH and hence is listening on PDCH. Let's better refrain
 		 * from continuing and start assignment on CCCH again */
-		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-		     && !(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
+		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) &&
+		    !dl_tbf_first_dl_ack_rcvd(ctx->dl_tbf)) {
 			struct GprsMs *ms = tbf_ms(ctx->tbf);
 			LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
 				  "Re-send downlink assignment on PCH (IMSI=%s)\n",
