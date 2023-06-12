@@ -33,9 +33,9 @@
 
 static const struct osmo_tdef_state_timeout tbf_ul_ass_fsm_timeouts[32] = {
 	[TBF_UL_ASS_NONE] = {},
-	[TBF_UL_ASS_SEND_ASS] = {},
+	[TBF_UL_ASS_SEND_ASS] = { .keep_timer = true },
 	[TBF_UL_ASS_SEND_ASS_REJ] = {},
-	[TBF_UL_ASS_WAIT_ACK] = {},
+	[TBF_UL_ASS_WAIT_ACK] = { .keep_timer = true },
 };
 
 static const struct value_string tbf_ul_ass_fsm_event_names[] = {
@@ -188,6 +188,32 @@ static void st_none(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
+static void st_send_ass_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct tbf_ul_ass_fsm_ctx *ctx = (struct tbf_ul_ass_fsm_ctx *)fi->priv;
+	unsigned long val;
+	unsigned int sec, micro;
+	struct GprsMs *ms = tbf_ms(ctx->tbf);
+
+	/* Here it's time where received PKT RES REQ or DL ACK/NACK to request a new UL TBF,
+	 * so MS will be gone after T3168 (* 4 retrans, 8.1.1.1.2) if we are unable to seize it.
+	 * Hence, attempt re-scheduling PKT UL ASS (states SEND_ASS<->WAIT_ACK ping-pong)
+	 * until T3168 we announced to the MS expires:
+	 */
+	if (prev_state == TBF_UL_ASS_NONE) {
+		/* tbf_free() called upon trigger */
+		fi->T = 3168;
+		val = osmo_tdef_get(ms->bts->T_defs_bts, fi->T, OSMO_TDEF_MS, -1);
+		val *= 4; /* 4 PKT RES REQ retransmit */
+		sec = val / 1000;
+		micro = (val % 1000) * 1000;
+		LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T3168 [PKT UL ASS PACCH] with %u sec. %u microsec\n",
+			sec, micro);
+		osmo_timer_schedule(&fi->timer, sec, micro);
+	}
+
+}
+
 static void st_send_ass(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_ul_ass_fsm_ctx *ctx = (struct tbf_ul_ass_fsm_ctx *)fi->priv;
@@ -268,6 +294,7 @@ static int tbf_ul_ass_fsm_timer_cb(struct osmo_fsm_inst *fi)
 	struct tbf_ul_ass_fsm_ctx *ctx = (struct tbf_ul_ass_fsm_ctx *)fi->priv;
 	switch (fi->T) {
 	case -2000:
+	case 3168:
 		tbf_free(ctx->tbf);
 		break;
 	default:
@@ -298,6 +325,7 @@ static struct osmo_fsm_state tbf_ul_ass_fsm_states[] = {
 			X(TBF_UL_ASS_NONE),
 		.name = "SEND_ASS",
 		.action = st_send_ass,
+		.onenter = st_send_ass_on_enter,
 	},
 	[TBF_UL_ASS_SEND_ASS_REJ] = {
 		.in_event_mask =

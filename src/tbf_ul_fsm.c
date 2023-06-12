@@ -106,6 +106,7 @@ static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
 	struct tbf_ul_fsm_ctx *ctx = (struct tbf_ul_fsm_ctx *)fi->priv;
+	struct GprsMs *ms = tbf_ms(ctx->tbf);
 	unsigned long val;
 	unsigned int sec, micro;
 
@@ -118,12 +119,13 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	 * other TBF always signal us assignment failure (we already get
 	 * assignment success through TBF_EV_ASSIGN_ACK_PACCH) */
 	if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)) {
-		fi->T = -2001;
-		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
+		fi->T = 3168;
+		val = osmo_tdef_get(ms->bts->T_defs_bts, fi->T, OSMO_TDEF_MS, -1);
+		val *= 4; /* 4 PKT RES REQ retransmit */
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
 		LOGPTBFUL(ctx->ul_tbf, LOGL_DEBUG,
-			  "Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
+			  "Starting timer T3168 [UL TBF Ass (PACCH)] with %u sec. %u microsec\n",
 			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	}
@@ -259,8 +261,8 @@ static int tbf_ul_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
 	struct tbf_ul_fsm_ctx *ctx = (struct tbf_ul_fsm_ctx *)fi->priv;
 	switch (fi->T) {
-	case -2001:
-		LOGPTBFUL(ctx->ul_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+	case 3168:
+		LOGPTBFUL(ctx->ul_tbf, LOGL_NOTICE, "Releasing due to UL TBF PACCH assignment timeout\n");
 		/* fall-through */
 	case 3169:
 		tbf_free(ctx->tbf);

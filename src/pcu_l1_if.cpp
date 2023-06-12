@@ -436,6 +436,8 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 			si_ro = ((struct gsm48_system_information_type_13*)data)->rest_octets;
 			if (osmo_gsm48_rest_octets_si13_decode(&bts->si13_ro_decoded, si_ro) < 0)
 				LOGP(DPCU, LOGL_ERROR, "Error decoding SI13\n");
+			/* Update our cached T3168 from it: */
+			osmo_tdef_set(bts->T_defs_bts, 3168, bts->si13_ro_decoded.cell_opts.t3168, OSMO_TDEF_MS);
 			break;
 		default:
 			LOGP(DL1IF, LOGL_ERROR,

@@ -55,7 +55,7 @@ MS(TLLI-0x00002342:TA-4:MSCLS-0-0:UL:DL): + tbf: now used by 2 (2*tbf)
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0x00002342){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0x00002342){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0x00002342){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0x00002342){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0x00002342){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 Modifying MS object, TLLI: 0xffffffff -> 0x00002342, already confirmed partly
 The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confirmed
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
@@ -2222,10 +2222,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2332,10 +2333,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2507,10 +2509,11 @@ MS(TLLI-0xf5667788:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf5667788:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654301 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
@@ -2648,10 +2651,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2766,10 +2770,11 @@ MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv
 UL_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654327 + 13 = 2654340
@@ -2873,10 +2878,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -3063,10 +3069,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -4298,10 +4305,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -4416,10 +4424,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -7550,10 +7559,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -7771,10 +7781,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -8231,10 +8242,11 @@ MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): + tbf: now used by 2 (rcv_resource_reques
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -9599,10 +9611,11 @@ MS(TLLI-0xffeeddcc:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcc:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -9649,10 +9662,11 @@ MS(TLLI-0xffeeddcd:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcd:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9705,10 +9719,11 @@ MS(TLLI-0xffeeddce:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddce:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9761,10 +9776,11 @@ MS(TLLI-0xffeeddcf:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcf:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
@@ -9817,10 +9833,11 @@ MS(TLLI-0xffeeddd0:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd0:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9873,10 +9890,11 @@ MS(TLLI-0xffeeddd1:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd1:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN}
@@ -9929,10 +9947,11 @@ MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NONE}: state_chg to SEND_ASS
+TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
@@ -9983,7 +10002,7 @@ MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): + tbf: now used by 2 (rcv_resource_requ
 UL_TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 UL_ASS_TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NONE}: state_chg to SEND_ASS_REJ
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
@@ -10043,7 +10062,7 @@ MS(TLLI-0xffeeddcc:TA-220:MSCLS-0-0:UL): + tbf: now used by 1 (tbf)
 UL_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
@@ -10140,7 +10159,7 @@ MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0:UL): + tbf: now used by 1 (tbf)
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}: state_chg to ASSIGN
-TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){ASSIGN} Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){ASSIGN} Starting timer T3168 [UL TBF Ass (PACCH)] with 16 sec. 0 microsec
 There is a new MS object for the same MS: (0xa3c2f953, '001001000000001') -> (0xecc1f953, '')
 MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0:DL): + ms_merge_and_clear_ms: now used by 2 (tbf,ms_merge_and_clear_ms)
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0:UL) Merge MS: MS(IMSI-001001000000001:TLLI-0xa3c2f953:TA-220:MSCLS-11-0:DL)
