@@ -99,8 +99,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -143,6 +143,7 @@ TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:G){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -224,8 +225,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -268,6 +269,7 @@ TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:G){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -349,8 +351,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -583,6 +585,7 @@ TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} V(B): (V(A)=22)""(V(S)-1=21)  A=Ac
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:G){FINISHED}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G){FINISHED}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-45-0:DL) Detaching TBF: TBF(DL:G:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -627,8 +630,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -666,8 +669,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-1:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-1:G){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-1:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-1:G){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-1:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-1:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-1:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-1:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-1:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -3820,6 +3823,7 @@ TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} V(B): (V(A)=28)""(
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4616,8 +4620,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -4888,6 +4892,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=25)""(V(S)-1=24)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -4934,8 +4939,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5153,6 +5158,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=20)""(V(S)-1=19)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -5199,8 +5205,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5378,6 +5384,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=15)""(V(S)-1=14)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -5424,8 +5431,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5587,6 +5594,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=13)""(V(S)-1=12)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -5633,8 +5641,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5780,6 +5788,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=11)""(V(S)-1=10)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -5826,8 +5835,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5949,6 +5958,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=8)""(V(S)-1=7)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -5995,8 +6005,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6127,6 +6137,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=11)""(V(S)-1=10)  A=Acked 
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6173,8 +6184,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6296,6 +6307,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=9)""(V(S)-1=8)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6342,8 +6354,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6454,6 +6466,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=8)""(V(S)-1=7)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6503,8 +6516,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6535,6 +6548,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6581,8 +6595,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6612,6 +6626,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6658,8 +6673,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6689,6 +6704,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6735,8 +6751,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6791,6 +6807,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6837,8 +6854,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6892,6 +6909,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -6938,8 +6956,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6993,6 +7011,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7039,8 +7058,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7094,6 +7113,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7143,8 +7163,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7181,6 +7201,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7227,8 +7248,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7265,6 +7286,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7311,8 +7333,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7349,6 +7371,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7395,8 +7418,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7440,6 +7463,7 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FLOW} Final ACK received.
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:E){FLOW}: state_chg to WAIT_RELEASE
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:0, PACCH:1]
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_RELEASE}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-11-11:DL) Detaching TBF: TBF(DL:E:TLLI-0xffeeddcc){WAIT_RELEASE}
@@ -7840,8 +7864,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -9447,8 +9471,8 @@ Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} attempted to set ass. type CCCH which is already set.
 TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
+TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]

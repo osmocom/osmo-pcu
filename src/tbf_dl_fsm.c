@@ -63,16 +63,19 @@ static void mod_ass_type(struct tbf_dl_fsm_ctx *ctx, uint8_t t, bool set)
 		OSMO_ASSERT(0);
 	}
 
-	if (set && prev_set)
-		LOGPTBFDL(ctx->dl_tbf, LOGL_ERROR,
-			  "attempted to set ass. type %s which is already set.\n", ch);
-	else if (!set && !prev_set)
-		return;
-
 	LOGPTBFDL(ctx->dl_tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
 		  set ? "" : "un", ch,
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
+
+	if (set && prev_set) {
+		LOGPTBFDL(ctx->dl_tbf, LOGL_ERROR,
+			  "Attempted to set ass. type %s which is already set\n", ch);
+		return;
+	}
+
+	if (!set && !prev_set)
+		return;
 
 	if (set)
 		ctx->state_flags |= (1 << t);
