@@ -111,7 +111,6 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_DL_ACK		2 /* DL TBF: At least one DL ACK/NACK was recieved since it was assigned */
 #define GPRS_RLCMAC_FLAG_TO_DL_ACK	3 /* DL TBF: Failed to receive last polled DL ACK/NACK */
-#define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
 #define TBF_TFI_UNSET 0xff
 

@@ -77,12 +77,10 @@ static void mod_ass_type(struct tbf_dl_fsm_ctx *ctx, uint8_t t, bool set)
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
 
-	if (set) {
+	if (set)
 		ctx->state_flags |= (1 << t);
-	} else {
-		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep to flags */
+	else
 		ctx->state_flags &= ~(1 << t);
-	}
 }
 
 
@@ -322,8 +320,8 @@ static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 	 * one slot assigned send another DL assignment via PDCH.
 	 */
 
-	/* keep TO flags */
-	ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+	/* Reset state flags */
+	ctx->state_flags = 0x00;
 
 	rc = dl_tbf_upgrade_to_multislot(ctx->dl_tbf);
 	if (rc < 0)

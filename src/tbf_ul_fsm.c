@@ -76,12 +76,10 @@ static void mod_ass_type(struct tbf_ul_fsm_ctx *ctx, uint8_t t, bool set)
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
 		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
 
-	if (set) {
+	if (set)
 		ctx->state_flags |= (1 << t);
-	} else {
-		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep to flags */
+	else
 		ctx->state_flags &= ~(1 << t);
-	}
 }
 
 
