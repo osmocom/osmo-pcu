@@ -98,9 +98,6 @@ TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -224,9 +221,6 @@ TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -350,9 +344,6 @@ TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -629,9 +620,6 @@ TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -668,9 +656,6 @@ TBF(DL:TFI-0-0-1:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-1:G){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-1:G){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-1:G){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-1:G){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-1:G){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-1:G){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-1:G){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-1:G){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -4619,9 +4604,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -4938,9 +4920,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5204,9 +5183,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5430,9 +5406,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5640,9 +5613,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -5834,9 +5804,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6004,9 +5971,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6183,9 +6147,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6353,9 +6314,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6515,9 +6473,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6594,9 +6549,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6672,9 +6624,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6750,9 +6699,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6853,9 +6799,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -6955,9 +6898,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7057,9 +6997,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7162,9 +7099,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7247,9 +7181,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7332,9 +7263,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7417,9 +7345,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -7863,9 +7788,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
@@ -9470,9 +9392,6 @@ TBF(DL:TFI-0-0-0:E){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bt
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: Received Event SCHED_ASS
 DL_ASS_TBF(DL:TFI-0-0-0:E){NONE}: state_chg to SEND_ASS
-DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ADD_CCCH
-TBF(DL:TFI-0-0-0:E){ASSIGN} set ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(DL:TFI-0-0-0:E){ASSIGN} Attempted to set ass. type CCCH which is already set
 DL_TBF(DL:TFI-0-0-0:E){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} The TBF has been confirmed on the PACCH, changed type from CCCH to PACCH
 TBF(DL:TFI-0-0-0:E){ASSIGN} unset ass. type CCCH [prev CCCH:1, PACCH:0]
