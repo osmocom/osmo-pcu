@@ -560,11 +560,11 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		dl_tbf = tbf_as_dl_tbf(this);
 		/* POLL Timeout expecting DL ACK/NACK: implies direction == GPRS_RLCMAC_DL_TBF */
 		OSMO_ASSERT(dl_tbf);
-		if (!(dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+		if (!dl_tbf->m_last_dl_poll_ack_lost) {
 			LOGPTBF(this, LOGL_NOTICE,
 				"Timeout for polling PACKET DOWNLINK ACK: %s\n",
 				tbf_rlcmac_diag(dl_tbf));
-			dl_tbf->state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+			dl_tbf->m_last_dl_poll_ack_lost = true;
 		}
 		if (dl_tbf->state_is(TBF_ST_RELEASING))
 			bts_do_rate_ctr_inc(bts, CTR_RLC_REL_TIMEDOUT);

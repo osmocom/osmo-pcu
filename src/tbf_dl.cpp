@@ -162,6 +162,7 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_tx_counter(0),
 	m_dl_ack_requested(false),
 	m_last_dl_poll_fn(-1),
+	m_last_dl_poll_ack_lost(false),
 	m_last_dl_drained_fn(-1),
 	m_dl_gprs_ctrs(NULL),
 	m_dl_egprs_ctrs(NULL)
@@ -858,7 +859,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because it was requested explicitly "
 				  "(e.g. first final block sent).\n");
-		} else if (state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK)) {
+		} else if (m_last_dl_poll_ack_lost) {
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because polling timed out.\n");
 		} else {
@@ -879,10 +880,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			if (is_final)
 				T_START(this, T3191, 3191, "final block (DL-TBF)", true);
 
-			state_fsm.state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK); /* clear poll timeout flag */
-
 			/* Clear request flag */
 			m_dl_ack_requested = false;
+			/* clear poll timeout flag */
+			m_last_dl_poll_ack_lost = false;
 
 			/* set polling in header */
 			rlc.rrbp = rrbp;
@@ -1080,7 +1081,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	LOGPTBFDL(this, LOGL_DEBUG, "downlink acknowledge\n");
 
 	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-	state_fsm.state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+	m_last_dl_poll_ack_lost = false;
 
 	/* reset N3105 */
 	n_reset(N3105);
@@ -1118,7 +1119,7 @@ bool gprs_rlcmac_dl_tbf::need_poll_for_dl_ack_nack() const
 {
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx or
 	 * when last polled DL ACK/NACK was lost. */
-	return state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
+	return m_last_dl_poll_ack_lost ||
 		m_tx_counter >= POLL_ACK_AFTER_FRAMES ||
 		m_dl_ack_requested;
 }

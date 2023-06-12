@@ -71,6 +71,9 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	bool m_dl_ack_requested;
 	int32_t m_last_dl_poll_fn;
+	/* Whether we failed to receive ("poll timeout") last PKT CTRL ACK from
+	 * MS polled during DL ACK/NACK with RRBP set in "m_last_dl_poll_fn": */
+	bool m_last_dl_poll_ack_lost;
 	int32_t m_last_dl_drained_fn;
 
 	struct BandWidth {
