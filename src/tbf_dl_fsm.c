@@ -104,6 +104,7 @@ static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	struct GprsMs *ms = tbf_ms(ctx->tbf);
 	unsigned long val;
 	unsigned int sec, micro;
 
@@ -125,20 +126,29 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	} else {
-		 /* GPRS_RLCMAC_FLAG_CCCH is set, so here we submitted an DL Ass
+		 /* GPRS_RLCMAC_FLAG_CCCH is set, so here we submit a DL Ass
 		  * through PCUIF on CCCH */
+		OSMO_ASSERT(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH));
+		/* Send CCCH (PCH) Immediate Assignment over PCUIF: */
+		bts_snd_dl_ass(ms->bts, ctx->dl_tbf);
 	}
 }
 
 static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	struct GprsMs *ms;
 	unsigned long val;
 	unsigned int sec, micro;
 
 	switch (event) {
 	case TBF_EV_ASSIGN_ADD_CCCH:
+		/* Note: This code path is not really used nowadays, since ADD_CCCH is
+		 * only dispatched during dl_tbf allocation (st=NEW) */
+		ms = tbf_ms(ctx->tbf);
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
+		/* Re-send CCCH (PCH) Immediate Assignment over PCUIF: */
+		bts_snd_dl_ass(ms->bts, ctx->dl_tbf);
 		break;
 	case TBF_EV_ASSIGN_ADD_PACCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
@@ -210,13 +220,8 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * from continuing and start assignment on CCCH again */
 		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) &&
 		    !dl_tbf_first_dl_ack_rcvd(ctx->dl_tbf)) {
-			struct GprsMs *ms = tbf_ms(ctx->tbf);
-			LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
-				  "Re-send downlink assignment on PCH (IMSI=%s)\n",
-				  ms_imsi_is_valid(ms) ? ms_imsi(ms) : "");
+			LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG, "Retransmit ImmAss[PktDlAss] on PCH\n");
 			tbf_dl_fsm_state_chg(fi, TBF_ST_ASSIGN);
-			/* send immediate assignment */
-			bts_snd_dl_ass(ms->bts, ctx->dl_tbf);
 		}
 		break;
 	case TBF_EV_LAST_DL_DATA_SENT:

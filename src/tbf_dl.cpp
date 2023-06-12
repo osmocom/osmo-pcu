@@ -485,9 +485,6 @@ void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf)
 
 	/* change state */
 	osmo_fsm_inst_dispatch(tbf->state_fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
-
-	/* send immediate assignment */
-	bts_snd_dl_ass(ms->bts, tbf);
 }
 
 int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *dl_tbf)
