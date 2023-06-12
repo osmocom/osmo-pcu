@@ -20,7 +20,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0x12345678, partly confir
 PDCH(bts=0,trx=0,ts=0) Attaching TBF(DL:TFI-0-0-0:G:TLLI-0x12345678){NEW}, 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI-0x12345678:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:TFI-0-0-0:G:TLLI-0x12345678){NEW}
 MS(TLLI-0x12345678:TA-220:MSCLS-0-0:DL): + tbf: now used by 1 (tbf)
- - TRX=0 (0) TS=0 TA=220
 PDCH(bts=0,trx=0,ts=0) Reserving FN 2715608 for type POLL
 PDCH(bts=0,trx=0,ts=0) Reserving FN 2715613 for type POLL
 PDCH(bts=0,trx=0,ts=0) Reserving FN 2715617 for type POLL

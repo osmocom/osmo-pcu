@@ -1099,12 +1099,12 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf *tbf)
 {
 	int plen;
-	const struct gprs_rlcmac_pdch *pdch;
-
-	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");
 
 	/* Only one TS can be assigned through PCH, hence the first one is the only one: */
-	pdch = tbf_get_first_ts_const(tbf);
+	const struct gprs_rlcmac_pdch *pdch = tbf_get_first_ts_const(tbf);
+	OSMO_ASSERT(pdch);
+
+	LOGPTBFDL(tbf, LOGL_INFO, "Tx CCCH (PCH) Immediate Assignment [PktDlAss=%s] TA=%d\n", pdch_name(pdch), tbf->ta());
 
 	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
 	bitvec_unhex(immediate_assignment, DUMMY_VEC); /* standard '2B'O padding */
@@ -1113,8 +1113,6 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 	 * that the resource reference cannot be confused with any CHANNEL REQUEST
 	 * message sent by a mobile station.  Use last_rts_fn + 21216 (16 TDMA
 	 * super-frame periods, or ~21.3 seconds) to achieve a decent distance. */
-	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d\n",
-	     tbf->trx->trx_no, tbf->trx->arfcn, pdch->ts_no, tbf->ta());
 	plen = Encoding::write_immediate_assignment(pdch,
 						    tbf, immediate_assignment, true, 125,
 						    fn2rfn(GSM_TDMA_FN_SUM(pdch->last_rts_fn, 21216)),

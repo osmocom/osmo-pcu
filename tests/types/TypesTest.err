@@ -1,9 +1,13 @@
 MS(TA-220:MSCLS-1-0) Allocating DL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+DL_TBF{NEW}: Allocated
 TBF(DL:TFI-0-0-0:G){NEW} Setting Control TS PDCH(bts=0,trx=0,ts=2)
 TBF(DL:TFI-0-0-0:G){NEW} Allocated: trx = 0, ul_slots = 04, dl_slots = 04
-TBF(DL:TFI-0-0-0:G){ASSIGN} TX: START Immediate Assignment Downlink (PCH)
+DL_TBF(DL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
+TBF(DL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
+DL_TBF(DL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bts=0,trx=0,ts=2)] TA=220
 PCU socket not connected, dropping message
 MS(TA-220:MSCLS-1-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
