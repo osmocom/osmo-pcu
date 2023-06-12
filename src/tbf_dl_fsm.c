@@ -179,7 +179,7 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
 		LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
-			  "Starting timer X2002 [assignment (AGCH)] with %u sec. %u microsec\n",
+			  "Starting timer X2002 [assignment (PCH)] with %u sec. %u microsec\n",
 			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 		break;
