@@ -60,10 +60,7 @@ static void mod_ass_type(struct tbf_dl_fsm_ctx *ctx, uint8_t t, bool set)
 		ch = "PACCH";
 		break;
 	default:
-		LOGPTBFDL(ctx->dl_tbf, LOGL_ERROR,
-			  "attempted to %sset unexpected ass. type %d - FIXME!\n",
-			set ? "" : "un", t);
-		return;
+		OSMO_ASSERT(0);
 	}
 
 	if (set && prev_set)
