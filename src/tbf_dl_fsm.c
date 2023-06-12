@@ -160,13 +160,13 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * have to wait for X2002 to trigger (meaning MS is already
 		 * listening on PDCH) in order to move to FLOW state and start
 		 * transmitting data to it. When X2002 triggers (see cb timer
-		 * end of the file) it will send  TBF_EV_ASSIGN_READY_CCCH back
+		 * end of the file) it will send TBF_EV_ASSIGN_READY_CCCH back
 		 * to us here.
 		 */
 		if (!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* This can happen if we initiated a CCCH DlAss from an
 			 * older TBF object (same TLLI) towards BTS, and the DL-TBF
-			 * was recreated and is now trying to be assigned throguh
+			 * was recreated and is now trying to be assigned through
 			 * PACCH.
 			 */
 			LOGPTBFDL(ctx->dl_tbf, LOGL_INFO,
