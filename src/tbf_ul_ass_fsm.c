@@ -164,7 +164,7 @@ static void st_none_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer X2000 [reject (PACCH)] with %u sec. %u microsec\n",
+		LOGPTBF(ctx->tbf, LOGL_DEBUG, "Starting timer X2000 [reject (PACCH)] with %u sec. %u microsec\n",
 			sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	}
@@ -207,7 +207,7 @@ static void st_send_ass_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 		val *= 4; /* 4 PKT RES REQ retransmit */
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T3168 [PKT UL ASS PACCH] with %u sec. %u microsec\n",
+		LOGPTBF(ctx->tbf, LOGL_DEBUG, "Starting timer T3168 [PKT UL ASS PACCH] with %u sec. %u microsec\n",
 			sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	}

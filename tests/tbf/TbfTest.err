@@ -565,7 +565,7 @@ TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} Scheduling Ack/Nack polling, becau
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 203 + 13 = 216
 PDCH(bts=0,trx=0,ts=4) Reserving FN 216 for type POLL
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=216, TS=4)
-TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} Starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=216, TS=4
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} msg block (BSN 21, CS-1): 0f 01 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -1937,7 +1937,7 @@ TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} Scheduling Ac
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 12 + 18 = 30
 PDCH(bts=0,trx=0,ts=4) Reserving FN 30 for type POLL
 TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=30, TS=4)
-TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
+TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} Starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} Scheduled Ack/Nack polling on FN=30, TS=4
 TBF(DL:TFI-0-0-0:G:IMSI-001001000123456:TLLI-0xc0123456){FINISHED} msg block (BSN 2, CS-1): 1f 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 MSG = 1f 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
@@ -1975,7 +1975,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -2041,7 +2041,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -2173,7 +2173,7 @@ TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2284,7 +2284,7 @@ TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2391,7 +2391,7 @@ TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduling Ack/Nac
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 PDCH(bts=0,trx=0,ts=7) Reserving FN 2654292 for type POLL
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=2654292, TS=7)
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled Ack/Nack polling on FN=2654292, TS=7
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654292 but previous FN=2654283 is still reserved!
@@ -2415,7 +2415,7 @@ TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduling Ack/Nac
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654296 + 13 = 2654309
 PDCH(bts=0,trx=0,ts=7) Reserving FN 2654309 for type POLL
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=2654309, TS=7)
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} restarting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654292
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Restarting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654292
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled Ack/Nack polling on FN=2654309, TS=7
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654245 qta=31
@@ -2460,7 +2460,7 @@ TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf5667788:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654301 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
@@ -2602,7 +2602,7 @@ TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2721,7 +2721,7 @@ TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Starting timer T3168
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654327 + 13 = 2654340
@@ -2829,7 +2829,7 @@ TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -2929,7 +2929,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654283
+TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654283
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -3020,7 +3020,7 @@ TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-0:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -3708,7 +3708,7 @@ TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduling Ack/Nac
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654396 + 13 = 2654409
 PDCH(bts=0,trx=0,ts=7) Reserving FN 2654409 for type POLL
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=2654409, TS=7)
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled Ack/Nack polling on FN=2654409, TS=7
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} msg block (BSN 27, CS-1): 0f 01 36 16 35 45 54 20 33 38 4c 4c 43 20 50 41 43 4b 45 54 20 33 39 
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) appending 21 bytes to DL LLC queue
@@ -4066,7 +4066,7 @@ TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduling Ack/Nac
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654448 + 13 = 2654461
 PDCH(bts=0,trx=0,ts=7) Reserving FN 2654461 for type POLL
 TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled DL Acknowledgement polling on PACCH (FN=2654461, TS=7)
-TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
+TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
 TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Scheduled Ack/Nack polling on FN=2654461, TS=7
 TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) Destroying MS object
@@ -4254,7 +4254,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -4373,7 +4373,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -7448,7 +7448,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -7669,7 +7669,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -7838,7 +7838,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -7869,7 +7869,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-1:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-1:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-1:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-1:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-1:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
@@ -7900,7 +7900,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-2:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-2:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-2:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-2:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-2:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
@@ -7931,7 +7931,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-3:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-3:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-3:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-3:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-3:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
@@ -7962,7 +7962,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-4:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-4:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-4:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-4:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-4:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
@@ -7993,7 +7993,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-5:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-5:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-5:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-5:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-5:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
@@ -8024,7 +8024,7 @@ MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-6:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-6:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-6:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-6:G){FLOW} starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+TBF(UL:TFI-0-0-6:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
@@ -8126,7 +8126,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xf1223344:TA-7:MSCLS-1-1:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
@@ -9491,7 +9491,7 @@ TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcc:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -9542,7 +9542,7 @@ TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcd:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9599,7 +9599,7 @@ TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddce:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9656,7 +9656,7 @@ TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddcf:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
@@ -9713,7 +9713,7 @@ TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd0:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
@@ -9770,7 +9770,7 @@ TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd1:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN}
@@ -9827,7 +9827,7 @@ TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Starting timer T3168 [UL TBF Ass (PA
 TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Change control TS PDCH(bts=0,trx=0,ts=7) -> PDCH(bts=0,trx=0,ts=7) until assignment is complete.
 UL_ASS_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){NONE}: state_chg to SEND_ASS
-TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
+TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Starting timer T3168 [PKT UL ASS PACCH] with 16 sec. 0 microsec
 MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
@@ -9943,7 +9943,7 @@ UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){SEND_ASS_REJ}: state_chg to NONE
-TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
+TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} Starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN}
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: Timeout of X2000
 TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} free

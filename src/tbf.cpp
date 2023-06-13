@@ -458,8 +458,8 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 		OSMO_ASSERT(false);
 	}
 
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
-	     tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "re" : "",
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %starting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
+	     tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "Res" : "S",
 	     get_value_string(tbf_timers_names, t), reason, sec, microsec, current_fn);
 
 	Tarr[t].data = this;
