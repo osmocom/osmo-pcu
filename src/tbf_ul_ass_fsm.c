@@ -195,10 +195,10 @@ static void st_send_ass_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	unsigned int sec, micro;
 	struct GprsMs *ms = tbf_ms(ctx->tbf);
 
-	/* Here it's time where received PKT RES REQ or DL ACK/NACK to request a new UL TBF,
+	/* Here it's point in time where we received PKT RES REQ or DL ACK/NACK to request a new UL TBF,
 	 * so MS will be gone after T3168 (* 4 retrans, 8.1.1.1.2) if we are unable to seize it.
-	 * Hence, attempt re-scheduling PKT UL ASS (states SEND_ASS<->WAIT_ACK ping-pong)
-	 * until T3168 we announced to the MS expires:
+	 * Hence, attempt re-scheduling PKT UL ASS (states SEND_ASS<->WAIT_ACK ping-pong) until T3168 we
+	 * announced (SI13) to the MS expires:
 	 */
 	if (prev_state == TBF_UL_ASS_NONE) {
 		/* tbf_free() called upon trigger */
