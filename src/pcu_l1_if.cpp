@@ -539,7 +539,7 @@ static int pcu_rx_data_cnf_dt(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_dat
 	     data_cnf_dt->sapi, data_cnf_dt->fn, current_fn);
 
 	switch (data_cnf_dt->sapi) {
-	case PCU_IF_SAPI_PCH:
+	case PCU_IF_SAPI_PCH_DT:
 		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->tlli, data_cnf_dt->fn);
 		break;
 	default:
