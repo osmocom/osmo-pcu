@@ -80,7 +80,7 @@ static struct osmo_tdef T_defs_bts[] = {
 	{ .T=3168, .default_val=4000, .unit=OSMO_TDEF_MS,  .desc="Time MS waits for PACKET UPLINK ACK when establishing a UL TBF", .val=0 },
 	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid", .val=0 },
 	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer", .val=0 },
-	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF", .val=0 },
+	{ .T=3193, .default_val=1600, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF", .val=0 },
 	{ .T=3195, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) upon no response from the MS (radio failure or cell change) for TBF/MBMS radio bearer", .val=0 },
 	{ .T = -16, .default_val = 1000, .unit = OSMO_TDEF_MS,
 		.desc = "Granularity for *:all_allocated rate counters: amount of milliseconds that one counter increment"
