@@ -228,12 +228,6 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		/* All data has been sent or received, change state to FINISHED */
 		tbf_dl_fsm_state_chg(fi, TBF_ST_FINISHED);
 		break;
-	case TBF_EV_FINAL_ACK_RECVD:
-		/* We received Final Ack (DL ACK/NACK) from MS. move to
-		 * WAIT_RELEASE, we wait there for release or re-use the TBF in
-		 * case we receive more DL data to tx */
-		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
-		break;
 	case TBF_EV_MAX_N3105:
 		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
@@ -383,12 +377,10 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_LAST_DL_DATA_SENT) |
-			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			X(TBF_ST_ASSIGN) |
 			X(TBF_ST_FINISHED) |
-			X(TBF_ST_WAIT_RELEASE) |
 			X(TBF_ST_RELEASING),
 		.name = "FLOW",
 		.action = st_flow,

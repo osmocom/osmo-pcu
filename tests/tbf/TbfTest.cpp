@@ -197,36 +197,6 @@ static void setup_bts(struct gprs_rlcmac_bts *bts, uint8_t ts_no, uint8_t cs = 1
 	bts_set_current_frame_number(bts, DUMMY_FN);
 }
 
-static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms_class,
-	uint8_t egprs_ms_class, uint8_t *trx_no_)
-{
-	int tfi;
-	uint8_t trx_no;
-	GprsMs *ms;
-	gprs_rlcmac_dl_tbf *dl_tbf;
-
-	ms = ms_alloc(bts, NULL);
-	ms_set_ms_class(ms, ms_class);
-	ms_set_egprs_ms_class(ms, egprs_ms_class);
-
-	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx_no, -1);
-	OSMO_ASSERT(tfi >= 0);
-	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
-	dl_tbf = ms_dl_tbf(ms);
-	OSMO_ASSERT(dl_tbf);
-	dl_tbf->set_ta(0);
-	check_tbf(dl_tbf);
-
-	/* "Establish" the DL TBF */
-	osmo_fsm_inst_dispatch(dl_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
-	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-	check_tbf(dl_tbf);
-
-	*trx_no_ = trx_no;
-
-	return dl_tbf;
-}
-
 static unsigned fn_add_blocks(unsigned fn, unsigned blocks)
 {
 	unsigned bn = fn2bn(fn) + blocks;
@@ -251,6 +221,36 @@ static void request_dl_rlc_block(struct gprs_rlcmac_tbf *tbf,
 	uint32_t *fn, uint8_t *block_nr = NULL)
 {
 	request_dl_rlc_block(tbf->bts, tbf->control_ts, fn, block_nr);
+}
+
+static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms_class,
+	uint8_t egprs_ms_class, uint8_t *trx_no_)
+{
+	int tfi;
+	uint8_t trx_no;
+	GprsMs *ms;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+
+	ms = ms_alloc(bts, NULL);
+	ms_set_ms_class(ms, ms_class);
+	ms_set_egprs_ms_class(ms, egprs_ms_class);
+
+	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx_no, -1);
+	OSMO_ASSERT(tfi >= 0);
+	OSMO_ASSERT(ms_new_dl_tbf_assigned_on_pch(ms) == 0);
+	dl_tbf = ms_dl_tbf(ms);
+	OSMO_ASSERT(dl_tbf);
+	dl_tbf->set_ta(0);
+	check_tbf(dl_tbf);
+
+	/* "Establish" the DL TBF */
+	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
+	check_tbf(dl_tbf);
+
+	*trx_no_ = trx_no;
+
+	return dl_tbf;
 }
 
 enum test_tbf_final_ack_mode {
@@ -327,6 +327,13 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	OSMO_ASSERT(dl_tbf->have_data());
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
+	do {
+		/* Request to send one block */
+		request_dl_rlc_block(dl_tbf, &fn, &block_nr);
+	} while (dl_tbf->state_is(TBF_ST_FLOW));
+
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FINISHED));
+
 	/* Queue a final ACK */
 	memset(rbb, 0, sizeof(rbb));
 	/* Receive a final ACK */
@@ -334,6 +341,9 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
+
+	/* Now append new data, a new DL TBF should be created and assigned through the old one due to T3192: */
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, llc_data, sizeof(llc_data));
 	new_tbf = ms_dl_tbf(ms);
 	check_tbf(new_tbf);
 	OSMO_ASSERT(new_tbf != dl_tbf);
@@ -2895,9 +2905,16 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 		/* Request to send one RLC/MAC block */
 		request_dl_rlc_block(dl_tbf, &fn);
 	}
+	/* ACK all blocks */
+	memset(rbb, 0xff, sizeof(rbb));
+	_rcv_ack(false, dl_tbf, rbb);
+	/* X2031 may keep the TBF open for a while: */
+	while (dl_tbf->state_is(TBF_ST_FLOW)) {
+		request_dl_rlc_block(dl_tbf, &fn);
+	}
 	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 
-	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FINISHED));
 
 	_rcv_ack(true, dl_tbf, rbb); /* Receive a final ACK */
 
@@ -2946,6 +2963,19 @@ static gprs_rlcmac_dl_tbf *tbf_init(struct gprs_rlcmac_bts *bts,
 static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 {
 	uint8_t rbb[64/8];
+	uint32_t fn = 0;
+
+	if (dl_tbf->state_is(TBF_ST_FLOW)) {
+		/* X2031 may keep the TBF open for a while: */
+		while (dl_tbf->state_is(TBF_ST_FLOW)) {
+			/* ACK all blocks */
+			memset(rbb, 0xff, sizeof(rbb));
+			_rcv_ack(false, dl_tbf, rbb);
+			request_dl_rlc_block(dl_tbf, &fn);
+		}
+	}
+
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FINISHED));
 
 	_rcv_ack(true, dl_tbf, rbb); /* Receive a final ACK */
 
@@ -3237,7 +3267,6 @@ static void establish_and_use_egprs_dl_tbf_for_retx(struct gprs_rlcmac_bts *bts,
 		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 	}
 	/* Clean up pending items in UL controller: */
-	send_empty_block(dl_tbf, dl_tbf->control_ts, fn+50);
 	tbf_cleanup(dl_tbf);
 }
 
