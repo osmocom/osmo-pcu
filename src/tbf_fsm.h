@@ -53,7 +53,7 @@ enum tbf_fsm_states {
 	TBF_ST_FLOW,	/* RLC/MAC flow, resource needed */
 	TBF_ST_FINISHED,	/* flow finished, wait for release */
 	TBF_ST_WAIT_RELEASE,/* DL TBF: wait for release or restart */
-	TBF_ST_RELEASING,	/* releasing, wait to free TBI/USF */
+	TBF_ST_RELEASING,	/* releasing, wait to free TFI/USF */
 };
 
 struct tbf_dl_fsm_ctx {
