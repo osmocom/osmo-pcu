@@ -401,9 +401,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		if (tbf->state_is(TBF_ST_WAIT_RELEASE) &&
-				tbf->direction == new_tbf->direction)
-			tbf_free(tbf);
 
 		osmo_fsm_inst_dispatch(new_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		/* there might be LLC packets waiting in the queue, but the DL
