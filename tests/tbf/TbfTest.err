@@ -295,7 +295,7 @@ DL_TBF(DL:TFI-0-0-0:G){FINISHED}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G){FINISHED}: state_chg to WAIT_RELEASE
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:1, PACCH:0]
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-45-0:DL) appending 200 bytes to DL LLC queue
-TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} in WAIT RELEASE state (T3193), so reuse TBF
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} in WAIT RELEASE state (T3192), so reuse TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -573,7 +573,7 @@ DL_TBF(DL:TFI-0-0-0:G){FINISHED}: Received Event FINAL_ACK_RECVD
 DL_TBF(DL:TFI-0-0-0:G){FINISHED}: state_chg to WAIT_RELEASE
 TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} unset ass. type CCCH [prev CCCH:1, PACCH:0]
 MS(TLLI-0xffeeddcc:TA-0:MSCLS-45-0:DL) appending 200 bytes to DL LLC queue
-TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} in WAIT RELEASE state (T3193), so reuse TBF
+TBF(DL:TFI-0-0-0:G:TLLI-0xffeeddcc){WAIT_RELEASE} in WAIT RELEASE state (T3192), so reuse TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled

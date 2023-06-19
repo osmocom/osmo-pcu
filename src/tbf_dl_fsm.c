@@ -34,7 +34,8 @@ static const struct osmo_tdef_state_timeout tbf_dl_fsm_timeouts[32] = {
 	[TBF_ST_ASSIGN] = {},
 	[TBF_ST_FLOW] = {},
 	[TBF_ST_FINISHED] = {},
-	[TBF_ST_WAIT_RELEASE] = { .T = 3193 },
+	[TBF_ST_WAIT_RELEASE] = { .T = 3192 },
+	[TBF_ST_WAIT_REUSE_TFI] = { /* .T = 3193 set manually onenter subtracting T3192 */ },
 	[TBF_ST_RELEASING] = { .T = 3195 },
 };
 
@@ -243,8 +244,9 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		break;
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
-		 * WAIT_RELEASE, we wait there for release or re-use the TBF in
-		 * case we receive more DL data to tx */
+		 * WAIT_RELEASE, where MS stays monitoring PDCH over T3192 span,
+		 * where we can use this DL TBF to assign a new one in case we
+		 * receive more DL data to Tx */
 		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_MAX_N3105:
@@ -259,6 +261,14 @@ static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_sta
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 
+	/* T3192 is running on the MS and has also been armed by this FSM now.
+	 * During that time, it is possible to reach the MS over PACCH to assign
+	 * new DL TBF.
+	 * Upon T3192 expiration, FSM will transition to TBF_ST_WAIT_REUSE_TFI
+	 * for some more time (T3193 - T3192) until internally freeing the TBF
+	 * object, at which time the resources can be reused.
+	 */
+
 	mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
 }
 
@@ -266,10 +276,41 @@ static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data
 {
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
-		/* ignore, duplicate ACK, we already know about since we are in WAIT_RELEASE */
+		/* ignore, duplicate ACK, we already know about since we left ST_FINISHED */
 		break;
-	case TBF_EV_MAX_N3105:
-		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
+static void st_wait_reuse_tfi_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	struct GprsMs *ms = tbf_ms(ctx->tbf);
+	unsigned long t3192, t3193, res;
+
+	/* T3192 has expired, so the MS is not listening on that PACCH anymore.
+	 * Still, wait until remaining of T3193 expiration (>T3192) to internally
+	 * free the TBF, at which point the TFI and other allocated resources
+	 * will be freed and can then be reused.
+	 */
+
+	t3192 = osmo_tdef_get(ms->bts->T_defs_bts, 3192, OSMO_TDEF_MS, -1);
+	t3193 = osmo_tdef_get(ms->bts->T_defs_bts, 3193, OSMO_TDEF_MS, -1);
+	/* As per spec T3193 shall be greater than T3192, but let's be safe against wrong configs: */
+	res = (t3193 >= t3192) ? (t3193 - t3192) : 0;
+	fi->T = 3193;
+	LOGPTBF(ctx->tbf, LOGL_DEBUG, "Waiting %lu sec. %lu microsec (T3193 - T3192) [REUSE TFI]\n",
+		res / 1000, (res % 1000) * 1000);
+	osmo_timer_schedule(&fi->timer, res / 1000, (res % 1000) * 1000);
+}
+
+static void st_wait_reuse_tfi(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	/* Simply wait for T3193 timeout, it will tbf_free() */
+	switch (event) {
+	case TBF_EV_FINAL_ACK_RECVD:
+		/* ignore, duplicate ACK, we already know about since we left ST_FINISHED */
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -333,6 +374,9 @@ static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
 	switch (fi->T) {
 	case -2002:
 		handle_timeout_X2002(fi);
+		break;
+	case 3192:
+		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_REUSE_TFI);
 		break;
 	case -2001:
 		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
@@ -401,10 +445,20 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
+			X(TBF_ST_WAIT_REUSE_TFI) |
 			X(TBF_ST_RELEASING),
 		.name = "WAIT_RELEASE",
 		.action = st_wait_release,
 		.onenter = st_wait_release_on_enter,
+	},
+	[TBF_ST_WAIT_REUSE_TFI] = {
+		.in_event_mask =
+			X(TBF_EV_FINAL_ACK_RECVD),
+		.out_state_mask =
+			X(TBF_ST_RELEASING),
+		.name = "WAIT_REUSE_TFI",
+		.action = st_wait_reuse_tfi,
+		.onenter = st_wait_reuse_tfi_on_enter,
 	},
 	[TBF_ST_RELEASING] = {
 		.in_event_mask =

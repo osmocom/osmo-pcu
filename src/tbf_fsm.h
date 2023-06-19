@@ -52,7 +52,8 @@ enum tbf_fsm_states {
 	TBF_ST_ASSIGN,	/* wait for downlink assignment */
 	TBF_ST_FLOW,	/* RLC/MAC flow, resource needed */
 	TBF_ST_FINISHED,	/* flow finished, wait for release */
-	TBF_ST_WAIT_RELEASE,/* DL TBF: wait for release or restart */
+	TBF_ST_WAIT_RELEASE,	/* DL TBF: wait for release or restart */
+	TBF_ST_WAIT_REUSE_TFI,	/* DL TBF: wait to reuse TFI after last PKT ACK/NACK */
 	TBF_ST_RELEASING,	/* releasing, wait to free TFI/USF */
 };
 

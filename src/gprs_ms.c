@@ -1368,20 +1368,31 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 
 	dl_tbf = ms_dl_tbf(ms);
 	if (dl_tbf) {
-		if (tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_RELEASE) {
-			LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
+		switch (tbf_state(dl_tbf_as_tbf_const(dl_tbf))) {
+		case TBF_ST_WAIT_RELEASE:
+			LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3192), so reuse TBF\n");
 			rc = ms_new_dl_tbf_assigned_on_pacch(ms, dl_tbf_as_tbf(dl_tbf));
+			return rc;
+		case TBF_ST_WAIT_REUSE_TFI:
+			/* According to DL TBF state it should be back to CCCH, let's check UL TBF to have more information. */
+			break;
+		case TBF_ST_RELEASING:
+			/* Something went wrong (T3195), delay for later. */
+		default:
+			/* DL TBF in working status (do nothing)*/
+			return 0;
 		}
-	} else {
-		/* Check if we can create a DL TBF to start sending the enqueued
-		 * data. Otherwise it will be triggered later when it is reachable
-		 * again. */
-		if (ms_is_reachable_for_dl_ass(ms)) {
-			if (ms_ul_tbf(ms))
-				rc = ms_new_dl_tbf_assigned_on_pacch(ms, ul_tbf_as_tbf(ms_ul_tbf(ms)));
-			else
-				rc = ms_new_dl_tbf_assigned_on_pch(ms);
-		}
+
+	}
+
+	/* Check if we can create a DL TBF to start sending the enqueued
+	 * data. Otherwise it will be triggered later when it is reachable
+	 * again. */
+	if (ms_is_reachable_for_dl_ass(ms)) {
+		if (ms_ul_tbf(ms))
+			rc = ms_new_dl_tbf_assigned_on_pacch(ms, ul_tbf_as_tbf(ms_ul_tbf(ms)));
+		else
+			rc = ms_new_dl_tbf_assigned_on_pch(ms);
 	}
 	return rc;
 }
