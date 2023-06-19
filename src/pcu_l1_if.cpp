@@ -436,8 +436,13 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 			si_ro = ((struct gsm48_system_information_type_13*)data)->rest_octets;
 			if (osmo_gsm48_rest_octets_si13_decode(&bts->si13_ro_decoded, si_ro) < 0)
 				LOGP(DPCU, LOGL_ERROR, "Error decoding SI13\n");
-			/* Update our cached T3168 from it: */
+			/* Update our cached timers from it: */
 			osmo_tdef_set(bts->T_defs_bts, 3168, bts->si13_ro_decoded.cell_opts.t3168, OSMO_TDEF_MS);
+			osmo_tdef_set(bts->T_defs_bts, 3192, bts->si13_ro_decoded.cell_opts.t3192, OSMO_TDEF_MS);
+			/* Some sanity checks: */
+			if (bts->si13_ro_decoded.cell_opts.t3192 >=
+			    osmo_tdef_get(bts->T_defs_bts, 3193, OSMO_TDEF_MS, -1))
+				LOGP(DL1IF, LOGL_ERROR, "Timers incorrectly configured! T3192 >= T3193\n");
 			break;
 		default:
 			LOGP(DL1IF, LOGL_ERROR,
