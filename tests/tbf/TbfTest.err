@@ -2271,11 +2271,15 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Timeout of X2002
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_READY_CCCH
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654167 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G){FLOW}
 TBF(UL:TFI-0-0-0:G){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -2337,11 +2341,15 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Timeout of X2002
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_READY_CCCH
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654167 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G){FLOW}
 TBF(UL:TFI-0-0-0:G){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -3225,11 +3233,15 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654283
+UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654283
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Timeout of X2002
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Received Event ASSIGN_READY_CCCH
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(UL:TFI-0-0-0:G){FLOW}
 TBF(UL:TFI-0-0-0:G){FLOW} UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -9317,8 +9329,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-0:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-0:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
@@ -9348,8 +9361,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-1:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-1:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-1:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-1:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-1:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-1:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-1:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-1:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
@@ -9379,8 +9393,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-2:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-2:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-2:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-2:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-2:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-2:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-2:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-2:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
@@ -9410,8 +9425,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-3:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-3:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-3:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-3:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-3:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-3:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-3:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-3:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
@@ -9441,8 +9457,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-4:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-4:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-4:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-4:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-4:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-4:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-4:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-4:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
@@ -9472,8 +9489,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-5:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-5:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-5:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-5:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-5:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-5:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-5:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-5:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
@@ -9503,8 +9521,9 @@ MS(TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-6:G){NEW}
 MS(TA-220:MSCLS-0-0:UL): + tbf: now used by 2 (bts_rcv_rach,tbf)
 UL_TBF(UL:TFI-0-0-6:G){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-6:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-6:G){NEW}: state_chg to FLOW
-TBF(UL:TFI-0-0-6:G){FLOW} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+UL_TBF(UL:TFI-0-0-6:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-6:G){ASSIGN} Starting timer X2002 [assignment (AGCH)] with 0 sec. 200000 microsec
+TBF(UL:TFI-0-0-6:G){ASSIGN} Starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 MS(TA-220:MSCLS-0-0:UL): - bts_rcv_rach: now used by 1 (tbf)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
@@ -9527,25 +9546,25 @@ MS(TA-220:MSCLS-0-0): - bts_rcv_rach: now used by 0 (-)
 MS(TA-220:MSCLS-0-0) Destroying MS object
 Tx Immediate Assignment Reject on AGCH
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-6:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-6:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-5:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-5:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-4:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-4:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-3:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-3:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-2:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-2:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-1:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-1:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 MS(TA-7:MSCLS-0-0:UL) Destroying MS object
-MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-0:G){FLOW}
+MS(TA-7:MSCLS-0-0:UL) Detaching TBF: TBF(UL:TFI-0-0-0:G){ASSIGN}
 MS(TA-7:MSCLS-0-0): - tbf: now used by 0 (-)
 === end test_immediate_assign_rej_multi_block ===
 === start test_immediate_assign_rej_single_block ===

@@ -650,10 +650,18 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(struct gprs_rlcmac_bts 
 
 	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &pdch->trx->trx_no, -1);
 
+	/* We set X2002 timeout to 0 here to get immediate trigger through osmo_select_main() below */
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2002, 0, OSMO_TDEF_MS) == 0);
 	bts_handle_rach(bts, 0x03, *fn, qta);
 
 	ul_tbf = bts_ul_tbf_by_tfi(bts, tfi, pdch->trx->trx_no, pdch->ts_no);
 	OSMO_ASSERT(ul_tbf != NULL);
+	OSMO_ASSERT(ul_tbf->state_is(TBF_ST_ASSIGN));
+
+	/* ImmAss has been sent PCU=PCUIF=>BTS. This means UL TBF is in state
+	 * ASSIGN with X2002 armed. It will move to FLOW once it expires. */
+	osmo_select_main(0);
+	OSMO_ASSERT(ul_tbf->state_is(TBF_ST_FLOW));
 
 	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 

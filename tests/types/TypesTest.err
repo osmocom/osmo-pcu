@@ -41,7 +41,7 @@ TBF(UL:TFI-0-0-0:E){NEW} Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 TBF(UL:TFI-0-0-0:E){NEW} setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
 UL_TBF(UL:TFI-0-0-0:E){NEW}: Received Event ASSIGN_ADD_CCCH
 TBF(UL:TFI-0-0-0:E){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
-UL_TBF(UL:TFI-0-0-0:E){NEW}: state_chg to FLOW
+UL_TBF(UL:TFI-0-0-0:E){NEW}: state_chg to ASSIGN
 ************** Test with empty window
 ************** Test with 1 lost packet
 ************** Test with compressed window

@@ -89,7 +89,7 @@ static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	switch (event) {
 	case TBF_EV_ASSIGN_ADD_CCCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
-		tbf_ul_fsm_state_chg(fi, TBF_ST_FLOW);
+		tbf_ul_fsm_state_chg(fi, TBF_ST_ASSIGN);
 		ul_tbf_contention_resolution_start(ctx->ul_tbf);
 		break;
 	case TBF_EV_ASSIGN_ADD_PACCH:
@@ -126,6 +126,22 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 			  "Starting timer T3168 [UL TBF Ass (PACCH)] with %u sec. %u microsec\n",
 			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
+	} else if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
+		/* Wait a bit for the AGCH ImmAss[PktUlAss] sent BSC->BTS to
+		 * arrive at the MS, and for the MS to jump and starting
+		 * listening on USFs in the assigned PDCH.
+		 * Ideally we would first wait for TBF_EV_ASSIGN_PCUIF_CNF to
+		 * account for queueing time, but that's only sent for data on PCH
+		 * so far, while ImmAss for UL TBF is sent on AGCH.
+		 */
+		fi->T = -2002;
+		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
+		sec = val / 1000;
+		micro = (val % 1000) * 1000;
+		LOGPTBFUL(ctx->ul_tbf, LOGL_DEBUG,
+			  "Starting timer X2002 [assignment (AGCH)] with %u sec. %u microsec\n",
+			  sec, micro);
+		osmo_timer_schedule(&fi->timer, sec, micro);
 	}
 }
 
@@ -150,6 +166,10 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
 		}
+		tbf_ul_fsm_state_chg(fi, TBF_ST_FLOW);
+		break;
+	case TBF_EV_ASSIGN_READY_CCCH:
+		/* change state to FLOW, so scheduler will start requesting USF */
 		tbf_ul_fsm_state_chg(fi, TBF_ST_FLOW);
 		break;
 	default:
@@ -259,6 +279,9 @@ static int tbf_ul_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
 	struct tbf_ul_fsm_ctx *ctx = (struct tbf_ul_fsm_ctx *)fi->priv;
 	switch (fi->T) {
+	case -2002:
+		osmo_fsm_inst_dispatch(fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
+		break;
 	case 3168:
 		LOGPTBFUL(ctx->ul_tbf, LOGL_NOTICE, "Releasing due to UL TBF PACCH assignment timeout\n");
 		/* fall-through */
@@ -286,7 +309,8 @@ static struct osmo_fsm_state tbf_ul_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
 			X(TBF_EV_ASSIGN_ADD_PACCH) |
-			X(TBF_EV_ASSIGN_ACK_PACCH),
+			X(TBF_EV_ASSIGN_ACK_PACCH) |
+			X(TBF_EV_ASSIGN_READY_CCCH),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_FINISHED),
