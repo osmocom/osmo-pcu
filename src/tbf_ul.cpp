@@ -258,6 +258,19 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		"V(R)=%d)\n", rlc->tfi, this->m_window.v_q(),
 		this->m_window.v_r());
 
+	if (tbf_state(this) == TBF_ST_RELEASING) {
+		/* This may happen if MAX_N3101 is hit previously, moving the UL
+		 * TBF to RELEASING state. Since we have an fn-advance where DL
+		 * blocks are scheduled in advance, we may have requested USF for
+		 * this UL TBF before triggering and hence we are now receiving a
+		 * UL block from it. If this is the case, simply ignore the block.
+		 */
+		LOGPTBFUL(this, LOGL_INFO,
+			  "UL DATA TFI=%d received (V(Q)=%d .. V(R)=%d) while in RELEASING state, discarding\n",
+			  rlc->tfi, this->m_window.v_q(), this->m_window.v_r());
+		return 0;
+	}
+
 	/* process RSSI */
 	gprs_rlcmac_rssi(this, rssi);
 
