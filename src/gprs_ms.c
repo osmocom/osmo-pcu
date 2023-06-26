@@ -1106,7 +1106,8 @@ static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 	if (!ul_tbf)
 		return true;
 	if (ul_tbf_contention_resolution_done(ul_tbf) &&
-	    !tbf_ul_ack_waiting_cnf_final_ack(ul_tbf))
+	    !tbf_ul_ack_waiting_cnf_final_ack(ul_tbf) &&
+	    tbf_state(ul_tbf_as_tbf(ul_tbf)) != TBF_ST_RELEASING)
 		return true;
 
 	return false;
