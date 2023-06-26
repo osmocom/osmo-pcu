@@ -260,8 +260,10 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	struct GprsMs *ms = tbf_ms(ctx->tbf);
 
-	/* T3192 is running on the MS and has also been armed by this FSM now.
+	/* This state was entered because FinalACK was received; now T3192 is
+	 * running on the MS and has also been armed by this FSM.
 	 * During that time, it is possible to reach the MS over PACCH to assign
 	 * new DL TBF.
 	 * Upon T3192 expiration, FSM will transition to TBF_ST_WAIT_REUSE_TFI
@@ -270,6 +272,12 @@ static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_sta
 	 */
 
 	mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
+
+	/* check for LLC PDU in the LLC Queue */
+	if (llc_queue_size(ms_llc_queue(ms)) > 0) {
+		/* we have more data so we will re-use this tbf */
+		ms_new_dl_tbf_assigned_on_pacch(ms, ctx->tbf);
+	}
 }
 
 static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data)

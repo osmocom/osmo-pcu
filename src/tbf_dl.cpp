@@ -1053,9 +1053,7 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 int gprs_rlcmac_dl_tbf::rcvd_dl_final_ack()
 {
 	uint16_t received;
-	int rc = 0;
-
-	osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_FINAL_ACK_RECVD, NULL);
+	int rc;
 
 	/* range V(A)..V(S)-1 */
 	received = m_window.count_unacked();
@@ -1064,10 +1062,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_final_ack()
 	m_tx_counter = 0;
 	m_window.reset();
 
-	/* check for LLC PDU in the LLC Queue */
-	if (llc_queue_size(llc_queue()) > 0)
-		/* we have more data so we will re-use this tbf */
-		rc = ms_new_dl_tbf_assigned_on_pacch(ms(), dl_tbf_as_tbf(this));
+	rc = osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_FINAL_ACK_RECVD, NULL);
 
 	return rc;
 }
