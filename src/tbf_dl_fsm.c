@@ -286,6 +286,11 @@ static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* ignore, duplicate ACK, we already know about since we left ST_FINISHED */
 		break;
+	case TBF_EV_DL_ACKNACK_MISS:
+		/* ignore, miss for retransmitted ACK, but a previous one was
+		 * already ACKED since we left ST_FINISHED. This happens due to
+		 * fn-advance scheduling several DL blocks in advance. */
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -319,6 +324,11 @@ static void st_wait_reuse_tfi(struct osmo_fsm_inst *fi, uint32_t event, void *da
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* ignore, duplicate ACK, we already know about since we left ST_FINISHED */
+		break;
+	case TBF_EV_DL_ACKNACK_MISS:
+		/* ignore, miss for retransmitted ACK, but a previous one was
+		 * already ACKED since we left ST_FINISHED. This happens due to
+		 * fn-advance scheduling several DL blocks in advance. */
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -450,6 +460,7 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 	},
 	[TBF_ST_WAIT_RELEASE] = {
 		.in_event_mask =
+			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
@@ -461,6 +472,7 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 	},
 	[TBF_ST_WAIT_REUSE_TFI] = {
 		.in_event_mask =
+			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_FINAL_ACK_RECVD),
 		.out_state_mask =
 			X(TBF_ST_RELEASING),
