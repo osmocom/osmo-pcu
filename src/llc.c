@@ -35,6 +35,8 @@ void llc_reset(struct gprs_llc *llc)
 {
 	llc->index = 0;
 	llc->length = 0;
+	llc->prio = 0;
+	llc->meta_info = (struct MetaInfo){0};
 
 	memset(llc->frame, 0x42, sizeof(llc->frame));
 }
@@ -231,6 +233,26 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 	q->queue_octets = queue_octets;
 }
 
+/* Prepend / Put back a previously dequeued LLC frame (llc_queue_dequeue()) */
+void llc_queue_merge_prepend(struct gprs_llc_queue *q, struct gprs_llc *llc)
+{
+	struct MetaInfo *meta_storage;
+	unsigned int len = llc_frame_length(llc);
+	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
+
+	OSMO_ASSERT(llc_msg);
+	memcpy(msgb_put(llc_msg, len), llc->frame, len);
+
+	q->queue_size += 1;
+	q->queue_octets += msgb_length(llc_msg);
+
+	meta_storage = (struct MetaInfo *)&llc_msg->cb[0];
+	memcpy(meta_storage, &llc->meta_info, sizeof(struct MetaInfo));
+
+	/* Prepend: */
+	llist_add(&llc_msg->list, &q->pq[llc->prio].queue);
+}
+
 #define ALPHA 0.5f
 
 static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *prio)
@@ -265,7 +287,7 @@ static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_q
 	return msg;
 }
 
-struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *out_prio, struct MetaInfo *out_info)
 {
 	struct msgb *msg;
 	struct timespec tv_now, tv_now2;
@@ -274,6 +296,7 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
 	struct gprs_pcu *pcu = bts->pcu;
 	struct timespec hyst_delta = {0, 0};
 	enum gprs_llc_queue_prio prio;
+	const struct MetaInfo *info = NULL;
 
 	if (pcu->vty.llc_discard_csec)
 		csecs_to_timespec(pcu->vty.llc_discard_csec, &hyst_delta);
@@ -282,7 +305,7 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
 	timespecadd(&tv_now, &hyst_delta, &tv_now2);
 
 	while ((msg = llc_queue_pick_msg(q, &prio))) {
-		const struct MetaInfo *info = (const struct MetaInfo *)&msg->cb[0];
+		info = (const struct MetaInfo *)&msg->cb[0];
 		const struct timespec *tv_disc = &info->expire_time;
 		const struct timespec *tv_recv = &info->recv_time;
 
@@ -333,6 +356,17 @@ drop_frame:
 			octets = 0xffffff;
 		if (pcu->bssgp.bctx)
 			bssgp_tx_llc_discarded(pcu->bssgp.bctx, ms_tlli(q->ms), frames, octets);
+	}
+
+	if (!msg)
+		return NULL;
+
+	if (out_prio)
+		*out_prio = prio;
+
+	if (out_info) {
+		OSMO_ASSERT(info);
+		*out_info = *info;
 	}
 
 	return msg;

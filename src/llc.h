@@ -50,6 +50,17 @@ struct gprs_llc_hdr {
 	uint8_t control[0];
 } __attribute__ ((packed));
 
+struct MetaInfo {
+	struct timespec recv_time;
+	struct timespec expire_time;
+};
+enum gprs_llc_queue_prio { /* lowest value has highest prio */
+	LLC_QUEUE_PRIO_GMM = 0, /* SAPI 1 */
+	LLC_QUEUE_PRIO_TOM_SMS, /* SAPI 2,7,8 */
+	LLC_QUEUE_PRIO_OTHER, /* Other SAPIs */
+	_LLC_QUEUE_PRIO_SIZE /* used to calculate size of enum */
+};
+
 /**
  * I represent the LLC data to a MS
  */
@@ -57,6 +68,10 @@ struct gprs_llc {
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t index; /* current write/read position of frame */
 	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
+
+	/* Saved when dequeue from llc_queue; allows re-enqueing in the queue if Tx fails */
+	enum gprs_llc_queue_prio prio;
+	struct MetaInfo meta_info;
 };
 
 void llc_init(struct gprs_llc *llc);
@@ -99,19 +114,9 @@ static inline bool llc_fits_in_current_frame(const struct gprs_llc *llc, uint8_t
 	return llc->length + chunk_size <= LLC_MAX_LEN;
 }
 
-struct MetaInfo {
-	struct timespec recv_time;
-	struct timespec expire_time;
-};
 /**
  * I store the LLC frames that come from the SGSN.
  */
-enum gprs_llc_queue_prio { /* lowest value has highest prio */
-	LLC_QUEUE_PRIO_GMM = 0, /* SAPI 1 */
-	LLC_QUEUE_PRIO_TOM_SMS, /* SAPI 2,7,8 */
-	LLC_QUEUE_PRIO_OTHER, /* Other SAPIs */
-	_LLC_QUEUE_PRIO_SIZE /* used to calculate size of enum */
-};
 struct gprs_llc_prio_queue {
 	struct gprs_codel codel_state;
 	struct llist_head queue; /* queued LLC DL data. See enum gprs_llc_queue_prio. */
@@ -133,8 +138,9 @@ void llc_queue_init(struct gprs_llc_queue *q, struct GprsMs *ms);
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts);
 void llc_queue_set_codel_interval(struct gprs_llc_queue *q, unsigned int interval);
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
+void llc_queue_merge_prepend(struct gprs_llc_queue *q, struct gprs_llc *llc);
 void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time);
-struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q);
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *out_prio, struct MetaInfo *out_info);
 
 static inline size_t llc_queue_size(const struct gprs_llc_queue *q)
 {

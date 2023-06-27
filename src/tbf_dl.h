@@ -42,6 +42,11 @@ enum tbf_dl_prio {
 	DL_PRIO_CONTROL,   /* a control block needs to be sent */
 };
 
+struct gprs_dl_llc_llist_item {
+	struct llist_head list; /* this item added in dl_tbf->tx_llc_until_first_dl_ack_rcvd */
+	struct gprs_llc llc;
+};
+
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_dl_tbf();
@@ -77,6 +82,11 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int32_t m_last_dl_drained_fn;
 	/* Whether we receive at least one PKT DL ACK/NACK from MS since this DL TBF was assigned: */
 	bool m_first_dl_ack_rcvd;
+
+	/* Keep transmitted LLC PDUs until first ACK to avoid losing them if MS is not there.
+	 * list of gprs_dl_llc_llist_item, stored in inverse order of transmission (last transmitted
+	 * is first in the list ) */
+	struct llist_head tx_llc_until_first_dl_ack_rcvd;
 
 	struct BandWidth {
 		struct timespec dl_bw_tv; /* timestamp for dl bw calculation */
@@ -160,6 +170,8 @@ void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf);
 void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
 bool dl_tbf_first_dl_ack_rcvd(const struct gprs_rlcmac_dl_tbf *tbf);
 int dl_tbf_upgrade_to_multislot(struct gprs_rlcmac_dl_tbf *tbf);
+
+void dl_tbf_copy_unacked_pdus_to_llc_queue(struct gprs_rlcmac_dl_tbf *tbf);
 
 static inline struct gprs_rlcmac_tbf *dl_tbf_as_tbf(struct gprs_rlcmac_dl_tbf *dl_tbf)
 {

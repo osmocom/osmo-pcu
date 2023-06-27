@@ -75,11 +75,10 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	size_t len, const MetaInfo *exp_info)
 {
 	struct msgb *llc_msg;
-	const MetaInfo *info_res;
+	MetaInfo info_res;
 
-	llc_msg = llc_queue_dequeue(queue);
+	llc_msg = llc_queue_dequeue(queue, NULL, &info_res);
 	OSMO_ASSERT(llc_msg != NULL);
-	info_res = (struct MetaInfo *)&llc_msg->cb[0];
 
 	fprintf(stderr, "dequeued msg, length %u (expected %zu), data %s\n",
 		msgb_length(llc_msg), len, msgb_hexdump(llc_msg));
@@ -88,8 +87,8 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 		fprintf(stderr, "check failed!\n");
 
 	if (exp_info) {
-		OSMO_ASSERT(memcmp(&exp_info->recv_time, &info_res->recv_time, sizeof(info_res->recv_time)) == 0);
-		OSMO_ASSERT(memcmp(&exp_info->expire_time, &info_res->expire_time, sizeof(info_res->expire_time)) == 0);
+		OSMO_ASSERT(memcmp(&exp_info->recv_time, &info_res.recv_time, sizeof(info_res.recv_time)) == 0);
+		OSMO_ASSERT(memcmp(&exp_info->expire_time, &info_res.expire_time, sizeof(info_res.expire_time)) == 0);
 	}
 	msgb_free(llc_msg);
 }

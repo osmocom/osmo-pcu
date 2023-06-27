@@ -456,6 +456,8 @@ void ms_update_announced_tlli(struct GprsMs *ms, uint32_t tlli)
 void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 {
 	char old_ms_name[128];
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+
 	OSMO_ASSERT(old_ms != ms);
 	ms_ref(old_ms, __func__);
 
@@ -472,6 +474,12 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 	if (!ms_egprs_ms_class(ms) && ms_egprs_ms_class(old_ms))
 		ms_set_egprs_ms_class(ms, ms_egprs_ms_class(old_ms));
 
+
+	if ((dl_tbf = ms_dl_tbf(old_ms))) {
+		/* Move the last partially/totally unacked LLC PDU back to the LLC queue: */
+		dl_tbf_copy_unacked_pdus_to_llc_queue(dl_tbf);
+	}
+	/* Now merge the old_ms queue into the new one: */
 	llc_queue_move_and_merge(&ms->llc_queue, &old_ms->llc_queue);
 
 	/* Clean up the old MS object */

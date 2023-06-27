@@ -173,6 +173,8 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	state_fi = osmo_fsm_inst_alloc(&tbf_dl_fsm, this, &state_fsm, LOGL_INFO, NULL);
 	OSMO_ASSERT(state_fi);
 
+	INIT_LLIST_HEAD(&this->tx_llc_until_first_dl_ack_rcvd);
+
 	/* This has to be called in child constructor because enable_egprs()
 	 * uses the window() virtual function which is dependent on subclass. */
 	if (ms_mode(m_ms) != GPRS)
@@ -542,7 +544,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 		return;
 
 	/* dequeue next LLC frame, if any */
-	msg = llc_queue_dequeue(llc_queue());
+	msg = llc_queue_dequeue(llc_queue(), &m_llc.prio, &m_llc.meta_info);
 	if (!msg)
 		return;
 
@@ -661,6 +663,15 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", llc_frame_length(&m_llc));
 		gprs_rlcmac_dl_bw(this, llc_frame_length(&m_llc));
 		bts_do_rate_ctr_add(bts, CTR_LLC_DL_BYTES, llc_frame_length(&m_llc));
+
+		/* Keep transmitted LLC PDUs until first ACK to avoid lossing them if MS is not there. */
+		if (!this->m_first_dl_ack_rcvd) {
+			struct gprs_dl_llc_llist_item *llc_it = talloc(this, struct gprs_dl_llc_llist_item);
+			memcpy(&llc_it->llc, &m_llc, sizeof(llc_it->llc));
+			/* Prepend to list to store them in inverse order of transmission, see
+			 * dl_tbf_copy_unacked_pdus_to_llc_queue() for the complete picture. */
+			llist_add(&llc_it->list, &this->tx_llc_until_first_dl_ack_rcvd);
+		}
 		llc_reset(&m_llc);
 
 		if (is_final) {
@@ -1073,7 +1084,15 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	int rc;
 	LOGPTBFDL(this, LOGL_DEBUG, "downlink acknowledge\n");
 
-	m_first_dl_ack_rcvd = true;
+	if (m_first_dl_ack_rcvd == false) {
+		/* MS is there, free temporarily stored transmitted LLC PDUs */
+		struct gprs_dl_llc_llist_item *llc_it;
+		while ((llc_it = llist_first_entry_or_null(&this->tx_llc_until_first_dl_ack_rcvd, struct gprs_dl_llc_llist_item, list))) {
+			llist_del(&llc_it->list);
+			talloc_free(llc_it);
+		}
+		m_first_dl_ack_rcvd = true;
+	}
 	m_last_dl_poll_ack_lost = false;
 
 	/* reset N3105 */
@@ -1110,6 +1129,33 @@ void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *dl_tbf) {
 bool dl_tbf_first_dl_ack_rcvd(const struct gprs_rlcmac_dl_tbf *tbf)
 {
 	return tbf->m_first_dl_ack_rcvd;
+}
+
+/* Copy back to GprsMs' llc_queue the LLC PDUs previously dequeued and never
+ * fully ACKED at the MS side.
+ * FIXME: For now, only blocks transmitted and without first ever DL ACK are
+ * copied, because we have no way yet to track LLC PDUs once they are converted
+ * to RLC blocks. This is however enough to cover the case where a DL TBF is
+ * assigned over PCH and the MS never answers.
+ */
+void dl_tbf_copy_unacked_pdus_to_llc_queue(struct gprs_rlcmac_dl_tbf *tbf)
+{
+	struct GprsMs *ms = tbf_ms(dl_tbf_as_tbf(tbf));
+	struct gprs_dl_llc_llist_item *llc_it;
+
+	/* If we have LLC PDU still being transmitted, prepend it first to the queue: */
+	if (llc_frame_length(&tbf->m_llc) > 0)
+		llc_queue_merge_prepend(&ms->llc_queue, &tbf->m_llc);
+
+	/* Iterate over the list of totally transmitted LLC PDUs and merge them
+	 * into the queue. The items in the list are in inverse order of
+	 * transmission, hence when popping from here and enqueueing (prepending)
+	 * back to the llc_queue it ends up in the exact same initial order. */
+	while ((llc_it = llist_first_entry_or_null(&tbf->tx_llc_until_first_dl_ack_rcvd, struct gprs_dl_llc_llist_item, list))) {
+		llist_del(&llc_it->list);
+		llc_queue_merge_prepend(&ms->llc_queue, &llc_it->llc);
+		talloc_free(llc_it);
+	}
 }
 
 /* Does this DL TBF require to poll the MS for DL ACK/NACK? */
