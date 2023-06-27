@@ -157,11 +157,30 @@ static inline struct gprs_llc_queue *ms_llc_queue(struct GprsMs *ms)
 	return &ms->llc_queue;
 }
 
+/* Function used in code where a ul_tbf related event occurs and hence its state
+ * changes, which in turn may change the entire MS state (eg becoming reachable
+ * over PCH or PACCH) and the caller may want to know if it is a good time to
+ * assign a DL TBF (and whether we have DL data to send) */
 static inline bool ms_need_dl_tbf(struct GprsMs *ms)
 {
-	if (ms_dl_tbf(ms) != NULL &&
-	    tbf_state((const struct gprs_rlcmac_tbf *)ms_dl_tbf(ms)) != TBF_ST_WAIT_RELEASE)
-		return false;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = ms_dl_tbf(ms);
+	if (dl_tbf) {
+		switch (tbf_state(dl_tbf_as_tbf(dl_tbf))) {
+		case TBF_ST_NEW:
+		case TBF_ST_ASSIGN:
+		case TBF_ST_FLOW:
+		case TBF_ST_FINISHED:
+		case TBF_ST_WAIT_RELEASE:
+			return false; /* TBF in use, hence no need for new DL TBF */
+		case TBF_ST_WAIT_REUSE_TFI:
+		case TBF_ST_RELEASING:
+			/* TBF cannot be used to send further data, a new one
+			 * may be needed, check below */
+			break;
+		default:
+			OSMO_ASSERT(0);
+		}
+	}
 
 	return llc_queue_size(ms_llc_queue(ms)) > 0;
 }
