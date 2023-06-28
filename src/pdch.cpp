@@ -734,7 +734,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		 * contention resolution is done:
 		 */
 		if ((dl_tbf = ms_dl_tbf(ms))) {
-			/* Get rid of previous finished UL TBF before providing a new one */
 			LOGPTBFDL(dl_tbf, LOGL_NOTICE,
 				  "Got PACKET RESOURCE REQ while DL-TBF pending, killing it\n");
 			tbf_free(dl_tbf);
