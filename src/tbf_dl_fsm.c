@@ -213,6 +213,20 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 
 	switch (event) {
+	case TBF_EV_ASSIGN_PCUIF_CNF:
+		if (!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+			/* This can happen if we initiated a CCCH DlAss from an
+			 * older TBF object (same TLLI) towards BTS, and the DL-TBF
+			 * was recreated (this one) and was successfully assigned over PACCH.
+			 * This is usually the case if MS requests 2phase access
+			 * to get an UL TBF while we were waiting for a DL TBF
+			 * assignment for that same MS over PCH.
+			 */
+			LOGPTBFDL(ctx->dl_tbf, LOGL_INFO,
+				  "Ignoring event ASSIGN_PCUIF_CNF from BTS "
+				  "(CCCH was not requested on current assignment)\n");
+		}
+		break;
 	case TBF_EV_DL_ACKNACK_MISS:
 		/* DL TBF: we missed a DL ACK/NACK. If we started assignment
 		 * over CCCH and never received any DL ACK/NACK yet, it means we
@@ -437,6 +451,7 @@ static struct osmo_fsm_state tbf_dl_fsm_states[] = {
 	},
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
+			X(TBF_EV_ASSIGN_PCUIF_CNF) |
 			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_LAST_DL_DATA_SENT) |
 			X(TBF_EV_MAX_N3105),
