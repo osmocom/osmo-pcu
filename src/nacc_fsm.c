@@ -191,7 +191,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	uint8_t tfi_is_dl = tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF;
 	uint8_t tfi = tbf_tfi(tbf);
 	uint8_t container_id = 0;
-	write_packet_cell_change_continue(mac_control_block, 1, rrbp, tfi_is_dl, tfi, true,
+	write_packet_cell_change_continue(mac_control_block, 1, rrbp, tfi_is_dl, tfi, ctx->neigh_key_present,
 			ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic, container_id);
 	LOGP(DNACC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Cell Change Continue +++++++++++++++++++++++++\n");
 	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
@@ -270,19 +270,90 @@ static int fill_rim_ran_info_req(const struct nacc_fsm_ctx *ctx, struct bssgp_ra
 	return 0;
 }
 
-static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct neigh_cache_entry_key *neigh_key,
+static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct nacc_fsm_ctx *ctx,
 						    const struct gprs_rlcmac_bts *bts,
 						    const Packet_Cell_Change_Notification_t *notif)
 {
+	const Target_Cell_GSM_Notif_t *notif_gsm;
+	const Target_Cell_3G_Notif_t *notif_3g;
+	const Target_Cell_4G_Notif_t *notif_4g;
+
+	memset(&ctx->neigh_key, 0, sizeof(ctx->neigh_key));
+	ctx->neigh_key_present = false;
+
 	switch (notif->Target_Cell.UnionType) {
-	case 0: /* GSM */
-		neigh_key->local_lac = bts->cgi_ps.rai.lac.lac;
-		neigh_key->local_ci = bts->cgi_ps.cell_identity;
-		neigh_key->tgt_arfcn = notif->Target_Cell.u.Target_Cell_GSM_Notif.ARFCN;
-		neigh_key->tgt_bsic = notif->Target_Cell.u.Target_Cell_GSM_Notif.BSIC;
+	case 0:	/* GSM */
+		notif_gsm = &notif->Target_Cell.u.Target_Cell_GSM_Notif;
+		LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell: RAT=GSM, ARFCN=%u, BSIC=%u\n",
+			 notif_gsm->ARFCN, notif_gsm->BSIC);
+
+		ctx->neigh_key.local_lac = bts->cgi_ps.rai.lac.lac;
+		ctx->neigh_key.local_ci = bts->cgi_ps.cell_identity;
+		ctx->neigh_key.tgt_arfcn = notif_gsm->ARFCN;
+		ctx->neigh_key.tgt_bsic = notif_gsm->BSIC;
+		ctx->neigh_key_present = true;
 		return 0;
 	default:
-		return -ENOTSUP;
+		switch (notif->Target_Cell.u.Target_Other_RAT_Notif.UnionType) {
+		case 0:	/* UTRAN */
+			notif_3g = &notif->Target_Cell.u.Target_Other_RAT_Notif.u.Target_Cell_3G_Notif;
+			if (notif_3g->Exist_FDD_Description) {
+				LOGPFSML(ctx->fi, LOGL_NOTICE,
+					 "TargetCell: RAT=UTRAN, FDD-ARFCN=%u => no system information provided.\n",
+					 notif_3g->FDD_Target_Cell_Notif.FDD_ARFCN);
+			} else if (notif_3g->Exist_TDD_Description) {
+				LOGPFSML(ctx->fi, LOGL_NOTICE,
+					 "TargetCell: RAT=UTRAN, TDD-ARFCN=%u => no system information provided.\n",
+					 notif_3g->TDD_Target_Cell.TDD_ARFCN);
+			}
+			return 0;
+		default:
+			switch (notif->Target_Cell.u.Target_Other_RAT_Notif.u.Target_Other_RAT_2_Notif.UnionType) {
+			case 0:	/* E-UTRAN (and older RAT) */
+				notif_4g =
+				    &notif->Target_Cell.u.Target_Other_RAT_Notif.u.Target_Other_RAT_2_Notif.u.Target_Cell_4G_Notif;
+				notif_3g = &notif_4g->Target_Cell_3G_Notif;
+				if (notif_4g->Exist_Arfcn) {
+					LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell: RAT=GSM, ARFCN=%u, BSIC=%u\n",
+						 notif_4g->Arfcn, notif_4g->bsic);
+					ctx->neigh_key.local_lac = bts->cgi_ps.rai.lac.lac;
+					ctx->neigh_key.local_ci = bts->cgi_ps.cell_identity;
+					ctx->neigh_key.tgt_arfcn = notif_4g->Arfcn;
+					ctx->neigh_key.tgt_bsic = notif_4g->bsic;
+					ctx->neigh_key_present = true;
+					return 0;
+				}
+				if (notif_4g->Exist_3G_Target_Cell) {
+					if (notif_3g->Exist_FDD_Description) {
+						LOGPFSML(ctx->fi, LOGL_NOTICE,
+							 "TargetCell: RAT=UTRAN, FDD-ARFCN=%u => no system information provided.\n",
+							 notif_3g->FDD_Target_Cell_Notif.FDD_ARFCN);
+					} else if (notif_3g->Exist_TDD_Description) {
+						LOGPFSML(ctx->fi, LOGL_NOTICE,
+							 "TargetCell: RAT=UTRAN, TDD-ARFCN=%u => no system information provided.\n",
+							 notif_3g->TDD_Target_Cell.TDD_ARFCN);
+					}
+					return 0;
+				}
+				if (notif_4g->Exist_Eutran_Target_Cell) {
+					LOGPFSML(ctx->fi, LOGL_NOTICE,
+						 "TargetCell: RAT=E-UTRAN, EARFCN=%u, CI=%u => no system information provided.\n",
+						 notif_4g->Target_EUTRAN_Cell.EARFCN,
+						 notif_4g->Target_EUTRAN_Cell.Physical_Layer_Cell_Identity);
+					return 0;
+				}
+
+				/* TODO: do something meaningful with an Eutran_Ccn_Measurement_Report, in case it is
+				 * provided. */
+
+				LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell: (none, invalid)\n");
+				return -EINVAL;
+			default:
+				LOGPFSML(ctx->fi, LOGL_NOTICE,
+					 "TargetCell: RAT=CSG-UTRAN|CSG-EUTRAN, (not supported)\n");
+				return -ENOTSUP;	/* TODO: Add support */
+			}
+		}
 	}
 }
 
@@ -316,14 +387,23 @@ static void handle_retrans_pkt_cell_chg_notif(struct nacc_fsm_ctx *ctx, const Pa
 {
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 	struct neigh_cache_entry_key neigh_key;
+	int rc;
 
-	if (fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, bts, notif) < 0) {
-		LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
-			 notif->Target_Cell.UnionType);
+	rc = fill_neigh_key_from_bts_pkt_cell_chg_not(ctx, bts, notif);
+	if (rc < 0) {
+		/* (see comment below) */
 		if (ctx->fi->state != NACC_ST_TX_CELL_CHG_CONTINUE)
 			nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
+	} else if (!ctx->neigh_key_present) {
+		/* In case no neighbour key information is present, (This would be the case for UTRAN or EUTRAN cells)
+		 * then we will not provide any system information. Instead we will send the PacketCellChangeContinue
+		 * message immediately. This also applies in the case of re-transmissions. See also: 3GPP TS 48.018,
+		 * section 8c.6.1. */
+		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		return;
 	}
+
 	/* If tgt cell changed, restart resolving it */
 	if (!neigh_cache_entry_key_eq(&ctx->neigh_key, &neigh_key)) {
 		ctx->neigh_key = neigh_key;
@@ -341,17 +421,21 @@ static void st_initial(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 	Packet_Cell_Change_Notification_t *notif;
+	int rc;
 
 	switch (event) {
 	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
 		notif = (Packet_Cell_Change_Notification_t *)data;
-		if (fill_neigh_key_from_bts_pkt_cell_chg_not(&ctx->neigh_key, bts, notif) < 0) {
-			LOGPFSML(fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
-				 notif->Target_Cell.UnionType);
+		rc = fill_neigh_key_from_bts_pkt_cell_chg_not(ctx, bts, notif);
+		if (rc < 0)
 			osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
-		} else {
+		else if (!ctx->neigh_key_present) {
+			/* In case no neighbour key information is present, (This would be the case for UTRAN or EUTRAN
+			 * cells) then we will not provide any system information. Instead we will send the
+			 * PacketCellChangeContinue message immediately. See also: 3GPP TS 48.018, section 8c.6.1. */
+			nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		} else
 			nacc_fsm_state_chg(fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
-		}
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -382,7 +466,6 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 	}
 
 	/* CGI-PS not in cache, resolve it using BSC Neighbor Resolution CTRL interface */
-
 	LOGPFSML(fi, LOGL_DEBUG, "No CGI-PS found in cache, resolving " NEIGH_CACHE_ENTRY_KEY_FMT "...\n",
 		 NEIGH_CACHE_ENTRY_KEY_ARGS(&ctx->neigh_key));
 
@@ -622,7 +705,8 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 		.in_event_mask =
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION),
 		.out_state_mask =
-			X(NACC_ST_WAIT_RESOLVE_RAC_CI),
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
+			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "INITIAL",
 		.action = st_initial,
 	},

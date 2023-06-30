@@ -47,6 +47,7 @@ struct nacc_fsm_ctx {
 	struct osmo_fsm_inst *fi;
 	struct GprsMs* ms; /* back pointer */
 	struct neigh_cache_entry_key neigh_key; /* target cell info from MS */
+	bool neigh_key_present; /* target cell info from MS is present */
 	struct osmo_cell_global_id_ps cgi_ps; /* target cell info resolved from req_{arfcn+bsic} */
 	struct si_cache_value si_info; /* SI info resolved from SGSN, to be sent to MS */
 	size_t si_info_bytes_sent; /* How many bytes out of si_info->si_len were already sent to MS */
