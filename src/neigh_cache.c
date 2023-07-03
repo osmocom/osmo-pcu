@@ -89,6 +89,26 @@ void neigh_cache_set_keep_time_interval(struct neigh_cache *cache, unsigned int 
 	neigh_cache_schedule_cleanup(cache);
 }
 
+static struct neigh_cache_entry *neigh_cache_lookup_entry(struct neigh_cache *cache,
+							  const struct neigh_cache_entry_key *key)
+{
+	struct neigh_cache_entry *tmp;
+	llist_for_each_entry(tmp, &cache->list, list) {
+		if (neigh_cache_entry_key_eq(&tmp->key, key))
+			return tmp;
+	}
+	return NULL;
+}
+
+const struct osmo_cell_global_id_ps *neigh_cache_lookup_value(struct neigh_cache *cache,
+							      const struct neigh_cache_entry_key *key)
+{
+	struct neigh_cache_entry *it = neigh_cache_lookup_entry(cache, key);
+	if (it)
+		return &it->value;
+	return NULL;
+}
+
 struct neigh_cache_entry *neigh_cache_add(struct neigh_cache *cache,
 					  const struct neigh_cache_entry_key *key,
 					  const struct osmo_cell_global_id_ps *value)
@@ -117,26 +137,6 @@ struct neigh_cache_entry *neigh_cache_add(struct neigh_cache *cache,
 	llist_add_tail(&it->list, &cache->list);
 	neigh_cache_schedule_cleanup(cache);
 	return it;
-}
-
-struct neigh_cache_entry *neigh_cache_lookup_entry(struct neigh_cache *cache,
-						   const struct neigh_cache_entry_key *key)
-{
-	struct neigh_cache_entry *tmp;
-	llist_for_each_entry(tmp, &cache->list, list) {
-		if (neigh_cache_entry_key_eq(&tmp->key, key))
-			return tmp;
-	}
-	return NULL;
-}
-
-const struct osmo_cell_global_id_ps *neigh_cache_lookup_value(struct neigh_cache *cache,
-							      const struct neigh_cache_entry_key *key)
-{
-	struct neigh_cache_entry *it = neigh_cache_lookup_entry(cache, key);
-	if (it)
-		return &it->value;
-	return NULL;
 }
 
 void neigh_cache_free(struct neigh_cache *cache)

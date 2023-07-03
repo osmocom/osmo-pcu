@@ -65,8 +65,6 @@ void neigh_cache_set_keep_time_interval(struct neigh_cache *cache, unsigned int 
 struct neigh_cache_entry *neigh_cache_add(struct neigh_cache *cache,
 					  const struct neigh_cache_entry_key *key,
 					  const struct osmo_cell_global_id_ps *value);
-struct neigh_cache_entry *neigh_cache_lookup_entry(struct neigh_cache *cache,
-						   const struct neigh_cache_entry_key *key);
 const struct osmo_cell_global_id_ps *neigh_cache_lookup_value(struct neigh_cache *cache,
 							      const struct neigh_cache_entry_key *key);
 void neigh_cache_free(struct neigh_cache *cache);
