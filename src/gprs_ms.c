@@ -1093,7 +1093,7 @@ static void ms_start_llc_timer(struct GprsMs *ms)
 /* Can we get to send a DL TBF ass to the MS? */
 static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 {
-	struct gprs_rlcmac_ul_tbf *ul_tbf = ms_ul_tbf(ms);
+	const struct gprs_rlcmac_ul_tbf *ul_tbf = ms_ul_tbf(ms);
 
 	/* This function assumes it is called when no DL TBF is present */
 	OSMO_ASSERT(!ms_dl_tbf(ms));
@@ -1115,7 +1115,7 @@ static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 		return true;
 	if (ul_tbf_contention_resolution_done(ul_tbf) &&
 	    !tbf_ul_ack_waiting_cnf_final_ack(ul_tbf) &&
-	    tbf_state(ul_tbf_as_tbf(ul_tbf)) != TBF_ST_RELEASING)
+	    tbf_state(ul_tbf_as_tbf_const(ul_tbf)) != TBF_ST_RELEASING)
 		return true;
 
 	return false;
