@@ -1093,10 +1093,13 @@ static void ms_start_llc_timer(struct GprsMs *ms)
 /* Can we get to send a DL TBF ass to the MS? */
 static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 {
+	const struct gprs_rlcmac_dl_tbf *dl_tbf = ms_dl_tbf(ms);
 	const struct gprs_rlcmac_ul_tbf *ul_tbf = ms_ul_tbf(ms);
 
-	/* This function assumes it is called when no DL TBF is present */
-	OSMO_ASSERT(!ms_dl_tbf(ms));
+	/* This function assumes it is called when no DL TBF is present, or
+	 * alternatively if it's not really in use by the MS (TBF_ST_WAIT_REUSE_TFI) */
+	OSMO_ASSERT(!dl_tbf ||
+		    tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_REUSE_TFI);
 
 	/* 3GPP TS 44.060 sec 7.1.3.1 Initiation of the Packet resource request procedure:
 	* "Furthermore, the mobile station shall not respond to PACKET DOWNLINK ASSIGNMENT
