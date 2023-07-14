@@ -275,6 +275,16 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 	else
 		memset(data, '0', IMSI_DIGITS_FOR_PAGING);
 
+	/* OS#6097: if strlen(imsi) == 0: We assume the MS is in non-DRX
+	 * mode (TS 44.060 5.5.1.5) and hence it is listening on all CCCH blocks
+	 * (TS 45.002 6.5.3, 6.5.6).
+	 * Hence, pgroup 000 is taken "randomly" to send it over it. This of
+	 * course not optimal since it can actually be sent on any CCCH blocks,
+	 * so we are delaying the ImmAss for no good reason. But anyway,
+	 * pcu_l1if_tx_pch() is deprecated and pcu_l1if_tx_pch_dt() should be
+	 * used instead, which doesn't suffer from this problem.
+	 */
+
 	/* block provided by upper layer comes without first byte (plen), prepend it manually: */
 	OSMO_ASSERT(sizeof(data) >= IMSI_DIGITS_FOR_PAGING + 1 + block->data_len);
 	data[IMSI_DIGITS_FOR_PAGING] = (plen << 2) | 0x01;
@@ -297,6 +307,10 @@ void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int p
 	pch_dt.tlli = tlli;
 	if (imsi)
 		OSMO_STRLCPY_ARRAY(pch_dt.imsi, imsi);
+	/* OS#6097: if strlen(pch_dt.imsi) == 0: We assume the MS is in non-DRX
+	 * mode (TS 44.060 5.5.1.5) and hence it is listening on all CCCH blocks
+	 * (TS 45.002 6.5.3, 6.5.6).
+	 */
 
 	pch_dt.data[0] = (plen << 2) | 0x01;
 	bitvec_pack(block, pch_dt.data + 1);
