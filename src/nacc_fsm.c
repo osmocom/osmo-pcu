@@ -270,16 +270,20 @@ static int fill_rim_ran_info_req(const struct nacc_fsm_ctx *ctx, struct bssgp_ra
 	return 0;
 }
 
-static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct nacc_fsm_ctx *ctx,
+/* Generate neighbour key information from a given PacketCellCHangeNotification and a BTS object (lac and cid). The
+ * ctx variable is used for logging only. */
+static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct neigh_cache_entry_key *neigh_key,
+						    bool *neigh_key_present,
 						    const struct gprs_rlcmac_bts *bts,
-						    const Packet_Cell_Change_Notification_t *notif)
+						    const Packet_Cell_Change_Notification_t *notif,
+						    const struct nacc_fsm_ctx *ctx)
 {
 	const Target_Cell_GSM_Notif_t *notif_gsm;
 	const Target_Cell_3G_Notif_t *notif_3g;
 	const Target_Cell_4G_Notif_t *notif_4g;
 
-	memset(&ctx->neigh_key, 0, sizeof(ctx->neigh_key));
-	ctx->neigh_key_present = false;
+	memset(neigh_key, 0, sizeof(*neigh_key));
+	*neigh_key_present = false;
 
 	switch (notif->Target_Cell.UnionType) {
 	case 0:	/* GSM */
@@ -287,11 +291,11 @@ static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct nacc_fsm_ctx *ctx,
 		LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell: RAT=GSM, ARFCN=%u, BSIC=%u\n",
 			 notif_gsm->ARFCN, notif_gsm->BSIC);
 
-		ctx->neigh_key.local_lac = bts->cgi_ps.rai.lac.lac;
-		ctx->neigh_key.local_ci = bts->cgi_ps.cell_identity;
-		ctx->neigh_key.tgt_arfcn = notif_gsm->ARFCN;
-		ctx->neigh_key.tgt_bsic = notif_gsm->BSIC;
-		ctx->neigh_key_present = true;
+		neigh_key->local_lac = bts->cgi_ps.rai.lac.lac;
+		neigh_key->local_ci = bts->cgi_ps.cell_identity;
+		neigh_key->tgt_arfcn = notif_gsm->ARFCN;
+		neigh_key->tgt_bsic = notif_gsm->BSIC;
+		*neigh_key_present = true;
 		return 0;
 	default:
 		switch (notif->Target_Cell.u.Target_Other_RAT_Notif.UnionType) {
@@ -316,11 +320,11 @@ static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct nacc_fsm_ctx *ctx,
 				if (notif_4g->Exist_Arfcn) {
 					LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell: RAT=GSM, ARFCN=%u, BSIC=%u\n",
 						 notif_4g->Arfcn, notif_4g->bsic);
-					ctx->neigh_key.local_lac = bts->cgi_ps.rai.lac.lac;
-					ctx->neigh_key.local_ci = bts->cgi_ps.cell_identity;
-					ctx->neigh_key.tgt_arfcn = notif_4g->Arfcn;
-					ctx->neigh_key.tgt_bsic = notif_4g->bsic;
-					ctx->neigh_key_present = true;
+					neigh_key->local_lac = bts->cgi_ps.rai.lac.lac;
+					neigh_key->local_ci = bts->cgi_ps.cell_identity;
+					neigh_key->tgt_arfcn = notif_4g->Arfcn;
+					neigh_key->tgt_bsic = notif_4g->bsic;
+					*neigh_key_present = true;
 					return 0;
 				}
 				if (notif_4g->Exist_3G_Target_Cell) {
@@ -387,15 +391,16 @@ static void handle_retrans_pkt_cell_chg_notif(struct nacc_fsm_ctx *ctx, const Pa
 {
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 	struct neigh_cache_entry_key neigh_key;
+	bool neigh_key_present;
 	int rc;
 
-	rc = fill_neigh_key_from_bts_pkt_cell_chg_not(ctx, bts, notif);
+	rc = fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, &neigh_key_present, bts, notif, ctx);
 	if (rc < 0) {
 		/* (see comment below) */
 		if (ctx->fi->state != NACC_ST_TX_CELL_CHG_CONTINUE)
 			nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
-	} else if (!ctx->neigh_key_present) {
+	} else if (!neigh_key_present) {
 		/* In case no neighbour key information is present, (This would be the case for UTRAN or EUTRAN cells)
 		 * then we will not provide any system information. Instead we will send the PacketCellChangeContinue
 		 * message immediately. This also applies in the case of re-transmissions. See also: 3GPP TS 48.018,
@@ -407,6 +412,7 @@ static void handle_retrans_pkt_cell_chg_notif(struct nacc_fsm_ctx *ctx, const Pa
 	/* If tgt cell changed, restart resolving it */
 	if (!neigh_cache_entry_key_eq(&ctx->neigh_key, &neigh_key)) {
 		ctx->neigh_key = neigh_key;
+		ctx->neigh_key_present = neigh_key_present;
 		nacc_fsm_state_chg(ctx->fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
 	}
 	/* else: ignore it, it's a dup, carry on what we were doing */
@@ -426,7 +432,7 @@ static void st_initial(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	switch (event) {
 	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
 		notif = (Packet_Cell_Change_Notification_t *)data;
-		rc = fill_neigh_key_from_bts_pkt_cell_chg_not(ctx, bts, notif);
+		rc = fill_neigh_key_from_bts_pkt_cell_chg_not(&ctx->neigh_key, &ctx->neigh_key_present, bts, notif, ctx);
 		if (rc < 0)
 			osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
 		else if (!ctx->neigh_key_present) {
