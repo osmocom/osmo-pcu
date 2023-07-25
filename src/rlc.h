@@ -573,10 +573,8 @@ inline const uint16_t gprs_rlc_dl_window::distance() const
 }
 
 inline gprs_rlc_ul_window::gprs_rlc_ul_window()
-	: m_v_r(0)
-	, m_v_q(0)
 {
-	m_v_n.reset();
+	reset_state();
 }
 
 inline bool gprs_rlc_ul_window::is_in_window(uint16_t bsn) const
@@ -603,6 +601,7 @@ inline void gprs_rlc_ul_window::reset_state()
 {
 	m_v_r = 0;
 	m_v_q = 0;
+	m_v_n.reset();
 }
 
 inline const void gprs_rlc_ul_window::set_v_r(int v_r)
