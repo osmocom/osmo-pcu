@@ -37,8 +37,14 @@ void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn)
 	/* Positive offset, so raise. */
 	if (offset_v_r < (sns() >> 1)) {
 		while (offset_v_r--) {
-			if (offset_v_r) /* all except the received block */
-				m_v_n.mark_missing(v_r());
+			const uint16_t _v_r = v_r();
+			const uint16_t bsn_no_longer_in_ws = mod_sns(_v_r - ws());
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Mark BSN %u as INVALID\n", bsn_no_longer_in_ws);
+			m_v_n.mark_invalid(bsn_no_longer_in_ws);
+			if (offset_v_r) {/* all except the received block */
+				LOGP(DRLCMACUL, LOGL_DEBUG, "- Mark BSN %u as MISSING\n", _v_r);
+				m_v_n.mark_missing(_v_r);
+			}
 			raise_v_r_to(1);
 		}
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n", v_r());

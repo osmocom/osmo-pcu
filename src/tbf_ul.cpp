@@ -303,7 +303,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				  rdbi->bsn,
 				  m_window.v_q(), m_window.mod_sns(m_window.v_q() + ws - 1));
 			continue;
-		} else if (m_window.is_received(rdbi->bsn)) {
+		} else if (m_window.m_v_n.is_received(rdbi->bsn)) {
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "BSN %d already received\n", rdbi->bsn);
 			continue;

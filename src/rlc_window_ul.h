@@ -32,6 +32,7 @@ struct gprs_rlc_v_n {
 
 	void mark_received(int bsn);
 	void mark_missing(int bsn);
+	void mark_invalid(int bsn);
 
 	bool is_received(int bsn) const;
 
@@ -51,6 +52,11 @@ inline void gprs_rlc_v_n::mark_received(int bsn)
 inline void gprs_rlc_v_n::mark_missing(int bsn)
 {
 	return mark(bsn, GPRS_RLC_UL_BSN_MISSING);
+}
+
+inline void gprs_rlc_v_n::mark_invalid(int bsn)
+{
+	return mark(bsn, GPRS_RLC_UL_BSN_INVALID);
 }
 
 inline bool gprs_rlc_v_n::is_received(int bsn) const
