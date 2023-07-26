@@ -20,6 +20,7 @@
 
 #include "llc.h"
 #include "rlc.h"
+#include "rlc_window.h"
 #include "cxx_linuxlist.h"
 #include "pcu_utils.h"
 #include <gprs_debug.h>

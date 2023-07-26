@@ -18,6 +18,7 @@
 #ifdef __cplusplus
 
 #include "tbf.h"
+#include "rlc_window_dl.h"
 
 #include <stdint.h>
 

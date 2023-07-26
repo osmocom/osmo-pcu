@@ -15,6 +15,7 @@
  */
 #include <decoding.h>
 #include <rlc.h>
+#include <rlc_window.h>
 #include <gprs_debug.h>
 #include <egprs_rlc_compression.h>
 

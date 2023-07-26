@@ -20,6 +20,7 @@
 #include <stdbool.h>
 
 #include "tbf.h"
+#include "rlc_window_ul.h"
 
 #ifdef __cplusplus
 extern "C" {

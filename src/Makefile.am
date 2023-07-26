@@ -79,6 +79,9 @@ libgprs_la_SOURCES = \
 	decoding.cpp \
 	llc.c \
 	rlc.cpp \
+	rlc_window.cpp \
+	rlc_window_dl.cpp \
+	rlc_window_ul.cpp \
 	osmobts_sock.c \
 	gprs_codel.c \
 	coding_scheme.c \
@@ -121,6 +124,9 @@ noinst_HEADERS = \
 	encoding.h \
 	sba.h \
 	rlc.h \
+	rlc_window.h \
+	rlc_window_dl.h \
+	rlc_window_ul.h \
 	decoding.h \
 	llc.h \
 	pcu_utils.h \

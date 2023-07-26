@@ -32,6 +32,8 @@ struct bitvec;
 
 #ifdef __cplusplus
 
+#include "rlc_window_dl.h"
+
 class Decoding {
 public:
 	/* represents (parts) LLC PDUs within one RLC Data block */
