@@ -22,7 +22,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* 3GPP TS 05.02 Annex B.1 */
+/* 3GPP TS 45.002 Annex B.1 */
 
 #define MS_NA	255 /* N/A */
 #define MS_A	254 /* 1 with hopping, 0 without */
