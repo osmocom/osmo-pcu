@@ -30,7 +30,8 @@
 #define MS_C	252 /* 1 with hopping, 0 without (change Tx to Rx)*/
 #define MS_TO	251 /* 31 symbol periods (this can be provided by a TA offset, i.e. a minimum TA value) */
 
-#define DEFAULT_MSLOT_CLASS 12
+/* If Multislot Class is not known, use ms_class=1: Rx=1 Tx=1 Sum=2 */
+#define DEFAULT_MSLOT_CLASS 1
 
 #define NO_FREE_TFI 0xffffffff
 

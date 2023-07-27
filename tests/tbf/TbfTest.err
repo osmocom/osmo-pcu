@@ -11511,22 +11511,20 @@ Found first unallocated TRX=0 TFI=0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)".CCC...."(TS=7)
-Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
-Selected UL slots: (TS=0)"..UUuu.."(TS=7), multi
-[UL] algo B <multi> (suggested TRX: 0): using 2 slots
-- Available DL/UL slots: (TS=0)"..CCDDD."(TS=7)
+Rx=1 Tx=1 Sum Rx+Tx=2, Tta=3 Ttb=2, Tra=4 Trb=2, Type=1
+Selected UL slots: (TS=0)".U....u."(TS=7), multi
+[UL] algo B <multi> (suggested TRX: 0): using 1 slots
+- Available DL/UL slots: (TS=0)".C....D."(TS=7)
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) ********** UL-TBF starts here **********
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_TBF{NEW}: Allocated
 UL_ACK_TBF{NONE}: Allocated
-TBF(UL:TFI-0-0--1:G:TLLI-0xecc1f953){NEW} Assigning TS=2 TFI=0 USF=0
-PDCH(bts=0,trx=0,ts=2) Attaching TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} Assigning TS=3 TFI=0 USF=0
-PDCH(bts=0,trx=0,ts=3) Attaching TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} Setting Control TS PDCH(bts=0,trx=0,ts=2)
-TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} Allocated: trx = 0, ul_slots = 0c, dl_slots = 00
+TBF(UL:TFI-0-0--1:G:TLLI-0xecc1f953){NEW} Assigning TS=1 TFI=0 USF=0
+PDCH(bts=0,trx=0,ts=1) Attaching TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} Setting Control TS PDCH(bts=0,trx=0,ts=1)
+TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW} Allocated: trx = 0, ul_slots = 02, dl_slots = 00
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0) Attaching UL TBF: TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}
 MS(TLLI-0xecc1f953:TA-220:MSCLS-0-0:UL): + tbf: now used by 1 (tbf)
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xecc1f953){NEW}: Received Event ASSIGN_ADD_PACCH
@@ -11552,22 +11550,18 @@ Modifying MS object, TLLI: 0xecc1f953 confirmed
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL) appending 19 bytes to DL LLC queue
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
-Selected DL slots: (TS=0)".DDDddd."(TS=7), multi
-[DL] algo B <multi> (suggested TRX: 0): using 3 slots
-- Available DL/UL slots: (TS=0)"..CCDDD."(TS=7)
+Selected DL slots: (TS=0)".D....d."(TS=7), multi
+[DL] algo B <multi> (suggested TRX: 0): using 1 slots
+- Available DL/UL slots: (TS=0)".C....D."(TS=7)
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL) ********** DL-TBF starts here **********
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL) Allocating DL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 DL_TBF{NEW}: Allocated
 TBF(DL:TFI-0-0--1:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Assigning TS=1 TFI=0
-PDCH(bts=0,trx=0,ts=1) Attaching TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 00, TFIs = 00000001.
-TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Assigning TS=2 TFI=0
-PDCH(bts=0,trx=0,ts=2) Attaching TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Assigning TS=3 TFI=0
-PDCH(bts=0,trx=0,ts=3) Attaching TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Setting Control TS PDCH(bts=0,trx=0,ts=2)
-TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Allocated: trx = 0, ul_slots = 04, dl_slots = 0e
+PDCH(bts=0,trx=0,ts=1) Attaching TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW}, 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Setting Control TS PDCH(bts=0,trx=0,ts=1)
+TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} Allocated: trx = 0, ul_slots = 02, dl_slots = 02
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL) Attaching DL TBF: TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW}
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL:DL): + tbf: now used by 2 (2*tbf)
 TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){NEW} [DOWNLINK] START (PACCH)
@@ -11581,14 +11575,14 @@ TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN} Starting timer 
 DL_TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}: Received Event ASSIGN_PCUIF_CNF
 TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN} Ignoring event ASSIGN_PCUIF_CNF from BTS (CCCH was not requested on current assignment)
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
-PDCH(bts=0,trx=0,ts=2) POLL scheduled at FN 0 + 13 = 13
+PDCH(bts=0,trx=0,ts=1) POLL scheduled at FN 0 + 13 = 13
 TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN} start Packet Downlink Assignment (PACCH) for TBF(DL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
-PDCH(bts=0,trx=0,ts=2) Reserving FN 13 for type POLL
-TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN} Scheduled DL Assignment polling on PACCH (FN=13, TS=2)
+PDCH(bts=0,trx=0,ts=1) Reserving FN 13 for type POLL
+TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN} Scheduled DL Assignment polling on PACCH (FN=13, TS=1)
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){SEND_ASS}: state_chg to WAIT_ACK
-PDCH(bts=0,trx=0,ts=2) FN=0 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}
+PDCH(bts=0,trx=0,ts=1) FN=0 Scheduling control message at RTS for TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}
 === end test_ms_merge_dl_tbf_different_trx ===
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL:DL) Destroying MS object
 MS(IMSI-001001000000001:TLLI-0xecc1f953:TA-220:MSCLS-11-0:UL:DL) Detaching TBF: TBF(UL:TFI-0-0-0:G:IMSI-001001000000001:TLLI-0xecc1f953){ASSIGN}

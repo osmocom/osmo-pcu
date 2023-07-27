@@ -4,37 +4,29 @@ Testing alloc_a direction(0)
 Testing alloc_a direction(1)
 Going to test multislot assignment MS_CLASS=0
 Testing UL then DL assignment.
-PDCH[6] is used for UL
-PDCH(bts=0,trx=0,ts=6) is control_ts for UL
-PDCH(bts=0,trx=0,ts=6) is first common for UL
+PDCH[5] is used for UL
+PDCH(bts=0,trx=0,ts=5) is control_ts for UL
+PDCH(bts=0,trx=0,ts=5) is first common for UL
 PDCH[5] is used for DL
-PDCH[6] is used for DL
-PDCH[7] is used for DL
-PDCH(bts=0,trx=0,ts=6) is control_ts for DL
-PDCH(bts=0,trx=0,ts=6) is first common for DL
+PDCH(bts=0,trx=0,ts=5) is control_ts for DL
+PDCH(bts=0,trx=0,ts=5) is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[6] is used for DL
-PDCH(bts=0,trx=0,ts=6) is control_ts for DL
-PDCH(bts=0,trx=0,ts=6) is first common for DL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
-PDCH(bts=0,trx=0,ts=6) is control_ts for UL
-PDCH(bts=0,trx=0,ts=6) is first common for UL
 PDCH[5] is used for DL
-PDCH[6] is used for DL
-PDCH[7] is used for DL
-PDCH(bts=0,trx=0,ts=6) is control_ts for DL
-PDCH(bts=0,trx=0,ts=6) is first common for DL
+PDCH(bts=0,trx=0,ts=5) is control_ts for DL
+PDCH(bts=0,trx=0,ts=5) is first common for DL
+PDCH[5] is used for UL
+PDCH(bts=0,trx=0,ts=5) is control_ts for UL
+PDCH(bts=0,trx=0,ts=5) is first common for UL
+PDCH[5] is used for DL
+PDCH(bts=0,trx=0,ts=5) is control_ts for DL
+PDCH(bts=0,trx=0,ts=5) is first common for DL
 Testing jolly example
-PDCH[3] is used for UL
-PDCH(bts=0,trx=0,ts=3) is control_ts for UL
-PDCH(bts=0,trx=0,ts=3) is first common for UL
+PDCH[1] is used for UL
+PDCH(bts=0,trx=0,ts=1) is control_ts for UL
+PDCH(bts=0,trx=0,ts=1) is first common for UL
 PDCH[1] is used for DL
-PDCH[2] is used for DL
-PDCH[3] is used for DL
-PDCH[4] is used for DL
-PDCH(bts=0,trx=0,ts=3) is control_ts for DL
-PDCH(bts=0,trx=0,ts=3) is first common for DL
+PDCH(bts=0,trx=0,ts=1) is control_ts for DL
+PDCH(bts=0,trx=0,ts=1) is first common for DL
 Going to test multislot assignment MS_CLASS=1
 Testing UL then DL assignment.
 PDCH[5] is used for UL
