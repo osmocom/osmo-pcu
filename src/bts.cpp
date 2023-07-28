@@ -970,6 +970,12 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single TS uplink transmission "
 		     "(one phase packet access)\n");
 		if (bts->pcu->vty.force_two_phase) {
+			/* 3GPP TS 44.018 3.5.2.1.3.1: "If the establishment cause in the
+			 * CHANNEL REQUEST message indicates a request for one phase packet access,
+			 * the network may grant either a one phase packet access or a single block
+			 * packet access for the mobile station. If a single block packet access is
+			 * granted, it forces the mobile station to perform a two phase packet access."
+			 */
 			LOGP(DRLCMAC, LOGL_DEBUG, "Forcing two phase access\n");
 			chan_req.single_block = true;
 		}
