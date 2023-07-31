@@ -315,6 +315,10 @@ void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int p
 	pch_dt.data[0] = (plen << 2) | 0x01;
 	bitvec_pack(block, pch_dt.data + 1);
 
+	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
+		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0,
+			    pch_dt.data, GSM_MACBLOCK_LEN);
+
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH_DT, 0, 0, 0, (uint8_t*)&pch_dt, sizeof(pch_dt));
 }
 
