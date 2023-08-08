@@ -300,11 +300,11 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 /* Send a MAC block via the paging channel. This will (obviously) only work for MAC blocks that contain an
  * IMMEDIATE ASSIGNMENT or a PAGING COMMAND message. In case the MAC block contains an IMMEDIATE ASSIGNMENT
  * message, the receiving end is required to confirm when the IMMEDIATE ASSIGNMENT has been sent. */
-void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t tlli)
+void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t msg_id)
 {
 	struct gsm_pcu_if_pch_dt pch_dt = { 0 };
 
-	pch_dt.tlli = tlli;
+	pch_dt.msg_id = msg_id;
 	if (imsi)
 		OSMO_STRLCPY_ARRAY(pch_dt.imsi, imsi);
 	/* OS#6097: if strlen(pch_dt.imsi) == 0: We assume the MS is in non-DRX
@@ -563,7 +563,7 @@ static int pcu_rx_data_cnf_dt(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_dat
 
 	switch (data_cnf_dt->sapi) {
 	case PCU_IF_SAPI_PCH_DT:
-		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->tlli, data_cnf_dt->fn);
+		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->msg_id, data_cnf_dt->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with unsupported sapi %d\n", data_cnf_dt->sapi);
@@ -789,7 +789,7 @@ static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 
 	/* NOTE: The classic way to confirm an IMMEDIATE assignment is to send the whole MAC block payload back to the
 	 * PCU. So it is the MAC block itsself that serves a reference for the confirmation. This method has certain
-	 * disadvantages so it was replaced with a method that uses the TLLI as a reference ("Direct TLLI"). This new
+	 * disadvantages so it was replaced with a method that uses the TLLI as a reference (msg_id). This new
 	 * method will replace the old one. The code that handles the old method will be removed in the foreseeable
 	 * future. (see also OS#5927) */
 	if (info_ind->version == 0x0a) {
