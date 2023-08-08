@@ -666,7 +666,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 	return best_first_tfi;
 }
 
-static int tlli_from_imm_ass(uint32_t *tlli, const uint8_t *data, uint32_t fn)
+static int tlli_from_imm_ass(uint32_t *tlli, const uint8_t *data)
 {
 	const struct gsm48_imm_ass *imm_ass = (struct gsm48_imm_ass *)data;
 	uint8_t plen;
@@ -680,9 +680,9 @@ static int tlli_from_imm_ass(uint32_t *tlli, const uint8_t *data, uint32_t fn)
 	data += 1 + plen;
 
 	if ((*data & 0xf0) != 0xd0) {
-		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but rest "
+		LOGP(DTBFDL, LOGL_ERROR, "Got IMM.ASS confirm, but rest "
 			"octets do not start with bit sequence 'HH01' "
-			"(Packet Downlink Assignment)\n", fn);
+			"(Packet Downlink Assignment)\n");
 		return -EINVAL;
 	}
 
@@ -696,7 +696,7 @@ static int tlli_from_imm_ass(uint32_t *tlli, const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
-int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t tlli, uint32_t fn)
+int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t tlli)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	GprsMs *ms;
@@ -710,30 +710,30 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	/* Extract TLLI from the presented IMMEDIATE ASSIGNMENT
 	 * (if present and only when TLLI that is supplied as function parameter is valid.) */
 	if (data && tlli == GSM_RESERVED_TMSI) {
-		rc = tlli_from_imm_ass(&tlli, data, fn);
+		rc = tlli_from_imm_ass(&tlli, data);
 		if (rc != 0)
 			return -EINVAL;
 	}
 
 	/* Make sure TLLI is valid */
 	if (tlli == GSM_RESERVED_TMSI) {
-		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but TLLI is invalid!\n", fn);
+		LOGP(DTBFDL, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI is invalid!\n");
 		return -EINVAL;
 	}
 
 	/* Find related TBF and send confirmation signal to FSM */
 	ms = bts_get_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (!ms) {
-		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm for unknown MS with TLLI=%08x\n", fn, tlli);
+		LOGP(DTBFDL, LOGL_ERROR, "Got IMM.ASS confirm for unknown MS with TLLI=%08x\n", tlli);
 		return -EINVAL;
 	}
 	dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
-		LOGPMS(ms, DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but MS has no DL TBF!\n", fn);
+		LOGPMS(ms, DTBFDL, LOGL_ERROR, "Got IMM.ASS confirm, but MS has no DL TBF!\n");
 		return -EINVAL;
 	}
 
-	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "FN=%u Got IMM.ASS confirm\n", fn);
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "Got IMM.ASS confirm\n");
 	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 
 	return 0;

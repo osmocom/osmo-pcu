@@ -534,15 +534,13 @@ static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *data_cnf)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(bts);
 
-	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
-		data_cnf->sapi, data_cnf->fn, current_fn);
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d\n", data_cnf->sapi);
 
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == GSM48_MT_RR_IMM_ASS)
-			bts_rcv_imm_ass_cnf(bts, data_cnf->data, GSM_RESERVED_TMSI, data_cnf->fn);
+			bts_rcv_imm_ass_cnf(bts, data_cnf->data, GSM_RESERVED_TMSI);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
@@ -556,14 +554,12 @@ static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 static int pcu_rx_data_cnf_dt(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_cnf_dt *data_cnf_dt)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(bts);
 
-	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
-	     data_cnf_dt->sapi, data_cnf_dt->fn, current_fn);
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d\n", data_cnf_dt->sapi);
 
 	switch (data_cnf_dt->sapi) {
 	case PCU_IF_SAPI_PCH_DT:
-		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->msg_id, data_cnf_dt->fn);
+		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->msg_id);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with unsupported sapi %d\n", data_cnf_dt->sapi);

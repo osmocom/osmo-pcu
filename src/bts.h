@@ -307,7 +307,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 
 int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip);
 int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip);
-int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t tlli, uint32_t fn);
+int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t tlli);
 
 void bts_send_gsmtap(struct gprs_rlcmac_bts *bts,
 		     enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
