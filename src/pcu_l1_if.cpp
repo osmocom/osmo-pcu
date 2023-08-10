@@ -281,7 +281,7 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 	 * Hence, pgroup 000 is taken "randomly" to send it over it. This of
 	 * course not optimal since it can actually be sent on any CCCH blocks,
 	 * so we are delaying the ImmAss for no good reason. But anyway,
-	 * pcu_l1if_tx_pch() is deprecated and pcu_l1if_tx_pch_dt() should be
+	 * pcu_l1if_tx_pch() is deprecated and pcu_l1if_tx_pch2() should be
 	 * used instead, which doesn't suffer from this problem.
 	 */
 
@@ -300,26 +300,26 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 /* Send a MAC block via the paging channel. This will (obviously) only work for MAC blocks that contain an
  * IMMEDIATE ASSIGNMENT or a PAGING COMMAND message. In case the MAC block contains an IMMEDIATE ASSIGNMENT
  * message, the receiving end is required to confirm when the IMMEDIATE ASSIGNMENT has been sent. */
-void pcu_l1if_tx_pch_dt(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t msg_id)
+void pcu_l1if_tx_pch2(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t msg_id)
 {
-	struct gsm_pcu_if_pch_dt pch_dt = { 0 };
+	struct gsm_pcu_if_pch pch = { 0 };
 
-	pch_dt.msg_id = msg_id;
+	pch.msg_id = msg_id;
 	if (imsi)
-		OSMO_STRLCPY_ARRAY(pch_dt.imsi, imsi);
-	/* OS#6097: if strlen(pch_dt.imsi) == 0: We assume the MS is in non-DRX
+		OSMO_STRLCPY_ARRAY(pch.imsi, imsi);
+	/* OS#6097: if strlen(pch.imsi) == 0: We assume the MS is in non-DRX
 	 * mode (TS 44.060 5.5.1.5) and hence it is listening on all CCCH blocks
 	 * (TS 45.002 6.5.3, 6.5.6).
 	 */
 
-	pch_dt.data[0] = (plen << 2) | 0x01;
-	bitvec_pack(block, pch_dt.data + 1);
+	pch.data[0] = (plen << 2) | 0x01;
+	bitvec_pack(block, pch.data + 1);
 
 	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0,
-			    pch_dt.data, GSM_MACBLOCK_LEN);
+			    pch.data, GSM_MACBLOCK_LEN);
 
-	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH_DT, 0, 0, 0, (uint8_t*)&pch_dt, sizeof(pch_dt));
+	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH_2, 0, 0, 0, (uint8_t*)&pch, sizeof(pch));
 }
 
 int pcu_tx_neigh_addr_res_req(struct gprs_rlcmac_bts *bts, const struct neigh_cache_entry_key *neigh_key)
@@ -551,18 +551,18 @@ static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 	return rc;
 }
 
-static int pcu_rx_data_cnf_dt(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_cnf_dt *data_cnf_dt)
+static int pcu_rx_data_cnf2(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_cnf *data_cnf)
 {
 	int rc = 0;
 
-	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d\n", data_cnf_dt->sapi);
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d\n", data_cnf->sapi);
 
-	switch (data_cnf_dt->sapi) {
-	case PCU_IF_SAPI_PCH_DT:
-		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf_dt->msg_id);
+	switch (data_cnf->sapi) {
+	case PCU_IF_SAPI_PCH_2:
+		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf->msg_id);
 		break;
 	default:
-		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with unsupported sapi %d\n", data_cnf_dt->sapi);
+		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with unsupported sapi %d\n", data_cnf->sapi);
 		rc = -EINVAL;
 	}
 
@@ -1272,9 +1272,9 @@ int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf);
 		rc = pcu_rx_data_cnf(bts, &pcu_prim->u.data_cnf);
 		break;
-	case PCU_IF_MSG_DATA_CNF_DT:
-		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf_dt);
-		rc = pcu_rx_data_cnf_dt(bts, &pcu_prim->u.data_cnf_dt);
+	case PCU_IF_MSG_DATA_CNF_2:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf2);
+		rc = pcu_rx_data_cnf2(bts, &pcu_prim->u.data_cnf2);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.rts_req);
