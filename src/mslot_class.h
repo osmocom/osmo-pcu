@@ -30,8 +30,6 @@
 #define MS_C	252 /* 1 with hopping, 0 without (change Tx to Rx)*/
 #define MS_TO	251 /* 31 symbol periods (this can be provided by a TA offset, i.e. a minimum TA value) */
 
-#define DEFAULT_MSLOT_CLASS 12
-
 #define NO_FREE_TFI 0xffffffff
 
 enum { MASK_TT = 0, MASK_TR = 1 };

@@ -43,6 +43,9 @@
 #define PCU_TDEF_NEIGH_CACHE_ALIVE (-10)
 #define PCU_TDEF_SI_CACHE_ALIVE    (-11)
 
+/* If Multislot Class is not known during TS allocation, assume ms_class=12: Rx=4 Tx=4 Sum=5 */
+#define PCU_DEFAULT_MSLOT_CLASS 12
+
 /* see bts->gsmtap_categ_mask */
 enum pcu_gsmtap_category {
 	PCU_GSMTAP_C_DL_UNKNOWN		= 0,	/* unknown or undecodable downlink blocks */
@@ -108,6 +111,7 @@ struct gprs_pcu {
 		int ns_priority;
 		uint16_t ws_base;
 		uint16_t ws_pdch; /* increase WS by this value per PDCH */
+		uint8_t msclass_default; /* Assume this MSCLASS if unknown when creating TBF */
 		uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 		uint32_t llc_discard_csec;
 		uint32_t llc_idle_ack_csec;

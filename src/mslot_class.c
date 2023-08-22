@@ -18,6 +18,7 @@
 
 #include <mslot_class.h>
 #include <gprs_debug.h>
+#include <gprs_pcu.h>
 
 #include <osmocom/core/bits.h>
 #include <osmocom/core/utils.h>
@@ -86,7 +87,7 @@ static const struct gprs_ms_multislot_class gprs_ms_multislot_class[] = {
 
 static inline const struct gprs_ms_multislot_class *get_mslot_table(uint8_t ms_cl)
 {
-	uint8_t index = ms_cl ? ms_cl : DEFAULT_MSLOT_CLASS;
+	uint8_t index = ms_cl ? ms_cl : the_pcu->vty.msclass_default;
 
 	if (ms_cl >= ARRAY_SIZE(gprs_ms_multislot_class))
 		index = 0;

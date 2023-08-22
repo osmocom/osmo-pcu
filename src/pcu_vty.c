@@ -279,6 +279,8 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " gamma %d%s", the_pcu->vty.gamma * 2, VTY_NEWLINE);
 	if (!the_pcu->vty.dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
+	if (the_pcu->vty.msclass_default != PCU_DEFAULT_MSLOT_CLASS)
+		vty_out(vty, " multislot-class default %u%s", the_pcu->vty.msclass_default, VTY_NEWLINE);
 	if (strcmp(the_pcu->pcu_sock_path, PCU_SOCK_DEFAULT))
 		vty_out(vty, " pcu-socket %s%s", the_pcu->pcu_sock_path, VTY_NEWLINE);
 
@@ -882,6 +884,19 @@ DEFUN_ATTR(cfg_pcu_no_dl_tbf_preemptive_retransmission,
 	return CMD_SUCCESS;
 }
 
+DEFUN_ATTR_USRATTR(cfg_pcu_msclass_default,
+		   cfg_pcu_msclass_default_cmd,
+		   CMD_ATTR_HIDDEN,
+		   X(PCU_VTY_ATTR_NEW_TBF),
+		   "multislot-class default <1-45>",
+		   "MultiSlot Class configuration\n"
+		   "Set assumed default MultiSlot Class if unknown during TBF allocation\n"
+		   "MultiSlot Class number to use as default (default: 12)\n")
+{
+	the_pcu->vty.msclass_default = atoi(argv[0]);
+	return CMD_SUCCESS;
+}
+
 #define MS_IDLE_TIME_STR "keep an idle MS object alive for the time given\n"
 DEFUN_DEPRECATED(cfg_pcu_ms_idle_time,
       cfg_pcu_ms_idle_time_cmd,
@@ -1314,6 +1329,7 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_tbf_preemptive_retransmission_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd);
+	install_element(PCU_NODE, &cfg_pcu_msclass_default_cmd);
 	install_element(PCU_NODE, &cfg_pcu_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gsmtap_remote_host_cmd);

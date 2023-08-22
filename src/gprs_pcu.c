@@ -129,6 +129,7 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	/* TODO: increase them when CRBB decoding is implemented */
 	pcu->vty.ws_base = 64;
 	pcu->vty.ws_pdch = 0;
+	pcu->vty.msclass_default = PCU_DEFAULT_MSLOT_CLASS;
 	pcu->vty.llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	pcu->vty.llc_idle_ack_csec = 10;
 
