@@ -300,7 +300,8 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const
 /* Send a MAC block via the paging channel. This will (obviously) only work for MAC blocks that contain an
  * IMMEDIATE ASSIGNMENT or a PAGING COMMAND message. In case the MAC block contains an IMMEDIATE ASSIGNMENT
  * message, the receiving end is required to confirm when the IMMEDIATE ASSIGNMENT has been sent. */
-void pcu_l1if_tx_pch2(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, const char *imsi, uint32_t msg_id)
+void pcu_l1if_tx_pch2(struct gprs_rlcmac_bts *bts, struct bitvec *block, int plen, bool confirm,
+		      const char *imsi, uint32_t msg_id)
 {
 	struct gsm_pcu_if_pch pch = { 0 };
 
@@ -312,6 +313,7 @@ void pcu_l1if_tx_pch2(struct gprs_rlcmac_bts *bts, struct bitvec *block, int ple
 	 * (TS 45.002 6.5.3, 6.5.6).
 	 */
 
+	pch.confirm = confirm;
 	pch.data[0] = (plen << 2) | 0x01;
 	bitvec_pack(block, pch.data + 1);
 

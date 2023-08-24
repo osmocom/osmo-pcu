@@ -1129,7 +1129,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 	if (plen >= 0) {
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
 		if (the_pcu->pcu_if_version >= 0x0b)
-			pcu_l1if_tx_pch2(bts, immediate_assignment, plen, tbf->imsi(), tbf->tlli());
+			pcu_l1if_tx_pch2(bts, immediate_assignment, plen, true, tbf->imsi(), tbf->tlli());
 		else
 			pcu_l1if_tx_pch(bts, immediate_assignment, plen, tbf->imsi());
 	}
