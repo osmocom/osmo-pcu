@@ -251,6 +251,8 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 
 void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
 {
+	/* TODO: When PCUIF v.11 has become mainline, we will use pcu_l1if_tx_agch2() exclusively.
+	 * This will make this function obsolote, so we can remove it. */
 	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
 
 	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
@@ -263,10 +265,31 @@ void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, sizeof(data));
 }
 
+/* Send a MAC block via the access grant channel. This will (obviously) only work for MAC blocks that contain
+ * an IMMEDIATE ASSIGNMENT. In case the confirm flag is set, the receiving end is required to send a confirmation
+ * back when the IMMEDIATE ASSIGNMENT has been sent. */
+void pcu_l1if_tx_agch2(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, bool confirm, uint32_t msg_id)
+{
+	struct gsm_pcu_if_agch agch = { 0 };
+
+	agch.confirm = confirm;
+	agch.msg_id = msg_id;
+	agch.data[0] = (plen << 2) | 0x01;
+	bitvec_pack(block, agch.data + 1);
+
+	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
+		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, agch.data, GSM_MACBLOCK_LEN);
+
+	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH_2, 0, 0, 0, (uint8_t*)&agch, sizeof(agch));
+}
+
 #define IMSI_DIGITS_FOR_PAGING 3
 /* Send a MAC block via the paging channel. (See also comment below) */
 void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi)
 {
+	/* TODO: When PCUIF v.11 has become mainline, we will use pcu_l1if_tx_pch2() exclusively.
+	 * This will make this function obsolote, so we can remove it. */
+
 	uint8_t data[IMSI_DIGITS_FOR_PAGING + GSM_MACBLOCK_LEN];
 
 	/* prepend last three IMSI digits (if present) from which BTS/BSC will calculate the paging group */
@@ -561,6 +584,7 @@ static int pcu_rx_data_cnf2(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_
 
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH_2:
+	case PCU_IF_SAPI_AGCH_2:
 		bts_rcv_imm_ass_cnf(bts, NULL, data_cnf->msg_id);
 		break;
 	default:

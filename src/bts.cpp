@@ -1033,7 +1033,10 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		rip->burst_type);
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
 	if (plen >= 0) {
-		pcu_l1if_tx_agch(bts, bv, plen);
+		if (the_pcu->pcu_if_version >= 0x0b)
+			pcu_l1if_tx_agch2(bts, bv, plen, false, GSM_RESERVED_TMSI);
+		else
+			pcu_l1if_tx_agch(bts, bv, plen);
 		rc = 0;
 	} else {
 		rc = plen;
@@ -1047,8 +1050,12 @@ send_imm_ass_rej:
 		bv, rip->ra, rip->rfn, rip->burst_type,
 		(uint8_t)osmo_tdef_get(bts->T_defs_bts, 3142, OSMO_TDEF_S, -1));
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
-	if (plen >= 0)
-		pcu_l1if_tx_agch(bts, bv, plen);
+	if (plen >= 0) {
+		if (the_pcu->pcu_if_version >= 0x0b)
+			pcu_l1if_tx_agch2(bts, bv, plen, false, GSM_RESERVED_TMSI);
+		else
+			pcu_l1if_tx_agch(bts, bv, plen);
+	}
 	bitvec_free(bv);
 	/* rc was already properly set before goto */
 	return rc;
@@ -1128,10 +1135,26 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
-		if (the_pcu->pcu_if_version >= 0x0b)
-			pcu_l1if_tx_pch2(bts, immediate_assignment, plen, true, tbf->imsi(), tbf->tlli());
-		else
+
+		if (the_pcu->pcu_if_version >= 0x0b) {
+			if (ms_imsi_is_valid(tbf->ms())) {
+				pcu_l1if_tx_pch2(bts, immediate_assignment, plen, true, tbf->imsi(), tbf->tlli());
+			} else {
+				/* During GMM ATTACH REQUEST, the IMSI is not yet known to the PCU or SGSN. (It is
+				 * requested after the GMM ATTACH REQUEST with the GMM IDENTITY REQUEST.) When the PCU
+				 * has to assign a DL TBF but the IMSI is not known, then the IMMEDIATE ASSIGNMENT is
+				 * sent on the AGCH. The reason for this is that without an IMSI we can not calculate
+				 + the paging group, which would be necessary for transmission on PCH. Since the IMSI
+				 * is usually only unknown during the GMM ATTACH REQUEST, we may assume that the MS
+				 * is in non-DRX mode and hence it is listening on all CCCH blocks, including AGCH.
+				 *
+				 * See also: 3gpp TS 44.060, section 5.5.1.5
+				 *           3gpp TS 45.002, section 6.5.3, 6.5.6 */
+				pcu_l1if_tx_agch2(bts, immediate_assignment, plen, true, tbf->tlli());
+			}
+		} else {
 			pcu_l1if_tx_pch(bts, immediate_assignment, plen, tbf->imsi());
+		}
 	}
 
 	bitvec_free(immediate_assignment);
