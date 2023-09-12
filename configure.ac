@@ -82,11 +82,11 @@ then
 fi
 
 dnl checks for libraries
-PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore >= 1.8.0)
-PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty >= 1.8.0)
-PKG_CHECK_MODULES(LIBOSMOCTRL, libosmoctrl >= 1.8.0)
-PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 1.8.0)
-PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 1.8.0)
+PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore >= 1.9.0)
+PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty >= 1.9.0)
+PKG_CHECK_MODULES(LIBOSMOCTRL, libosmoctrl >= 1.9.0)
+PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 1.9.0)
+PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 1.9.0)
 
 AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
 AC_ARG_ENABLE(sysmocom-dsp,
@@ -175,8 +175,8 @@ AC_ARG_ENABLE(er-e1-ccu,
 AC_MSG_RESULT([$enable_er_e1_ccu])
 AM_CONDITIONAL(ENABLE_ER_E1_CCU, test "x$enable_er_e1_ccu" = "xyes")
 AS_IF([test "x$enable_er_e1_ccu" = "xyes"], [
-	PKG_CHECK_MODULES(LIBOSMOABIS, libosmoabis >= 1.4.0)
-	PKG_CHECK_MODULES(LIBOSMOTRAU, libosmotrau >= 1.4.0)
+	PKG_CHECK_MODULES(LIBOSMOABIS, libosmoabis >= 1.5.0)
+	PKG_CHECK_MODULES(LIBOSMOTRAU, libosmotrau >= 1.5.0)
 ])
 
 AC_ARG_ENABLE([vty_tests],

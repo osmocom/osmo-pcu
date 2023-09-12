@@ -1,3 +1,169 @@
+osmo-pcu (1.3.0) unstable; urgency=medium
+
+  [ Philipp Maier ]
+  * pcuif_proto: move gsm_pcu_if_e1_ccu_ind into right place
+  * pcu_l1_if.cpp: handle TLLI based IMMEDIATE ASSIGNMENT confirmation
+  * pcu_l1_if: move direct phy l1if functions to dedicated header file
+  * lc15/oc2g: fix function signature of l1if_open_pdch()
+  * osmo-bts-xyz: include pcu_l1_if_phy.h in phy in l1_if code
+  * en/decoding: fix deprecated include path
+  * pcu_l1_if: use only the term "direct PHY access"
+  * pcu_l1_if_phy: add header file for struct gsmtap_inst
+  * pcu_l1_if_phy: add new PHY API function to disconnect PDCH
+  * pcu_l1_if_phy: add new PHY API function to initialize PHY
+  * pcu_l1_if: cosmetic: remove whitespace after *
+  * pcu_l1_if_phy: support multiple BTS (in theory)
+  * bts: add IMMEDIATE ASSIGNMENT via PCH transmission
+  * support for Ericsson RBS E1 CCU
+  * pcu_l1_if: get rid of strange paging group calculation
+  * doc: add sample config to illustrate how to use an E1 CCU
+  * pcu_l1_if: do not copy IMSI when it is NULL
+  * Makefile.am: remove phy specific EXTRA_DIST variables
+  * doc: overview: put BTS and PCU on the same rank
+  * doc: Add details regarding BSC co-location
+  * pdch_ul_controller: log reserved frame numbers
+  * pcu_l1_if: cosmetic: reformat comment
+  * er_ccu_l1_if: use one ccu_desr per timeslot
+  * pcu_l1_if_phy: fix API function names
+  * pcu_l1_if: replace magic numbers with IMSI_DIGITS_FOR_PAGING
+  * gprs_rlcmac: also use PCU_IF_SAPI_PCH_DT for paging MAC blocks
+  * pcu_l1_if: use correct SAPI in PCUIF message PCU_IF_MSG_DATA_CNF_DT
+  * neigh_cache: make neigh_cache_lookup_entry static
+  * nacc_fsm: Add support for NACC with UTRAN and E-UTRAN cells
+  * nacc_fsm: fix uninitialized neigh_key variable
+  * pcuif_proto: rename tlli to msg_id
+  * bts: get rid of fn parameter in bts_rcv_imm_ass_cnf
+  * pcuif_proto: remove unnecessary members from gsm_pcu_if_data_cnf_dt
+  * pcuif_proto: get rid of _DT, _dt (Direct TLLI)
+  * pcuif_proto: add confirm flag to struct gsm_pcu_if_pch
+  * pcu_l1_if: add support for PCU_IF_SAPI_AGCH_2 for PCUIF v.11
+  * osmobts_sock: cosmetic: rename osmobts_sock.c to pcuif_sock.c
+  * pcuif_sock: improve log output (OsmoBTS/OsmoBSC)
+
+  [ Oliver Smith ]
+  * Run struct_endianness.py
+  * lc15bts.h: add missing extern keyword
+  * debian: set compat level to 10
+  * systemd: depend on networking-online.target
+
+  [ Pau Espin Pedrol ]
+  * tbf: Increase log level if polling requested in wrong TS
+  * tbf_ul_fm: Allow receiving event TBF_EV_MAX_N3105 in state RELEASING
+  * osmo_bts_sock.c: Call osmo_fd_unregister() before closing and changing bfd->fd
+  * Update libosmogsm deprecated include
+  * ms: Fix MS without PTMSI not freed immediatelly
+  * ms: Drop setting tlli during ms_alloc()
+  * tbf_dl: Avoid attempt scheduling DL ACK/NACK in TS != CTRL TS
+  * ms: Drop setting (egprs_)ms_class during bts_alloc_ms()
+  * bts: Rename bts_ms_by_{tlli,imsi} -> bts_get_ms_by_{tlli,imsi}
+  * ms: Merge ms_storage into bts.cpp
+  * ms: store in bts->ms_list during alloc/destroy of ms object
+  * Merge bts_alloc_ms() and ms_alloc()
+  * ms: Use osmo_use_count to track references
+  * ms: Make sure tbf!=NULL in ms_attach_{ul,dl}_tbf()
+  * ms: Make ms_{attach,detach}_tbf expectancies more robust
+  * ms: Log detaching tbf log line in proper place
+  * ms: Rewrite MS release lifecycle
+  * tbf: Store initial timestamp during constructor
+  * tbf: Move m_ctrs alloc to constructor
+  * tbf_ul: Move rate_ctr allocation to constructor
+  * tbf: Move enable_egprs() to constructor
+  * cosmetic: Fix indentation in comment
+  * ms: Hold a reference during ms_alloc
+  * dl_tbf: Set BandWidth timestamps to current time directly
+  * Add new log category 'ms'
+  * ms: Increase log level when scheduling release timer
+  * meas: Improve logging formatting
+  * ms: Get rid of ms->delay field
+  * ms: Rename field timer -> release_timer
+  * ms: Log MS active/idle state in 'show ms' VTY commands
+  * vty: Several improvements to 'show ms' output format
+  * alloc_algo: Pass a struct containing all req params
+  * alloc_algo: Move printing outside of update_ms_reserved_slots()
+  * Move out of alloc_algo code modifying the data model
+  * Move resource allocation outside of tbf allocation
+  * ms: Mark ms_reset() as static
+  * ms: Fix unsafe iterating freeing items in list
+  * cosmetic: ms: fix formatting of function comment
+  * tbf: Improve TBF name description in logs
+  * cosmetic: tbf_ul_ack_fsm: Clean up use of ul_tbf and tbf pointers
+  * Use always RFN when handling RACH indications
+  * Error trying to obtain FN from RFN if curr_fn not known
+  * bts: use RFN directly to calculate fn416
+  * encoding: pass RFN to write_immediate_assignment(_reject)()
+  * Derive FN from RFN once and cache it in struct rach_ind_params
+  * Use fn_valid() helper in pcu_rx_time_ind()
+  * Move call to bts_set_current_frame_number() earlier in the code path
+  * Use OSMO_UNLIKELY() in bts_rfn_to_fn()
+  * pcu_utils.h: Replace software based bitcount impl with gcc builtin
+  * Document pcu_lsb() function
+  * Log MS information in error message using usual MS API
+  * tbf_dl_fsm: Apply T3193 using FSM infrastructure instead of manually
+  * tbf_{ul,dl}_fsm: Remove unneeded asserts
+  * tbf_{ul,dl}_fsm: remove impossible dst state transitions
+  * Avoid using N3101 in DL TBFs
+  * Avoid using N3103 in DL TBFs
+  * Avoid using N3105 in UL TBFs
+  * tbf_dl_fsm: Remove T3169 references, simplify T3195 set up as consequence
+  * tbf_ul_fsm: Remove 3195 references, simplify T3169 set up as consequence
+  * Abort UL TBF PACCH Ass based on T3168
+  * Remove unused GPRS_RLCMAC_FLAG_TO_MASK
+  * Improve logging in bts_snd_dl_ass()
+  * tbf_dl_fsm: Fix wrong lchan specified in log line
+  * tbf_{ul,dl}_fsm: Abort on unexpected path
+  * tbf_{ul,dl}_fsm.c: Rearrange code/logs in mod_ass_type()
+  * Move GPRS_RLCMAC_FLAG_TO_DL_ACK from state_fsm to dl_tbf
+  * Move GPRS_RLCMAC_FLAG_DL_ACK from state_fsm to dl_tbf
+  * tests/tbf: Drop unneeded line re-setting CCCH ass type
+  * cosmetic: tbf_dl_fsm: Fix a couple comment typos
+  * Move call to bts_snd_dl_ass() from tbf_dl.cpp to tbf_dl_fsm.c
+  * Change several log lines to start with capital letter
+  * cosmetic: Improve comment
+  * Fix DL_TBF PACCH ass done on UL_TBF already scheduled to tx last PKT CTRL ACK
+  * bts: Use same default value for T3193 as set in osmo-bts/bsc
+  * Store T3192 value received from SI13, do some sanity checks
+  * tbf_dl_fsm: Drop impossible event
+  * cosmetic: tbf_fsm: Fix typo in comment
+  * pdch.cpp: Drop impossible code path
+  * Differentiate between T3192 and T3193
+  * ms_need_dl_tbf(): Fix state checks and document function
+  * tbf_ul: Avoid processing rx UL blocks for UL TBFs in RELEASING state
+  * tbf_ul_fsm: Delay moving ul_tbf to FLOW
+  * Avoid using UL TBF in RELEASE state to assign DL TBF over PACCH
+  * Avoid re-assigning DL TBF over PACCH upon duplicate FinalACKs received
+  * tbf_dl_fsm: Ignore DL_ACKNACK_MISS events in WAIT_{RELEASE,REUSE_TFI} states
+  * Reestore last LLC frames never completely acked when freeing DL TBF
+  * cosmetic: pdch.cpp: Drop wrong comment due to copy-paste error
+  * tbf_dl_fsm: Fix '{FLOW}: Event ASSIGN_PCUIF_CNF not permitted'
+  * pcuif: Log read() error cause
+  * gprs_ms: Constify variable in ms_is_reachable_for_dl_ass()
+  * gprs_ms: Update assert condition
+  * oc2g: Fix multiple definitions of arrays
+  * pcu_l1_if: Document tx_pch empty IMSI scenario
+  * gprs_rlc_ul_window: Make sure V(N) array is cleared during reset_state()
+  * Split rlc_{dl_,ul_,}window out of rlc.{h,cpp}
+  * gprs_rlc_ul_window: Mark received BSNs falling out of the V(N)/RBB when V(R) is raised
+  * cosmetic: mslot_class.h: Update spec reference
+  * cosmetic: Document foce_two_phase feature based on specs
+  * pcu_l1_if.cpp: Fix gsmtap not sent in PCU_IF_SAPI_PCH_DT
+  * vty: Allow modifying default msclass
+
+  [ Vadim Yanitskiy ]
+  * {src,tests}/Makefile.am: libraries shall not be in AM_LDFLAGS
+  * tests/Makefile.am: do not overwrite global LDFLAGS
+  * fix pcu_rx(): actually discard malformed container message
+  * tests: $(BUILT_SOURCES) is not defined, depend on osmo-pcu
+  * copyright: fix typo: sysmocom s/s.m.f.c./s.f.m.c./ GmbH
+
+  [ arehbein ]
+  * PCU interface: Log version when starting listener
+
+  [ Max ]
+  * gprs_rlcmac: convert from C++ to C
+  * ctrl: drop deprecated neighbor resolution interface
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 12 Sep 2023 16:00:25 +0200
+
 osmo-pcu (1.2.0) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]

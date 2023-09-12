@@ -6,9 +6,9 @@ Build-Depends: debhelper (>= 10),
                dh-autoreconf,
                autotools-dev,
                pkg-config,
-	       libosmo-abis-dev (>= 1.4.0),
-               libosmocore-dev (>= 1.8.0),
-               osmo-gsm-manuals-dev (>= 1.4.0)
+	       libosmo-abis-dev (>= 1.5.0),
+               libosmocore-dev (>= 1.9.0),
+               osmo-gsm-manuals-dev (>= 1.5.0)
 Standards-Version: 3.9.8
 Homepage: http://osmocom.org/projects/osmopcu
 Vcs-Git: https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu
