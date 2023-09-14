@@ -484,8 +484,9 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 
-	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
-		poll_fn, pdch->ts_no, bts_current_frame_number(bts));
+	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d), reason=%s\n",
+		poll_fn, pdch->ts_no, bts_current_frame_number(bts),
+		get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 
 	switch (reason) {
 	case PDCH_ULC_POLL_UL_ACK:

@@ -2703,7 +2703,7 @@ PDCH(bts=0,trx=0,ts=7) Expiring FN=2654292 but previous FN=2654283 is still rese
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW}
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} N3101 1 => 2 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654292, reason=DL_ACK): TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654292, TS=7 (curr FN 2654292)
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654292, TS=7 (curr FN 2654292), reason=DL_ACK
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
@@ -2772,7 +2772,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(UL:TFI-0-0-0
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} N3101 2 => 3 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654309 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654309, reason=DL_ACK): TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654309, TS=7 (curr FN 2654348)
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654309, TS=7 (curr FN 2654348), reason=DL_ACK
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
@@ -4100,7 +4100,7 @@ PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654374 is still rese
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){RELEASING}
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){RELEASING} N3101 22 => 23 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654379, reason=DL_ACK): TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654379, TS=7 (curr FN 2654379)
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} poll timeout for FN=2654379, TS=7 (curr FN 2654379), reason=DL_ACK
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FINISHED}: Received Event DL_ACKNACK_MISS
@@ -5173,18 +5173,18 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 25, MCS-1): 0f 40 0
 Detected FN jump! 4 -> 169 (expected 8, delta 165)
 PDCH(bts=0,trx=0,ts=4) Expiring FN=169 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=169 but previous FN=99 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=99, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=99, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=99, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=169 but previous FN=117 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=117, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=117, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=117, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 2 => 3 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -5453,13 +5453,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=1
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 20, MCS-2): 0f 00 05 12 6f 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=147 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=147 but previous FN=95 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=95, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=95, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=95, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -5688,13 +5688,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=1
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 15, MCS-3): 0f c0 03 06 93 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=121 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=121 but previous FN=73 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=73, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=73, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=73, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -5907,13 +5907,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=1
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 13, MCS-4): 0f 40 03 00 af 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=117 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=117 but previous FN=65 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=65, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=65, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=65, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -6110,13 +6110,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=1
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 11, MCS-5): 0f c0 02 e8 db 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=108 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=108 but previous FN=56 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=56, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=56, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=56, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -6289,13 +6289,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=1
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 8, MCS-6): 0f 00 02 e0 e4 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=95 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=95 but previous FN=43 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=43, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=43, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=43, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -6478,13 +6478,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=9
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 11, MCS-5): 0f c0 02 e8 db 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=39 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=39, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=39, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=39, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -6659,13 +6659,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=9
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 9, MCS-8): 0f 40 02 00 60 1e 0e 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 78 38 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=82 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=82 but previous FN=34 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=34, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=34, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=34, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -6828,13 +6828,13 @@ TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Scheduled Ack/Nack polling on FN=9
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} msg block (BSN 8, MCS-6): 0f 00 02 e0 e4 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=82 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=13, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} Timeout for polling PACKET DOWNLINK ACK: |Assignment was on CCCH|Downlink ACK was received|
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 0 => 1 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=82 but previous FN=30 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=30, reason=DL_ACK): TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED}
-TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=30, TS=4 (curr FN 169)
+TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} poll timeout for FN=30, TS=4 (curr FN 169), reason=DL_ACK
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} N3105 1 => 2 (< MAX 8)
 DL_TBF(DL:TFI-0-0-0:E){FINISHED}: Received Event DL_ACKNACK_MISS
 TBF(DL:TFI-0-0-0:E:TLLI-0xffeeddcc){FINISHED} downlink acknowledge
@@ -11044,7 +11044,7 @@ TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddcd:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 56)
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 56), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -11101,7 +11101,7 @@ TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddce:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 60)
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 60), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -11158,7 +11158,7 @@ TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddcf:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 65)
+TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 65), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: state_chg to SEND_ASS
@@ -11215,7 +11215,7 @@ TBF(UL:TFI-0-0-4:E:TLLI-0xffeeddd0){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddd0:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN}
-TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 69)
+TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 69), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xffeeddcc){WAIT_ACK}: state_chg to SEND_ASS
@@ -11272,7 +11272,7 @@ TBF(UL:TFI-0-0-5:E:TLLI-0xffeeddd1){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddd1:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN}
-TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 73)
+TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 73), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-2:E:TLLI-0xffeeddce){WAIT_ACK}: state_chg to SEND_ASS
@@ -11329,7 +11329,7 @@ TBF(UL:TFI-0-0-6:E:TLLI-0xffeeddd2){ASSIGN} Starting timer T3168 [PKT UL ASS PAC
 MS(TLLI-0xffeeddd2:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN}
-TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 78)
+TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 78), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-1:E:TLLI-0xffeeddcd){WAIT_ACK}: state_chg to SEND_ASS
@@ -11382,7 +11382,7 @@ UL_ASS_TBF(UL:TFI-0-0--1:E:TLLI-0xffeeddd3){NONE}: state_chg to SEND_ASS_REJ
 MS(TLLI-0xffeeddd3:TA-7:MSCLS-11-11:UL): - rcv_resource_request: now used by 1 (tbf)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN}
-TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 82)
+TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} poll timeout for FN=2654231, TS=7 (curr FN 82), reason=UL_ASS
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
 TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){ASSIGN} Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL:TFI-0-0-3:E:TLLI-0xffeeddcf){WAIT_ACK}: state_chg to SEND_ASS
