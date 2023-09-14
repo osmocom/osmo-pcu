@@ -305,6 +305,14 @@ static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data
 		 * already ACKED since we left ST_FINISHED. This happens due to
 		 * fn-advance scheduling several DL blocks in advance. */
 		break;
+	case TBF_EV_MAX_N3105:
+		/* Triggered potentially by a poll timeout of PKT UL/DL TBF ASS.
+		 * Reached N3105, the MS is not responding, so stop attempting
+		 * using the TBF for DL assignment and change to ST_RELEASING in
+		 * order to simply wait until resources can be reused (see
+		 * st_releasing_on_enter()). */
+		tbf_dl_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
