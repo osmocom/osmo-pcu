@@ -1,3 +1,9 @@
+osmo-pcu (1.3.1) unstable; urgency=medium
+
+  * tbf_dl_fsm: Fix assert hit due to EV_MAX_N3105 received in ST_RELEASING
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 15 Sep 2023 11:33:44 +0200
+
 osmo-pcu (1.3.0) unstable; urgency=medium
 
   [ Philipp Maier ]
