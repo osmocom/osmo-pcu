@@ -642,7 +642,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 
 	/* find a TFI that is unused on all PDCH */
 	for (trx = trx_from; trx <= trx_to; trx++) {
-		uint8_t tmp_first_tfi;
+		uint8_t tmp_first_tfi = 0xff; /* make gcc happy */
 		unsigned int tmp_cnt;
 		tmp_cnt = trx_count_free_tfi(&bts->trx[trx], dir, &tmp_first_tfi);
 		if (tmp_cnt > best_cnt) {
