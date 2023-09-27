@@ -10,7 +10,6 @@ StateDirectory=osmocom
 WorkingDirectory=%S/osmocom
 Restart=always
 RestartSec=2
-RestartPreventExitStatus=1
 # CPU scheduling policy:
 CPUSchedulingPolicy=rr
 # For real-time scheduling policies an integer between 1 (lowest priority) and 99 (highest priority):
