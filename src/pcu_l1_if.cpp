@@ -941,7 +941,7 @@ bssgp_failed:
 
 	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
 		bts->trx[trx_nr].arfcn = info_ind->trx[trx_nr].arfcn;
-		if ((info_ind->flags & PCU_IF_FLAG_SYSMO)
+		if ((info_ind->flags & PCU_IF_FLAG_DIRECT_PHY)
 		 && info_ind->trx[trx_nr].hlayer1) {
 #ifdef ENABLE_DIRECT_PHY
 			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx_nr,
@@ -972,7 +972,7 @@ bssgp_failed:
 				if (!pdch->is_enabled()) {
 #ifdef ENABLE_DIRECT_PHY
 					if ((info_ind->flags &
-							PCU_IF_FLAG_SYSMO))
+							PCU_IF_FLAG_DIRECT_PHY))
 						l1if_connect_pdch(
 							bts->trx[trx_nr].fl1h, ts_nr);
 #endif
@@ -1003,7 +1003,7 @@ bssgp_failed:
 			} else {
 				if (pdch->is_enabled()) {
 #ifdef ENABLE_DIRECT_PHY
-					if ((info_ind->flags & PCU_IF_FLAG_SYSMO))
+					if ((info_ind->flags & PCU_IF_FLAG_DIRECT_PHY))
 						l1if_disconnect_pdch(bts->trx[trx_nr].fl1h, ts_nr);
 #endif
 					pcu_tx_act_req(bts, pdch, 0);
