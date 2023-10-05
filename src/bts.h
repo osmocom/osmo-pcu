@@ -275,6 +275,9 @@ struct gprs_rlcmac_bts {
 	struct llist_head pch_timer;
 
 	struct osmo_time_cc all_allocated_pdch;
+
+	/* BTS hardware model, see pcuif_proto.h */
+	uint8_t bts_model;
 };
 
 struct paging_req_cs {
