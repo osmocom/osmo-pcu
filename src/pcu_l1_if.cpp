@@ -724,6 +724,17 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 	return gprs_ns_update_config(bts, info_ind->nsei, local, remote, nsvci, valid);
 }
 
+const struct value_string gsm_pcuif_bts_model_names[] = {
+	{ PCU_IF_BTS_MODEL_UNSPEC,		"(unspecified)" },
+	{ PCU_IF_BTS_MODEL_LC15,		"osmo-bts-lc15" },
+	{ PCU_IF_BTS_MODEL_OC2G,		"osmo-bts-oc2g" },
+	{ PCU_IF_BTS_MODEL_OCTPHY,		"osmo-bts-octphy" },
+	{ PCU_IF_BTS_MODEL_SYSMO,		"osmo-bts-sysmo" },
+	{ PCU_IF_BTS_MODEL_TRX,			"osmo-bts-trx" },
+	{ PCU_IF_BTS_MODEL_RBS,			"ericsson-rbs" },
+	{ 0, NULL }
+};
+
 static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_bssgp_pcu *pcu;
@@ -932,6 +943,9 @@ bssgp_failed:
 			}
 		}
 	}
+
+	LOGP(DL1IF, LOGL_INFO, "BTS model: %s\n", get_value_string(gsm_pcuif_bts_model_names, info_ind->bts_model));
+	bts->bts_model = info_ind->bts_model;
 
 	bts->active = true;
 	return rc;
