@@ -23,7 +23,7 @@ PDCH(bts=0,trx=0,ts=6) Attaching TBF(DL:TFI-0-0-0:E){NEW}, 1 TBFs, USFs = 00, TF
 ws(64)
 MS(TA-220:MSCLS-10-11) Attaching DL TBF: TBF(DL:TFI-0-0-0:E){NEW}
 MS(TA-220:MSCLS-10-11:DL): + tbf: now used by 1 (tbf)
-(bts=0,trx=0,ts=0) FN=0 Sending data request: sapi=3 arfcn=0 cur_fn=-1 block=0 data=30 30 30 2d 06 3f 30 0e 00 00 7d 80 00 1c 00 df ff ff ff f8 00 00 03 2b 2b 2b 
+(bts=0,trx=0,ts=0) FN=0 Sending data request: sapi=9 arfcn=0 cur_fn=-1 block=0 data=ff ff ff ff 2d 06 3f 30 0e 00 00 7d 80 00 1c 00 df ff ff ff f8 00 00 03 2b 2b 2b 01 
 Creating MS object
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 13
@@ -33,7 +33,7 @@ PDCH(bts=0,trx=0,ts=5) Attaching TBF(DL:TFI-0-0-1:E){NEW}, 1 TBFs, USFs = 00, TF
 ws(64)
 MS(TA-220:MSCLS-12-13) Attaching DL TBF: TBF(DL:TFI-0-0-1:E){NEW}
 MS(TA-220:MSCLS-12-13:DL): + tbf: now used by 1 (tbf)
-(bts=0,trx=0,ts=0) FN=0 Sending data request: sapi=3 arfcn=0 cur_fn=-1 block=0 data=30 30 30 2d 06 3f 30 0d 00 00 7d 80 00 1c 00 df ff ff ff f8 40 00 03 2b 2b 2b 
+(bts=0,trx=0,ts=0) FN=0 Sending data request: sapi=9 arfcn=0 cur_fn=-1 block=0 data=ff ff ff ff 2d 06 3f 30 0d 00 00 7d 80 00 1c 00 df ff ff ff f8 40 00 03 2b 2b 2b 01 
 
 --- test_sched_app_info_ok ---
 Application Information Request received: type=0x00000000 len=15

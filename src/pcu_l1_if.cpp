@@ -249,22 +249,6 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
 }
 
-void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen)
-{
-	/* TODO: When PCUIF v.11 has become mainline, we will use pcu_l1if_tx_agch2() exclusively.
-	 * This will make this function obsolote, so we can remove it. */
-	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
-
-	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
-	bitvec_pack(block, data + 1);
-	data[0] = (plen << 2) | 0x01;
-
-	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
-		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, GSM_MACBLOCK_LEN);
-
-	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, sizeof(data));
-}
-
 /* Send a MAC block via the access grant channel. This will (obviously) only work for MAC blocks that contain
  * an IMMEDIATE ASSIGNMENT. In case the confirm flag is set, the receiving end is required to send a confirmation
  * back when the IMMEDIATE ASSIGNMENT has been sent. */
@@ -281,43 +265,6 @@ void pcu_l1if_tx_agch2(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, boo
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, agch.data, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH_2, 0, 0, 0, (uint8_t*)&agch, sizeof(agch));
-}
-
-#define IMSI_DIGITS_FOR_PAGING 3
-/* Send a MAC block via the paging channel. (See also comment below) */
-void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec *block, int plen, const char *imsi)
-{
-	/* TODO: When PCUIF v.11 has become mainline, we will use pcu_l1if_tx_pch2() exclusively.
-	 * This will make this function obsolote, so we can remove it. */
-
-	uint8_t data[IMSI_DIGITS_FOR_PAGING + GSM_MACBLOCK_LEN];
-
-	/* prepend last three IMSI digits (if present) from which BTS/BSC will calculate the paging group */
-	if (imsi && strlen(imsi) >= IMSI_DIGITS_FOR_PAGING)
-		memcpy(data, imsi + strlen(imsi) - IMSI_DIGITS_FOR_PAGING, IMSI_DIGITS_FOR_PAGING);
-	else
-		memset(data, '0', IMSI_DIGITS_FOR_PAGING);
-
-	/* OS#6097: if strlen(imsi) == 0: We assume the MS is in non-DRX
-	 * mode (TS 44.060 5.5.1.5) and hence it is listening on all CCCH blocks
-	 * (TS 45.002 6.5.3, 6.5.6).
-	 * Hence, pgroup 000 is taken "randomly" to send it over it. This of
-	 * course not optimal since it can actually be sent on any CCCH blocks,
-	 * so we are delaying the ImmAss for no good reason. But anyway,
-	 * pcu_l1if_tx_pch() is deprecated and pcu_l1if_tx_pch2() should be
-	 * used instead, which doesn't suffer from this problem.
-	 */
-
-	/* block provided by upper layer comes without first byte (plen), prepend it manually: */
-	OSMO_ASSERT(sizeof(data) >= IMSI_DIGITS_FOR_PAGING + 1 + block->data_len);
-	data[IMSI_DIGITS_FOR_PAGING] = (plen << 2) | 0x01;
-	bitvec_pack(block, data + IMSI_DIGITS_FOR_PAGING + 1);
-
-	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
-		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0,
-			    data + IMSI_DIGITS_FOR_PAGING, GSM_MACBLOCK_LEN);
-
-	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, sizeof(data));
 }
 
 /* Send a MAC block via the paging channel. This will (obviously) only work for MAC blocks that contain an
@@ -556,26 +503,6 @@ static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 	return rc;
 }
 
-static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *data_cnf)
-{
-	int rc = 0;
-
-	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d\n", data_cnf->sapi);
-
-	switch (data_cnf->sapi) {
-	case PCU_IF_SAPI_PCH:
-		if (data_cnf->data[2] == GSM48_MT_RR_IMM_ASS)
-			bts_rcv_imm_ass_cnf(bts, data_cnf->data, GSM_RESERVED_TMSI);
-		break;
-	default:
-		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
-			"unsupported sapi %d\n", data_cnf->sapi);
-		rc = -EINVAL;
-	}
-
-	return rc;
-}
-
 static int pcu_rx_data_cnf2(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data_cnf *data_cnf)
 {
 	int rc = 0;
@@ -809,14 +736,7 @@ static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_
 
 	LOGP(DL1IF, LOGL_DEBUG, "Info indication received:\n");
 
-	/* NOTE: The classic way to confirm an IMMEDIATE assignment is to send the whole MAC block payload back to the
-	 * PCU. So it is the MAC block itsself that serves a reference for the confirmation. This method has certain
-	 * disadvantages so it was replaced with a method that uses the TLLI as a reference (msg_id). This new
-	 * method will replace the old one. The code that handles the old method will be removed in the foreseeable
-	 * future. (see also OS#5927) */
-	if (info_ind->version == 0x0a) {
-		LOGP(DL1IF, LOGL_NOTICE, "PCUIF version 10 is deprecated. OS#5927\n");
-	} else if (info_ind->version != PCU_IF_VERSION) {
+	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS/BSC (%u) is different (%u).\nPlease use a BTS/BSC with a compatble interface!\n",
 			info_ind->version, PCU_IF_VERSION);
 		exit(-1);
@@ -1293,10 +1213,6 @@ int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 	case PCU_IF_MSG_DATA_IND:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_ind);
 		rc = pcu_rx_data_ind(bts, &pcu_prim->u.data_ind);
-		break;
-	case PCU_IF_MSG_DATA_CNF:
-		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf);
-		rc = pcu_rx_data_cnf(bts, &pcu_prim->u.data_cnf);
 		break;
 	case PCU_IF_MSG_DATA_CNF_2:
 		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf2);
