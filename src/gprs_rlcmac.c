@@ -44,11 +44,7 @@ int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mo
 	}
 	bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS);
 
-	if (the_pcu->pcu_if_version >= 0x0b)
-		pcu_l1if_tx_pch2(bts, paging_request, plen, false, imsi, GSM_RESERVED_TMSI);
-	else
-		pcu_l1if_tx_pch(bts, paging_request, plen, imsi);
-
+	pcu_l1if_tx_pch2(bts, paging_request, plen, false, imsi, GSM_RESERVED_TMSI);
 	bitvec_free(paging_request);
 
 	return 0;
