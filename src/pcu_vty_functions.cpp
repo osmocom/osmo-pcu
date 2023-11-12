@@ -289,7 +289,7 @@ int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts)
 		for (ts_nr = 0; ts_nr < ARRAY_SIZE(trx->pdch); ts_nr++) {
 			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_nr];
 
-			vty_out(vty, "  TS%u: PDCH %s, %u UL TBFs, %u DL TBFs%s", pdch->ts_no,
+			vty_out(vty, "  TS%u: PDCH %s, %u DL TBFs, %u UL TBFs%s", pdch->ts_no,
 				pdch->is_enabled() ? "enabled" : "disabled",
 				pdch->num_tbfs(GPRS_RLCMAC_DL_TBF),
 				pdch->num_tbfs(GPRS_RLCMAC_UL_TBF), VTY_NEWLINE);
