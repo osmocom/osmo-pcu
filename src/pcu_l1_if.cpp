@@ -551,11 +551,10 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	const unsigned num_tbfs = pdch->num_tbfs(GPRS_RLCMAC_DL_TBF)
 				+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
 	bool skip_idle = (num_tbfs == 0);
-#ifdef ENABLE_DIRECT_PHY
-		/* In DIRECT_PHY mode we want to always submit something to L1 in
-		 * TRX0, since BTS is not preparing dummy bursts on idle TS for us: */
+
+	if (bts->gen_idle_blocks)
 		skip_idle = skip_idle && trx != 0;
-#endif
+
 	if (skip_idle) {
 		pcu_l1if_tx_ptcch(bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr,
 				  NULL, 0);
@@ -734,6 +733,27 @@ const struct value_string gsm_pcuif_bts_model_names[] = {
 	{ PCU_IF_BTS_MODEL_RBS,			"ericsson-rbs" },
 	{ 0, NULL }
 };
+
+static bool decide_gen_idle_blocks(struct gprs_rlcmac_bts *bts)
+{
+	switch (bts->bts_model) {
+	case PCU_IF_BTS_MODEL_UNSPEC:
+	case PCU_IF_BTS_MODEL_LC15:
+	case PCU_IF_BTS_MODEL_OC2G:
+	case PCU_IF_BTS_MODEL_OCTPHY:
+	case PCU_IF_BTS_MODEL_SYSMO:
+	case PCU_IF_BTS_MODEL_RBS:
+		/* The BTS models above do not generate dummy blocks by themselves, so OsmoPCU must fill the idle gaps in the
+		 * stream of generated PDCH blocks with dummy blocks. */
+		return true;
+	case PCU_IF_BTS_MODEL_TRX:
+		/* The BTS models above generate dummy blocks by themselves, so OsmoBTS will only generate PDCH bloks that
+		 * actually contain data. On idle, no blocks are generated. */
+	        return false;
+	default:
+		return false;
+	}
+}
 
 static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_info_ind *info_ind)
 {
@@ -946,6 +966,7 @@ bssgp_failed:
 
 	LOGP(DL1IF, LOGL_INFO, "BTS model: %s\n", get_value_string(gsm_pcuif_bts_model_names, info_ind->bts_model));
 	bts->bts_model = info_ind->bts_model;
+	bts->gen_idle_blocks = decide_gen_idle_blocks(bts);
 
 	bts->active = true;
 	return rc;
