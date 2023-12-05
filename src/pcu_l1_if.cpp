@@ -552,7 +552,7 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 				+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
 	bool skip_idle = (num_tbfs == 0);
 
-	if (bts->gen_idle_blocks)
+	if (bts->gen_idle_blocks_C0)
 		skip_idle = skip_idle && trx != 0;
 
 	if (skip_idle) {
@@ -966,7 +966,7 @@ bssgp_failed:
 
 	LOGP(DL1IF, LOGL_INFO, "BTS model: %s\n", get_value_string(gsm_pcuif_bts_model_names, info_ind->bts_model));
 	bts->bts_model = info_ind->bts_model;
-	bts->gen_idle_blocks = decide_gen_idle_blocks(bts);
+	bts->gen_idle_blocks_C0 = decide_gen_idle_blocks(bts);
 
 	bts->active = true;
 	return rc;

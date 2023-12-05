@@ -282,7 +282,7 @@ struct gprs_rlcmac_bts {
 	/* When the PDCH is idle, the timeslot is expected to transmit dummy blocks. Some BTS models will generate
 	 * those dummy blocks automatically when no data is transmitted. In contrast, other BTS models may require a
 	 * continuous stream of PDCH blocks that already has the gaps filled with dummy blocks. */
-	bool gen_idle_blocks;
+	bool gen_idle_blocks_C0;
 };
 
 struct paging_req_cs {

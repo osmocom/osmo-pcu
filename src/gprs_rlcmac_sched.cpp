@@ -488,7 +488,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 					+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
 		bool skip_idle = (num_tbfs == 0);
 
-		if (bts->gen_idle_blocks)
+		if (bts->gen_idle_blocks_C0)
 			skip_idle = skip_idle && trx != 0;
 
 		if (!skip_idle && (msg = sched_dummy())) {
