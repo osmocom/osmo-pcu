@@ -1,3 +1,32 @@
+osmo-pcu (1.4.0) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * tbf: Log poll timeout reason
+
+  [ Vadim Yanitskiy ]
+  * pdch_ul_controller: migrate from fn_cmp() to gsm0502_fncmp()
+  * bts: bts_tfi_find_free(): fix -Wmaybe-uninitialized (false positive)
+
+  [ Oliver Smith ]
+  * systemd: remove RestartPreventExitStatus=1
+  * Revert "pdch_ul_controller: migrate from fn_cmp() to gsm0502_fncmp()"
+
+  [ Philipp Maier ]
+  * pcuif_proto: rename PCU_IF_FLAG_SYSMO to PCU_IF_FLAG_DIRECT_PHY
+  * pcuif_proto: drop support for PCUIF v10
+  * pcu_l1_if: signal BTS model via PCUIF
+  * gprs_rlcmac_sched: fix condition for generating dummy blocks on idle
+  * bts: rename struct member gen_idle_blocks to gen_idle_blocks_C0
+
+  [ Andreas Eversberg ]
+  * Increase RR scheduler priority to 20, to avoid dropped bursts
+  * Use uniform log format for default config files
+
+  [ Keith ]
+  * TBF status: Fix VTY output text
+
+ -- Oliver Smith <osmith@sysmocom.de>  Tue, 12 Dec 2023 16:58:16 +0100
+
 osmo-pcu (1.3.1) unstable; urgency=medium
 
   * tbf_dl_fsm: Fix assert hit due to EV_MAX_N3105 received in ST_RELEASING
