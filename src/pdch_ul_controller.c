@@ -17,8 +17,6 @@
 #include <unistd.h>
 #include <talloc.h>
 
-#include <osmocom/gsm/gsm0502.h>
-
 #include "pdch_ul_controller.h"
 #include "bts.h"
 #include "sba.h"
@@ -45,6 +43,20 @@ const struct value_string pdch_ulc_tbf_poll_reason_names[] = {
 	{ 0, NULL }
 };
 
+#define GSM_MAX_FN_THRESH (GSM_MAX_FN >> 1)
+/* 0: equal, -1: fn1 BEFORE fn2, 1: fn1 AFTER fn2 */
+static inline int fn_cmp(uint32_t fn1, uint32_t fn2)
+{
+	if (fn1 == fn2)
+		return 0;
+	/* FN1 goes before FN2: */
+	if ((fn1 < fn2 && (fn2 - fn1) < GSM_MAX_FN_THRESH) ||
+	    (fn1 > fn2 && (fn1 - fn2) > GSM_MAX_FN_THRESH))
+		return -1;
+	/* FN1 goes after FN2: */
+	return 1;
+}
+
 struct pdch_ulc *pdch_ulc_alloc(struct gprs_rlcmac_pdch *pdch, void *ctx)
 {
 	struct pdch_ulc* ulc;
@@ -66,7 +78,7 @@ struct pdch_ulc_node *pdch_ulc_get_node(struct pdch_ulc *ulc, uint32_t fn)
 
 	while (node) {
 		it = rb_entry(node, struct pdch_ulc_node, node);
-		res = gsm0502_fncmp(it->fn, fn);
+		res = fn_cmp(it->fn, fn);
 		if (res > 0) /* it->fn AFTER fn */
 			node = node->rb_left;
 		else if (res < 0) /* it->fn BEFORE fn */
@@ -155,7 +167,7 @@ uint32_t pdch_ulc_get_next_free_fn(const struct pdch_ulc *ulc, uint32_t start_fn
 
 	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
 		it = container_of(node, struct pdch_ulc_node, node);
-		res = gsm0502_fncmp(it->fn, check_fn);
+		res = fn_cmp(it->fn, check_fn);
 		if (res > 0) { /* it->fn AFTER check_fn */
 			/* Next reserved FN is passed check_fn, hence it means check_fn is free */
 			return check_fn;
@@ -191,7 +203,7 @@ static int pdch_ulc_add_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item)
 		it = container_of(*n, struct pdch_ulc_node, node);
 
 		parent = *n;
-		res = gsm0502_fncmp(item->fn, it->fn);
+		res = fn_cmp(item->fn, it->fn);
 		if (res < 0) { /* item->fn "BEFORE" it->fn */
 			n = &((*n)->rb_left);
 		} else if (res > 0) { /* item->fn "AFTER" it->fn */
@@ -293,7 +305,7 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 	struct rb_node *first;
 	while ((first = rb_first(&ulc->tree_root))) {
 		item = container_of(first, struct pdch_ulc_node, node);
-		res = gsm0502_fncmp(item->fn, fn);
+		res = fn_cmp(item->fn, fn);
 		if (res > 0) /* item->fn AFTER fn */
 			break;
 		if (res < 0) { /* item->fn BEFORE fn */
