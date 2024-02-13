@@ -43,7 +43,7 @@ static const struct osmo_tdef_state_timeout tbf_ul_fsm_timeouts[32] = {
 #define tbf_ul_fsm_state_chg(fi, NEXT_STATE) \
 	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
 				     tbf_ul_fsm_timeouts, \
-				     tbf_ms(((struct tbf_dl_fsm_ctx *)(fi->priv))->tbf)->bts->T_defs_bts, \
+				     tbf_ms(((struct tbf_ul_fsm_ctx *)(fi->priv))->tbf)->bts->T_defs_bts, \
 				     -1)
 
 static void mod_ass_type(struct tbf_ul_fsm_ctx *ctx, uint8_t t, bool set)
