@@ -8,20 +8,6 @@ Copyright: 2009-2015 Holger Hans Peter Freyther <zecke@selfish.org>
            2013 Jacob Erlbeck <jerlbeck@sysmocom.de>
            2016-2019 sysmocom s.f.m.c. GmbH <info@sysmocom.de>
            2015 by Yves Godin <support@nuranwireless.com>
-License:   AGPL-3.0+
-
-Files:     src/gprs_ms.h
-           src/gprs_coding_scheme.cpp
-           src/gprs_coding_scheme.h
-           src/coding_scheme.c
-           src/coding_scheme.h
-           src/cxx_linuxlist.h
-           src/pcu_vty_functions.cpp
-           src/pcu_vty_functions.h
-           src/pcu_utils.h
-           src/gprs_codel.c
-           src/gprs_codel.h
-Copyright: 2016-2019 sysmocom s.f.m.c. GmbH <info@sysmocom.de>
 License:   GPL-2.0+
 
 Files:     osmoappdesc.py
