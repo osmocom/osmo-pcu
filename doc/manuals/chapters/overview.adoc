@@ -106,6 +106,19 @@ in turn part of the libosmocore software package.  This allows the same
 Gb implementation to be used from OsmoPCU, OsmoGbProxy as well as
 OsmoSGSN.
 
+The Gb Implementation supports two different dialects:
+
+* `classic` dialect, which implements a non-standard dialect from the days
+  where Frame Relay was the default and no IP transport had yet been
+  specified by 3GPP.
+* `ip-sns` dialect, which implements the 3GPP standard for NS-over-IP,
+  including the IP-SNS protocol.
+
+In case of doubt, and assuming you are directly interfacing to a
+modern 3rd party SGSN, use the `ip-sns` dialect.
+
+Selection of the dialect is done using the `gb-dialect` VTY option at the `pcu` node.
+
 [[pcu_sock_iface]]
 ==== `pcu_sock` Interface to OsmoBTS/OsmoBSC
 
