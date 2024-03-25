@@ -2525,7 +2525,7 @@ static void test_ms_merge_dl_tbf_different_trx(void)
 	osmo_fsm_inst_dispatch(ms_dl_tbf(second_ms)->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 	osmo_select_main(0);
 
-	/* get the PACCH PktDlAss for the DL-TBF, allocated one the UL-TBF from the new MS obj: */
+	/* get the PACCH PktDlAss for the DL-TBF, allocated on the UL-TBF from the new MS obj: */
 	request_dl_rlc_block(dl_tbf->bts, dl_tbf->control_ts, &fn);
 
 	fprintf(stderr, "=== end %s ===\n", __func__);
