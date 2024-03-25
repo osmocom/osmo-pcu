@@ -68,9 +68,9 @@ Creating MS object
 MS(TA-220:MSCLS-0-0): + test_ms_cs_selection: now used by 1 (test_ms_cs_selection)
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddbb, partly confirmed
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:G:TLLI-0xffeeddbb){NEW}
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Destroying MS object
 MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:G:TLLI-0xffeeddbb){NEW}
-MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - tbf: now used by 0 (-)
+MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0): - test_ms_cs_selection: now used by 0 (-)
+MS(TLLI-0xffeeddbb:TA-220:MSCLS-0-0) Destroying MS object
 Creating MS object
 MS(TA-220:MSCLS-0-0): + test_ms_mcs_mode: now used by 1 (test_ms_mcs_mode)
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbeef, partly confirmed
@@ -78,6 +78,6 @@ Creating MS object
 MS(TA-220:MSCLS-0-0): + test_ms_mcs_mode: now used by 1 (test_ms_mcs_mode)
 The MS object cannot fully confirm an unexpected TLLI: 0xdeadbef0, partly confirmed
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0) Attaching DL TBF: TBF(DL:G:TLLI-0xdeadbef0){NEW}
-MS(TLLI-0xdeadbeef:TA-220:MSCLS-0-0) Destroying MS object
-MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL) Destroying MS object
 MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0:DL) Detaching TBF: TBF(DL:G:TLLI-0xdeadbef0){NEW}
+MS(TLLI-0xdeadbeef:TA-220:MSCLS-0-0) Destroying MS object
+MS(TLLI-0xdeadbef0:TA-220:MSCLS-0-0) Destroying MS object

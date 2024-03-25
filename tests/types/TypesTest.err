@@ -9,6 +9,10 @@ TBF(DL:TFI-0-0-0:G){NEW} set ass. type CCCH [prev CCCH:0, PACCH:0]
 DL_TBF(DL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
 TBF(DL:TFI-0-0-0:G){ASSIGN} Tx CCCH (PCH) Immediate Assignment [PktDlAss=PDCH(bts=0,trx=0,ts=2)] TA=220
 PCU socket not connected, dropping message
+TBF(DL:TFI-0-0-0:G){ASSIGN} free
+DL_TBF(DL:TFI-0-0-0:G){ASSIGN}: Deallocated
+UL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Deallocated
+DL_ASS_TBF(DL:TFI-0-0-0:G){NONE}: Deallocated
 MS(TA-220:MSCLS-1-0) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -19,6 +23,11 @@ TBF(UL:TFI-0-0-0:G){NEW} Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 UL_TBF(UL:TFI-0-0-0:G){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:G){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:G){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:G){ASSIGN} free
+UL_ACK_TBF(UL:TFI-0-0-0:G){NONE}: Deallocated
+UL_TBF(UL:TFI-0-0-0:G){ASSIGN}: Deallocated
+UL_ASS_TBF(UL:TFI-0-0-0:G){NONE}: Deallocated
+DL_ASS_TBF(UL:TFI-0-0-0:G){NONE}: Deallocated
 MS(TA-220:MSCLS-1-1) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -30,6 +39,11 @@ TBF(UL:TFI-0-0-0:E){NEW} setting EGPRS UL window size to 64, base(64) slots(1) w
 UL_TBF(UL:TFI-0-0-0:E){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(UL:TFI-0-0-0:E){NEW} set ass. type PACCH [prev CCCH:0, PACCH:0]
 UL_TBF(UL:TFI-0-0-0:E){NEW}: state_chg to ASSIGN
+TBF(UL:TFI-0-0-0:E){ASSIGN} free
+UL_ACK_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated
+UL_TBF(UL:TFI-0-0-0:E){ASSIGN}: Deallocated
+UL_ASS_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated
+DL_ASS_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated
 ############## test_egprs_ul_ack_nack
 MS(TA-220:MSCLS-1-1) Allocating UL TBF
 UL_ASS_TBF{NONE}: Allocated
@@ -46,3 +60,8 @@ UL_TBF(UL:TFI-0-0-0:E){NEW}: state_chg to ASSIGN
 ************** Test with 1 lost packet
 ************** Test with compressed window
 ************** Provoke an uncompressed ACK without EOW
+TBF(UL:TFI-0-0-0:E){ASSIGN} free
+UL_ACK_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated
+UL_TBF(UL:TFI-0-0-0:E){ASSIGN}: Deallocated
+UL_ASS_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated
+DL_ASS_TBF(UL:TFI-0-0-0:E){NONE}: Deallocated

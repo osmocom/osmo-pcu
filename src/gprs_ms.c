@@ -193,18 +193,18 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	osmo_timer_del(&ms->release_timer);
 
 	if (ms->ul_tbf) {
-		tbf_set_ms(ul_tbf_as_tbf(ms->ul_tbf), NULL);
-		ms->ul_tbf = NULL;
+		tbf_free(ul_tbf_as_tbf(ms->ul_tbf));
+		OSMO_ASSERT(ms->ul_tbf == NULL);
 	}
 
 	if (ms->dl_tbf) {
-		tbf_set_ms(dl_tbf_as_tbf(ms->dl_tbf), NULL);
-		ms->dl_tbf = NULL;
+		tbf_free(dl_tbf_as_tbf(ms->dl_tbf));
+		OSMO_ASSERT(ms->dl_tbf == NULL);
 	}
 
 	llist_for_each_entry_safe(pos, tmp, &ms->old_tbfs, list) {
 		struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)pos->entry;
-		tbf_set_ms(tbf, NULL);
+		tbf_free(tbf);
 	}
 
 	llc_queue_clear(&ms->llc_queue, ms->bts);
