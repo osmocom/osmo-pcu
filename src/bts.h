@@ -208,7 +208,6 @@ struct chan_req_params {
 	bool single_block;
 };
 
-struct GprsMsStorage;
 struct pcu_l1_meas;
 
 /**
