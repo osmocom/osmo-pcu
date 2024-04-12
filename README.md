@@ -78,7 +78,6 @@ Current limitations
  * No fixed allocation support (was removed from 3GPP Rel >= 5 anyway)
  * No extended dynamic allocation support
  * No unacknowledged mode operation
- * Only single slot assignment on uplink direction
  * No half-duplex class support (only semi-duplex)
  * No TA loop
  * No power loop
