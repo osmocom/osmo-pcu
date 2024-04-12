@@ -59,8 +59,8 @@ enum tbf_egprs_ul_counters {
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
-	~gprs_rlcmac_ul_tbf();
-	gprs_rlc_window *window();
+	~gprs_rlcmac_ul_tbf(void);
+	gprs_rlc_window *window(void);
 	void apply_allocated_resources(const struct alloc_resources_res *res);
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
@@ -70,7 +70,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(const gprs_rlc_data *data);
-	int snd_ul_ud();
+	int snd_ul_ud(void);
 
 	egprs_rlc_ul_reseg_bsn_state handle_egprs_ul_spb(
 		const struct gprs_rlc_data_info *rlc,
@@ -87,12 +87,12 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 		struct gprs_rlc_data *block,
 		uint8_t *data, const uint8_t block_idx);
 
-	uint16_t window_size() const;
-	void set_window_size();
+	uint16_t window_size(void) const;
+	void set_window_size(void);
 	void update_coding_scheme_counter_ul(enum CodingScheme cs);
-        void usf_timeout();
-	void contention_resolution_start();
-	void contention_resolution_success();
+	void usf_timeout(void);
+	void contention_resolution_start(void);
+	void contention_resolution_success(void);
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
