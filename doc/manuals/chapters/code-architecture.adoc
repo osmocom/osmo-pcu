@@ -1,0 +1,71 @@
+[[code_architecture]]
+== Code Architecture
+
+[[fig-code-architecture-general]]
+.General overview of main OsmoTRX components
+[graphviz]
+----
+digraph hierarchy {
+node[shape=record,style=filled,fillcolor=gray95]
+edge[dir=back, arrowtail=empty]
+
+PCU[label = "{gprs_pcu|+ pcu_sock_state\l+ bssgp\l+ bts_list[]\l}"]
+BTS[label = "{gprs_rlcmac_bts|+ gsm_sysinfo\l+ trx_list[]\l+ ms_list[]\l}"]
+TRX[label = "{gprs_rlcmac_bts_trx|+ul_tbfs[]\l+dl_tbfs[]\l}"]
+PDCH[label = "{gprs_rlcmac_pdch|+ is_enabled\l+ pdch_ulc\l+ assigned_usf_mask\l+ assigned_tfi_mask_(dl,ul)\l+ tbfs_dl[]\l+ tbfs_ul[]\l+ pagings[]\l}"]
+ULC[label = "{pdch_ulc|+ registered_polls[]\l}"]
+ULC_NODE[label = "{pdch_ulc_node|+ fn\l+ type\l}"]
+ULC_NODE_TBF_USF[label = "{pdch_ulc_node_tbf_usf|+ ul_tbf\l}"]
+ULC_NODE_TBF_POLL[label = "{pdch_ulc_node_tbf_poll|+ poll_tbf (UL/DL)\l+ reason\l}"]
+ULC_NODE_SBA[label = "{pdch_ulc_node_sba|+ sba\l}"]
+MS[label = "{GprsMs|+ imsi, tlli, ta...\l+ refcount\l+ current_trx\l+ first_common_ts\l+ llc_queue\l}"]
+TBF[label = "{gprs_rlcmac_tbf|+ tfi\l+ egprs_enabled\l+ control_ts\l+ pdch[]\l+ ul_ass_fsm\l+ dl_ass_fsm\l+ window\l+ llc_frame\l+ rlc_blocks\l}"]
+UL_TBF[label = "{gprs_rlcmac_ul_tbf|+ state_fsm\l+ ul_ack_fsm\l+ usf[]\l}"]
+DL_TBF[label = "{gprs_rlcmac_dl_tbf|+ state_fsm\l}"]
+SBA[label = "{gprs_rlcmac_sba|+ pdch\l+ fn\l+ ta\l}"]
+RLC_WINDOW[label = "{gprs_rlcmac_window|+ sns\l+ ws\l}"]
+RLC_WINDOW_UL[label = "{gprs_rlcmac_window_ul|+ v_r\l+ v_q\l+ v_n[]\l}"]
+RLC_WINDOW_DL[label = "{gprs_rlcmac_window_dl|+ v_s\l+ v_a\l+ v_b[]\l}"]
+LLC_QUEUE[label = "{gprs_llc_queue|+ prio_queues[]\l}"]
+LLC_PRIO_QUEUE[label = "{gprs_llc_prio_queue|+ codel_state\l+ priority\l+ frames[]\l}"]
+LLC_FRAME[label = "{gprs_llc_frame|+ payload[]\l+ priority\l}"]
+RLC_BLOCK[label = "{gprs_rlcmac_rlc_block|...}"]
+
+PCU -> BTS [headlabel="*", taillabel="1"]
+BTS -> TRX [headlabel="0..8", taillabel="1"]
+BTS -> MS [headlabel="*", taillabel="1"]
+TRX -> PDCH [headlabel="0..8", taillabel="1"]
+
+PDCH -> ULC [headlabel="1", taillabel="0..1"]
+ULC -> ULC_NODE [headlabel="*", taillabel="1"]
+ULC_NODE -> ULC_NODE_TBF_USF [arrowtail=odiamond]
+ULC_NODE -> ULC_NODE_TBF_POLL [arrowtail=odiamond]
+ULC_NODE -> ULC_NODE_SBA [arrowtail=odiamond]
+ULC_NODE_SBA -> SBA[headlabel="1", taillabel="1"]
+
+TBF -> UL_TBF [arrowtail=odiamond]
+TBF -> DL_TBF [arrowtail=odiamond]
+
+RLC_WINDOW -> RLC_WINDOW_UL [arrowtail=odiamond]
+RLC_WINDOW -> RLC_WINDOW_DL [arrowtail=odiamond]
+
+MS -> TBF [headlabel="*", taillabel="1"]
+
+MS -> LLC_QUEUE [headlabel="1", taillabel="1"]
+LLC_QUEUE -> LLC_PRIO_QUEUE [headlabel="*", taillabel="1"]
+LLC_PRIO_QUEUE -> LLC_FRAME [headlabel="*", taillabel="1"]
+
+TBF -> RLC_WINDOW [headlabel="*", taillabel="1"]
+TBF -> LLC_FRAME [headlabel="0..1", taillabel="1"]
+TBF -> RLC_BLOCK [headlabel="*", taillabel="1"]
+
+TRX -> MS [headlabel="*", taillabel="1", style=dashed, arrowtail=none, label="assigned"]
+TBF -> PDCH [headlabel="0..8", taillabel="1", style=dashed, arrowtail=none, label="assigned"]
+
+UL_TBF -> ULC_NODE_TBF_USF [style=dashed, arrowtail=none, label="registered"]
+TBF -> ULC_NODE_TBF_POLL [style=dashed, arrowtail=none, label="registered"]
+
+TRX -> UL_TBF [headlabel="*", taillabel="1", style=dashed, label="assigned"]
+TRX -> DL_TBF [headlabel="*", taillabel="1", style=dashed, label="assigned"]
+}
+----
