@@ -6,7 +6,6 @@ BUILT_SOURCES = $(top_srcdir)/.version
 EXTRA_DIST = \
 	     .version \
 	     README.md \
-	     contrib/osmo-pcu.spec.in \
 	     debian \
 	     git-version-gen \
 	     osmoappdesc.py \
