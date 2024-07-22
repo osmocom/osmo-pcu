@@ -53,24 +53,6 @@ static void pcu_sock_timeout(void *_priv)
 	pcu_l1if_open();
 }
 
-static void pcu_tx_txt_retry(void *_priv)
-{
-	struct gprs_rlcmac_bts *bts;
-	bool retry = llist_empty(&the_pcu->bts_list);
-
-	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
-		if (bts->active)
-			continue;
-		retry = true;
-		pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
-		break;
-	}
-
-	/* If no BTS (or not all) yet active, retry */
-	if (retry)
-		osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
-}
-
 int pcu_sock_send(struct msgb *msg)
 {
 	struct osmo_fd *conn_bfd;
@@ -239,10 +221,6 @@ int pcu_l1if_open(void)
 	     the_pcu->pcu_sock_path);
 
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
-
-	/* Schedule a timer so we keep trying until the BTS becomes active. */
-	osmo_timer_setup(&pcu_sock_state.timer, pcu_tx_txt_retry, NULL);
-	osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 
 	return 0;
 }
