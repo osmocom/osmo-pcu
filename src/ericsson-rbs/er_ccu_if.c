@@ -126,7 +126,7 @@ static void e1_send_ts_frame(struct e1inp_ts *ts)
 						  DEBUG_BYTES_MAX ? DEBUG_BYTES_MAX : msgb_length(msg)));
 
 	/* Hand data over to the E1 stack */
-	msgb_enqueue(&ts->raw.tx_queue, msg);
+	e1inp_ts_send_raw(ts, msg);
 }
 
 /* Callback function to handle incoming E1 traffic */
