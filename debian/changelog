@@ -1,3 +1,32 @@
+osmo-pcu (1.5.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * Revert "Revert "pdch_ul_controller: migrate from fn_cmp() to gsm0502_fncmp()""
+  * contrib: remove rpm spec file
+  * contrib/systemd: run as osmocom user
+
+  [ Pau Espin Pedrol ]
+  * tbf_ul_fsm: Fix wrong cast
+  * cosmetic: TbfTest: fix typo in comment
+  * Make sure GprsMs free() also frees its tbfs
+  * README.md: Remove 'multi-slot ul tbf' line from 'Current Limitations'
+  * bts: Drop no-longer existing GprsMsStorage reference
+  * tbf.h: Fix wrong type declaration of field dl_ass_fsm
+  * tbf_ul.h: Mark empty param list as void
+  * doc: Introduce code architecture section with main class diagram
+
+  [ Harald Welte ]
+  * fix license headers
+  * doc: Mention the `gb-dialect` vty option, as it is quite essential
+
+  [ Vadim Yanitskiy ]
+  * README.md: cosmetic: fix a typo
+
+  [ Philipp Maier ]
+  * pcuif_sock: do not retry when sending PCU version
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 24 Jul 2024 16:16:26 +0200
+
 osmo-pcu (1.4.0) unstable; urgency=medium
 
   [ Pau Espin Pedrol ]
