@@ -11923,7 +11923,7 @@ UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){SEND_ASS_REJ}: state_chg to NONE
-TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} Starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
+TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} Starting timer X2000 [delay free after Packet Access Reject (PACCH)] with 0ms
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN}
 UL_ASS_TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){NONE}: Timeout of X2000
 TBF(UL:TFI-0-0--1:G:TLLI-0xffeeddcc){ASSIGN} free

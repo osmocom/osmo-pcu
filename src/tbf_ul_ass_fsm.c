@@ -156,16 +156,26 @@ static void st_none_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	unsigned long val;
 	unsigned int sec, micro;
 
-	/* Start release after rejecting only if it is UL TBF */
 	if (prev_state == TBF_UL_ASS_SEND_ASS_REJ &&
 	    tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF) {
-		/* tbf_free() called upon trigger */
+		/* If TBF object doing the UL assignment is also an UL TBF, and
+		 * it was just rejected over PACCH, then there's nothing more to do
+		 * with this UL TBF other than freeing it and waiting for MS to
+		 * retry asking for another UL TBF assignment. But since we are
+		 * currently being called from the scheduled (we arrived here
+		 * through st_send_ass_rej(TBF_UL_ASS_EV_CREATE_RLCMAC_MSG)),
+		 * then we need to delay the tbf_free() to do it asynchrosnouly
+		 * in the event loop. Using a fixed 0ms internal fsm timer
+		 * number would have been fine here, but since for historical
+		 * reasons we have VTY-configurable X2000 for this purpose, keep
+		 * using it (it is expected to be 0 usually).
+		 */
 		fi->T = -2000;
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG, "Starting timer X2000 [reject (PACCH)] with %u sec. %u microsec\n",
-			sec, micro);
+		LOGPTBF(ctx->tbf, LOGL_DEBUG, "Starting timer X2000 [delay free after Packet Access Reject (PACCH)] with %lums\n",
+			val);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	}
 
