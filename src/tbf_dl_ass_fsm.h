@@ -28,6 +28,7 @@ enum tbf_dl_ass_fsm_event {
 	TBF_DL_ASS_EV_CREATE_RLCMAC_MSG, /* Scheduler wants to gen+Tx the Ass (rej): data=tbf_dl_ass_ev_create_rlcmac_msg_ctx */
 	TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, /* Received CTRL ACK answering poll set on Pkt Dl Ass */
 	TBF_DL_ASS_EV_ASS_POLL_TIMEOUT, /* Pdch Ul Controller signals timeout for poll set on Pkt Dl Ass */
+	TBF_DL_ASS_EV_ABORT, /* DL TBF being assigned was internally released */
 };
 
 enum tbf_dl_ass_fsm_states {

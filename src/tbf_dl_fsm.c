@@ -411,6 +411,10 @@ static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
+	struct GprsMs *ms = NULL;
+	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+	struct gprs_rlcmac_tbf *tbf = NULL;
+
 	switch (fi->T) {
 	case -2002:
 		handle_timeout_X2002(fi);
@@ -419,7 +423,14 @@ static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
 		tbf_dl_fsm_state_chg(fi, TBF_ST_WAIT_REUSE_TFI);
 		break;
 	case -2001:
+		ms = tbf_ms(ctx->tbf);
+		ul_tbf = ms_ul_tbf(ms);
+		tbf = ul_tbf_as_tbf(ul_tbf);
 		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+		/* If a UL TBF is trying to assign us, notify it that we are
+		 * dying so it avoids continuing the assignment. */
+		if (ul_tbf && tbf_dl_ass_fi(tbf)->state != TBF_DL_ASS_NONE)
+			osmo_fsm_inst_dispatch(tbf_dl_ass_fi(tbf), TBF_DL_ASS_EV_ABORT, NULL);
 		/* fall-through */
 	case 3193:
 	case 3195:

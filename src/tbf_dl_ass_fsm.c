@@ -42,6 +42,7 @@ static const struct value_string tbf_dl_ass_fsm_event_names[] = {
 	{ TBF_DL_ASS_EV_CREATE_RLCMAC_MSG, "CREATE_RLCMAC_MSG" },
 	{ TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, "RX_ASS_CTRL_ACK" },
 	{ TBF_DL_ASS_EV_ASS_POLL_TIMEOUT, "ASS_POLL_TIMEOUT" },
+	{ TBF_DL_ASS_EV_ABORT, "ABORT" },
 	{ 0, NULL }
 };
 
@@ -163,6 +164,10 @@ static void st_send_ass(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			return;
 		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_WAIT_ACK);
 		break;
+	case TBF_DL_ASS_EV_ABORT:
+		/* Cancel pending schedule for Pkt Ul Ass: */
+		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_NONE);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -182,6 +187,9 @@ static void st_wait_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			tbf_rlcmac_diag(ctx->tbf));
 		/* Reschedule Pkt Dl Ass */
 		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_SEND_ASS);
+		break;
+	case TBF_DL_ASS_EV_ABORT:
+		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_NONE);
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -208,7 +216,8 @@ static struct osmo_fsm_state tbf_dl_ass_fsm_states[] = {
 		.onenter = st_none_on_enter,
 	},
 	[TBF_DL_ASS_SEND_ASS] = {
-		.in_event_mask = X(TBF_DL_ASS_EV_CREATE_RLCMAC_MSG),
+		.in_event_mask = X(TBF_DL_ASS_EV_CREATE_RLCMAC_MSG) |
+				 X(TBF_DL_ASS_EV_ABORT),
 		.out_state_mask =
 			X(TBF_DL_ASS_WAIT_ACK) |
 			X(TBF_DL_ASS_NONE),
@@ -218,7 +227,8 @@ static struct osmo_fsm_state tbf_dl_ass_fsm_states[] = {
 	[TBF_DL_ASS_WAIT_ACK] = {
 		.in_event_mask =
 			X(TBF_DL_ASS_EV_RX_ASS_CTRL_ACK) |
-			X(TBF_DL_ASS_EV_ASS_POLL_TIMEOUT),
+			X(TBF_DL_ASS_EV_ASS_POLL_TIMEOUT) |
+			X(TBF_DL_ASS_EV_ABORT),
 		.out_state_mask =
 			X(TBF_DL_ASS_NONE) |
 			X(TBF_DL_ASS_SEND_ASS),
