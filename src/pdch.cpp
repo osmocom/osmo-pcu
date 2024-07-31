@@ -389,7 +389,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				osmo_fsm_inst_state_name(tbf_ul_ass_fi(tbf)));
 			return;
 		}
-		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
 		pdch_ulc_release_fn(ulc, fn);
 		if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
 			tbf->n_reset(N3105);
@@ -397,10 +396,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		new_tbf = ms_ul_tbf(ms);
 		if (!new_tbf) {
-			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
-				"TBF is gone TLLI=0x%08x\n", tlli);
+			LOGPDCH(this, DRLCMAC, LOGL_ERROR,
+				"Got PKT_CTRL_ACK (UL_ASS) from %s, but UL TBF is gone (TLLI=0x%08x)\n",
+				tbf_name(tbf), tlli);
 			return;
 		}
+		LOGPTBF(tbf, LOGL_DEBUG, "Got PKT_CTRL_ACK confirming assignment of %s\n", tbf_name(new_tbf));
 
 		osmo_fsm_inst_dispatch(new_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		/* there might be LLC packets waiting in the queue, but the DL
@@ -417,7 +418,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				osmo_fsm_inst_state_name(tbf_dl_ass_fi(tbf)));
 			return;
 		}
-		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
 		pdch_ulc_release_fn(ulc, fn);
 		if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
 			tbf->n_reset(N3105);
@@ -425,10 +425,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		new_tbf = ms_dl_tbf(ms);
 		if (!new_tbf) {
-			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
-				"TBF is gone TLLI=0x%08x\n", tlli);
+			LOGPDCH(this, DRLCMAC, LOGL_ERROR,
+				"Got PKT_CTRL_ACK (DL_ASS) from %s, but DL TBF is gone (TLLI=0x%08x)\n",
+				tbf_name(tbf), tlli);
 			return;
 		}
+		LOGPTBF(tbf, LOGL_DEBUG, "Got PKT_CTRL_ACK confirming assignment of %s\n", tbf_name(new_tbf));
 		if ((tbf->state_is(TBF_ST_WAIT_RELEASE) ||
 		     tbf->state_is(TBF_ST_WAIT_REUSE_TFI)) &&
 		    tbf->direction == new_tbf->direction)

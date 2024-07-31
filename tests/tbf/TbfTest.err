@@ -2719,9 +2719,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2843,9 +2843,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2903,9 +2903,9 @@ PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:T
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
-TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} [UPLINK] DOWNLINK ASSIGNED
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} Got PKT_CTRL_ACK confirming assignment of TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
@@ -3030,9 +3030,9 @@ Detected FN jump! 2654348 -> 2654361 (expected 2654353, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} FN=2654361 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN}
 UL_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-1:G:TLLI-0xf5667788){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654361 but previous FN=2654353 is still reserved!
@@ -3181,9 +3181,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -3300,9 +3300,9 @@ Detected FN jump! 2654327 -> 2654340 (expected 2654331, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} FN=2654340 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -3421,9 +3421,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -3624,9 +3624,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:G:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -3724,9 +3724,9 @@ PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(UL:T
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
-TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} [UPLINK] DOWNLINK ASSIGNED
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){FLOW} Got PKT_CTRL_ACK confirming assignment of TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 DL_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
@@ -4452,9 +4452,9 @@ PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(DL:T
 PDCH(bts=0,trx=0,ts=7) FN=2654413 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654413 ------------------------- RX : Uplink Control Block -------------------------
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE} FN=2654413 Rx Packet Control Ack (reason=DL_ASS)
-TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE} [UPLINK] DOWNLINK ASSIGNED
 DL_ASS_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE} Got PKT_CTRL_ACK confirming assignment of TBF(DL:TFI-0-0-1:G:IMSI-0011223344:TLLI-0xf1223344){ASSIGN}
 TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE} free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(DL:TFI-0-0-0:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE}, 2 TBFs, USFs = 01, TFIs = 00000003.
 MS(IMSI-0011223344:TLLI-0xf1223344:TA-7:MSCLS-1-0:UL:DL) Detaching TBF: TBF(DL:G:IMSI-0011223344:TLLI-0xf1223344){WAIT_RELEASE}
@@ -4878,9 +4878,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -5010,9 +5010,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -9282,9 +9282,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -9516,9 +9516,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
@@ -10048,9 +10048,9 @@ Detected FN jump! 2654270 -> 2654283 (expected 2654275, delta 13)
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
-TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} [DOWNLINK] UPLINK ASSIGNED
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){WAIT_ACK}: state_chg to NONE
+TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN} Got PKT_CTRL_ACK confirming assignment of TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 UL_TBF(UL:TFI-0-0-0:E:TLLI-0xf1223344){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
