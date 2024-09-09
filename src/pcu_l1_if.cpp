@@ -124,7 +124,7 @@ int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...)
 	struct gsm_pcu_if_txt_ind *txt;
 	va_list ap;
 	char *rep;
-	struct msgb *msg = pcu_msgb_alloc(PCU_IF_MSG_TXT_IND, 0);
+	struct msgb *msg = pcu_msgb_alloc(PCU_IF_MSG_TXT_IND, PCU_IF_BTS_NR_BCAST);
 	if (!msg)
 		return -ENOMEM;
 
