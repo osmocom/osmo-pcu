@@ -124,6 +124,13 @@ int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...)
 	struct gsm_pcu_if_txt_ind *txt;
 	va_list ap;
 	char *rep;
+
+	/* In case the caller sends a TXT indication of type PCU_VERSION, the bts_nr will always be 0. Also the receiver
+	 * is expected to ignore the bts_nr when receiving a TXT indication of type PCU_VERSION. The rationale is that
+	 * the information about the PCU version number is only useful to the receiving process as a whole (be it osmo-bsc
+	 * or osmo-bts). */
+	/* TODO: add support for sending other TXT indication types than PCU_VERSION */
+	OSMO_ASSERT(t == PCU_VERSION);
 	struct msgb *msg = pcu_msgb_alloc(PCU_IF_MSG_TXT_IND, 0);
 	if (!msg)
 		return -ENOMEM;
