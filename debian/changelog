@@ -1,3 +1,24 @@
+osmo-pcu (1.5.1) unstable; urgency=medium
+
+  [ Mychaela N. Falconia ]
+  * fix E1 TS output when used with osmo-e1d
+
+  [ Pau Espin Pedrol ]
+  * tbf_ul_ass_fsm: Clarify use of X2000 timer
+  * rcv_control_ack(): Improve logging of confirmation of Pkt Dl/Ul Ass
+  * X2001 timeout: Update UL TBF's dl_ass_fsm state
+
+  [ Oliver Smith ]
+  * contrib/jenkins: libosmo-abis after libosmo-netif
+
+  [ Philipp Maier ]
+  * pcuif: add comment on TXT_IND/PCU_VERSION BTS initialization behavior
+
+  [ Vadim Yanitskiy ]
+  * Add .checkpatch.conf, ignore src/gsm_rlcmac.c
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 12 Feb 2025 12:46:23 +0100
+
 osmo-pcu (1.5.0) unstable; urgency=medium
 
   [ Oliver Smith ]
