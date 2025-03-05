@@ -127,6 +127,7 @@ static int write_ta_index(bitvec *dest, int8_t tai)
 	return 0;
 }
 
+#if 0
 static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 {
 	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
@@ -149,6 +150,7 @@ static inline void write_ta(bitvec *dest, unsigned& wp, uint8_t ta)
 		bitvec_write_field(dest, &wp, ta, 6);
 	}
 }
+#endif
 
 /* 3GPP TS 44.060 Table 12.5.2.1 */
 static inline uint16_t enc_ws(uint16_t ws)
@@ -156,6 +158,7 @@ static inline uint16_t enc_ws(uint16_t ws)
 	return (ws - 64) / 32;
 }
 
+#if 0
 static inline void write_ws(bitvec *dest, unsigned int *write_index, uint16_t ws)
 {
 	dest->cur_bit = *write_index;
@@ -178,6 +181,7 @@ static inline void write_ta_ie(bitvec *dest, unsigned& wp,
 	if (write_tai(dest, wp, tai)) /* TIMING_ADVANCE_TIMESLOT_NUMBER: */
 		bitvec_write_field(dest, &wp, ts, 3);
 }
+#endif
 
 static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, bool polling, bool ta_valid,
 				  uint16_t rfn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
