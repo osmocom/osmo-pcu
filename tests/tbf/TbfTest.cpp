@@ -723,7 +723,7 @@ static uint32_t get_poll_fn(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch
 
 static void send_control_ack(gprs_rlcmac_tbf *tbf)
 {
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_CONTROL_ACK;
 	Packet_Control_Acknowledgement_t *ctrl_ack =
@@ -749,7 +749,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 	uint32_t sba_fn = *fn + 52;
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -892,7 +892,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(struct gprs_rlcmac_bts
 	uint32_t sba_fn = *fn + 52;
 	int tfi = 0, i = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -1323,7 +1323,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(struct gprs_rlcmac_bts *bts,
 	uint32_t sba_fn = *fn + 52;
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 
 	/* needed to set last_rts_fn in the PDCH object */
 	request_dl_rlc_block(bts, pdch, fn);
@@ -1626,7 +1626,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(struct gprs_rlcmac_bts *bt
 	uint32_t sba_fn = *fn + 52;
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 
 	/* needed to set last_rts_fn in the PDCH object */
 	request_dl_rlc_block(bts, pdch, fn);
@@ -2184,7 +2184,7 @@ static void test_tbf_dl_reuse()
 	gprs_rlcmac_dl_tbf *dl_tbf1, *dl_tbf2;
 	GprsMs *ms1, *ms2;
 	unsigned i;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
@@ -2574,7 +2574,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(struct gprs_rlcmac_bts *bts,
 	uint32_t sba_fn = *fn + 52;
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	Packet_Resource_Request_t *presreq = NULL;
 	MS_Radio_Access_capability_t *pmsradiocap = NULL;
@@ -3406,7 +3406,7 @@ static void test_packet_access_rej_prr()
 	uint16_t qta = 31;
 	int ts_no = 7;
 	uint8_t trx_no = 0;
-	RlcMacUplink_t ulreq = {0};
+	RlcMacUplink_t ulreq = { };
 	Packet_Resource_Request_t *presreq = NULL;
 	uint8_t ms_class = 11;
 	uint8_t egprs_ms_class = 11;
@@ -3500,7 +3500,7 @@ void test_packet_access_rej_epdan()
 
 int main(int argc, char **argv)
 {
-	struct vty_app_info pcu_vty_info = {0};
+	struct vty_app_info pcu_vty_info = { };
 
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile TbfTest context");
 	if (!tall_pcu_ctx)

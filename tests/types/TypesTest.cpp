@@ -99,7 +99,7 @@ static void test_llc(void)
 static void test_rlc()
 {
 	{
-		struct gprs_rlc_data rlc = { 0, };
+		struct gprs_rlc_data rlc = { };
 		memset(rlc.block, 0x23, RLC_MAX_LEN);
 		uint8_t *p = prepare(&rlc, 20);
 		OSMO_ASSERT(p == rlc.block);

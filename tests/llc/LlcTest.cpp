@@ -109,7 +109,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
 static void test_llc_queue()
 {
 	gprs_llc_queue *queue = prepare_queue();
-	struct timespec expire_time = {0};
+	struct timespec expire_time = { };
 
 	printf("=== start %s ===\n", __func__);
 
@@ -147,8 +147,8 @@ static void test_llc_queue()
 static void test_llc_meta()
 {
 	gprs_llc_queue *queue = prepare_queue();
-	MetaInfo info1 = {0};
-	MetaInfo info2 = {0};
+	MetaInfo info1 = { };
+	MetaInfo info2 = { };
 
 	printf("=== start %s ===\n", __func__);
 
@@ -188,8 +188,8 @@ static void test_llc_meta()
 static void test_llc_meta_pdu_life_expire()
 {
 	gprs_llc_queue *queue = prepare_queue();
-	MetaInfo info1 = {0};
-	MetaInfo info2 = {0};
+	MetaInfo info1 = { };
+	MetaInfo info2 = { };
 
 	printf("=== start %s ===\n", __func__);
 
@@ -242,7 +242,7 @@ static void test_llc_codel()
 		gprs_codel_set_maxpacket(&queue->pq[i].codel_state, 8);
 	}
 
-	MetaInfo info1 = {0};
+	MetaInfo info1 = { };
 
 	printf("=== start %s ===\n", __func__);
 
@@ -298,7 +298,7 @@ static void test_llc_merge()
 	gprs_llc_queue *queue1 = prepare_queue();
 	struct GprsMs *ms = ms_alloc(queue1->ms->bts, NULL);
 	gprs_llc_queue *queue2 = ms_llc_queue(ms);
-	struct timespec expire_time = {0};
+	struct timespec expire_time = { };
 
 	printf("=== start %s ===\n", __func__);
 
@@ -344,7 +344,7 @@ static void test_llc_merge()
 
 int main(int argc, char **argv)
 {
-	struct vty_app_info pcu_vty_info = {0};
+	struct vty_app_info pcu_vty_info = { };
 
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "LlcTest context");
 	if (!tall_pcu_ctx)
