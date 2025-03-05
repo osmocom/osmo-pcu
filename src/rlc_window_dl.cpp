@@ -139,11 +139,10 @@ void gprs_rlc_dl_window::update(struct gprs_rlcmac_bts *bts, char *show_rbb, uin
 
 int gprs_rlc_dl_window::move_window()
 {
-	int i;
 	uint16_t bsn;
 	int moved = 0;
 
-	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = mod_sns(bsn + 1)) {
+	for (bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_acked(bsn)) {
 			m_v_b.mark_invalid(bsn);
 			moved += 1;
