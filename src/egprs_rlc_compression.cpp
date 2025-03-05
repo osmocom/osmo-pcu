@@ -228,11 +228,13 @@ static const unsigned t4_term_length[2][64] = {
 	{8, 6, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
 
+#if 0
 static const unsigned t4_min_term_length[] = {2, 4};
 static const unsigned t4_min_make_up_length[] = {10, 5};
 
 static const unsigned t4_max_term_length[] = {12, 8};
 static const unsigned t4_max_make_up_length[] = {13, 9};
+#endif
 
 static const unsigned t4_make_up_length[2][15] = {
 	{10, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13},
