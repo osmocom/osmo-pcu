@@ -48,6 +48,12 @@ typedef guint8 N32_t;
 typedef guint8 N51_t;
 typedef guint8 N26_t;
 
+/* Payload type as defined in TS 44.060 / 10.4.7 */
+#define PAYLOAD_TYPE_DATA              0
+#define PAYLOAD_TYPE_CTRL_NO_OPT_OCTET 1
+#define PAYLOAD_TYPE_CTRL_OPT_OCTET    2
+#define PAYLOAD_TYPE_RESERVED          3
+
 /*  Starting Time IE as specified in 04.08 */
 typedef struct
 {

@@ -36,12 +36,6 @@
 #include <arpa/inet.h>
 #include <gprs_debug.h>
 
-/* Payload type as defined in TS 44.060 / 10.4.7 */
-#define PAYLOAD_TYPE_DATA              0
-#define PAYLOAD_TYPE_CTRL_NO_OPT_OCTET 1
-#define PAYLOAD_TYPE_CTRL_OPT_OCTET    2
-#define PAYLOAD_TYPE_RESERVED          3
-
 /* CSN1 structures */
 /*(not all parts of CSN_DESCR structure are always initialized.)*/
 static const
