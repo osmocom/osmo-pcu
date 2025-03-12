@@ -73,7 +73,7 @@ csnStreamInit(csnStream_t* ar, gint bit_offset, gint remaining_bits_len)
 {
   ar->remaining_bits_len  = remaining_bits_len;
   ar->bit_offset          = bit_offset;
-  ar->direction           = 0;
+  ar->direction           = CSN_DIRECTION_ENC;
 }
 
 static const struct value_string csn1_error_names[] = {

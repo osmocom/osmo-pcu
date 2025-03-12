@@ -178,7 +178,7 @@ CSN_DESCR_END     (EGPRS_AckNack_Desc_t)
 /*< EGPRS Ack/Nack Description IE >*/
 gint16 Egprs_Ack_Nack_Desc_w_len_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
-  if (ar->direction == 0)
+  if (ar->direction == CSN_DIRECTION_ENC)
   {
     return csnStreamEncoder(ar, CSNDESCR(EGPRS_AckNack_Desc_t), vector, readIndex, data);
   }
@@ -798,7 +798,7 @@ CSN_DESCR_END  (Receive_N_PDU_Number_t)
 #if 0
 gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
-  if (ar->direction == 0)
+  if (ar->direction == CSN_DIRECTION_ENC)
   {
     return csnStreamEncoder(ar, CSNDESCR(Receive_N_PDU_Number_t), vector, readIndex, data);
   }
@@ -937,7 +937,7 @@ CSN_DESCR_END         (Content_t)
 
 gint16 Content_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
-  if (ar->direction == 0)
+  if (ar->direction == CSN_DIRECTION_ENC)
     {
       return csnStreamEncoder(ar, CSNDESCR(Content_t), vector, readIndex, data);
     }
@@ -961,7 +961,7 @@ CSN_DESCR_END         (Additional_access_technologies_t)
 
 static gint16 Additional_access_technologies_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
-  if (ar->direction == 0)
+  if (ar->direction == CSN_DIRECTION_ENC)
   {
     return csnStreamEncoder(ar, CSNDESCR(Additional_access_technologies_t), vector, readIndex, data);
   }

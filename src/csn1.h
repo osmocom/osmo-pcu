@@ -51,7 +51,10 @@ typedef gint16 CSN_CallBackStatus_t;
 #define CSNCBS_REVISION_LIMIT_STOP   -20 /* Stop packing/unpacking - revision limit */
 #define CSNCBS_NOT_SUPPORTED_IE      -21 /* Handling of the unpacked IE is not supported by MS-software */
 
-
+enum CSN_Direction {
+  CSN_DIRECTION_ENC = 0,
+  CSN_DIRECTION_DEC  = 1,
+};
 
 #ifndef ElementsOf
 #define ElementsOf(array) (sizeof(array) / sizeof(array[0]))
@@ -63,7 +66,7 @@ typedef struct
 {
   gint  remaining_bits_len;  /* IN to an csn stream operation */
   gint  bit_offset;          /* IN/OUT to an csn stream operation */
-  gint  direction;           /* 0 - decode; 1 - encode */
+  enum CSN_Direction direction; /* encode vs decode */
 } csnStream_t;
 
 typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data);

@@ -483,7 +483,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         remaining_bits_len -= length_len;
 
         csnStreamInit(&arT, bit_offset, length > 0 ? length : remaining_bits_len);
-        arT.direction = 1;
+        arT.direction = CSN_DIRECTION_DEC;
         LOGPC(DCSN1, LOGL_DEBUG, "offset = %u | ", pDescr->offset);
 	Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
