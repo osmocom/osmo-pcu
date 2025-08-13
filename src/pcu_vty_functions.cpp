@@ -61,8 +61,8 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		tbf->ta(),
 		tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		tbf->imsi(), VTY_NEWLINE);
-	vty_out(vty, " created=%lu state=%s flags=%08x [CCCH:%u, PACCH:%u] 1st_cTS=%" PRId8 " ctrl_TS=%d MS_CLASS=%d/%d%s",
-		tbf->created_ts(), tbf->state_name(),
+	vty_out(vty, " created=%llu state=%s flags=%08x [CCCH:%u, PACCH:%u] 1st_cTS=%" PRId8 " ctrl_TS=%d MS_CLASS=%d/%d%s",
+		(unsigned long long) tbf->created_ts(), tbf->state_name(),
 		state_flags,
 		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
 		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
@@ -153,8 +153,8 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		osmo_gettimeofday(&tv_now, NULL);
 		timersub(&tv_now, &ms->tv_idle_start, &tv_res1);
 		osmo_timer_remaining(&ms->release_timer, &tv_now, &tv_res2);
-		vty_out(vty, "  State:                  IDLE for %lus, release in %lus%s",
-			tv_res1.tv_sec, tv_res2.tv_sec, VTY_NEWLINE);
+		vty_out(vty, "  State:                  IDLE for %llus, release in %llus%s",
+			(unsigned long long) tv_res1.tv_sec, (unsigned long long) tv_res2.tv_sec, VTY_NEWLINE);
 	} else {
 		vty_out(vty, "  State:                  ACTIVE%s", VTY_NEWLINE);
 	}
