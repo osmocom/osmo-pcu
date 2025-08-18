@@ -234,7 +234,7 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 }
 
 /* Prepend / Put back a previously dequeued LLC frame (llc_queue_dequeue()) */
-void llc_queue_merge_prepend(struct gprs_llc_queue *q, struct gprs_llc *llc)
+void llc_queue_merge_prepend(struct gprs_llc_queue *q, const struct gprs_llc *llc)
 {
 	struct MetaInfo *meta_storage;
 	unsigned int len = llc_frame_length(llc);
