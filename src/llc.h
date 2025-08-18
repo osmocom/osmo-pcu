@@ -139,7 +139,7 @@ void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts);
 void llc_queue_set_codel_interval(struct gprs_llc_queue *q, unsigned int interval);
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
 void llc_queue_merge_prepend(struct gprs_llc_queue *q, const struct gprs_llc *llc);
-void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time);
+int llc_queue_enqueue(struct gprs_llc_queue *q, const uint8_t *data, uint16_t len, const struct timespec *expire_time);
 struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *out_prio, struct MetaInfo *out_info);
 
 static inline size_t llc_queue_size(const struct gprs_llc_queue *q)

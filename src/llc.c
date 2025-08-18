@@ -141,24 +141,34 @@ static enum gprs_llc_queue_prio llc_sapi2prio(uint8_t sapi)
 	}
 }
 
-void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time)
+int llc_queue_enqueue(struct gprs_llc_queue *q, const uint8_t *data, uint16_t len, const struct timespec *expire_time)
 {
+	struct msgb *llc_msg;
 	struct MetaInfo *meta_storage;
-	struct gprs_llc_hdr *llc_hdr = (struct gprs_llc_hdr *)msgb_data(llc_msg);
+	struct gprs_llc_hdr *llc_hdr;
 	enum gprs_llc_queue_prio prio;
 
-	osmo_static_assert(sizeof(*meta_storage) <= sizeof(llc_msg->cb), info_does_not_fit);
+	llc_msg = msgb_alloc_headroom(sizeof(*meta_storage) + len, sizeof(*meta_storage), "llc_pdu_queue");
+	if (!llc_msg)
+		return -ENOMEM;
 
-	prio = llc_sapi2prio(llc_hdr->sapi);
-
-	q->queue_size += 1;
-	q->queue_octets += msgb_length(llc_msg);
-
-	meta_storage = (struct MetaInfo *)&llc_msg->cb[0];
+	/* Fist set up MetaInfo in the msgb headroom: */
+	meta_storage = (struct MetaInfo *)llc_msg->head;
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meta_storage->recv_time);
 	meta_storage->expire_time = *expire_time;
 
+	/* Copy PDU to msgb data: */
+	llc_hdr = (struct gprs_llc_hdr *)msgb_put(llc_msg, len);
+	memcpy(llc_hdr, data, len);
+
+	prio = llc_sapi2prio(llc_hdr->sapi);
+
+	/* Append: */
+	q->queue_size += 1;
+	q->queue_octets += msgb_length(llc_msg);
 	msgb_enqueue(&q->pq[prio].queue, llc_msg);
+
+	return 0;
 }
 
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
@@ -205,8 +215,8 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 				msg = msg1;
 				msg1 = NULL;
 			} else {
-				const struct MetaInfo *mi1 = (struct MetaInfo *)&msg1->cb[0];
-				const struct MetaInfo *mi2 = (struct MetaInfo *)&msg2->cb[0];
+				const struct MetaInfo *mi1 = (struct MetaInfo *)msg1->head;
+				const struct MetaInfo *mi2 = (struct MetaInfo *)msg2->head;
 
 				if (timespeccmp(&mi2->recv_time, &mi1->recv_time, >)) {
 					msg = msg1;
@@ -236,20 +246,21 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 /* Prepend / Put back a previously dequeued LLC frame (llc_queue_dequeue()) */
 void llc_queue_merge_prepend(struct gprs_llc_queue *q, const struct gprs_llc *llc)
 {
+	struct msgb *llc_msg;
 	struct MetaInfo *meta_storage;
 	unsigned int len = llc_frame_length(llc);
-	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
 
+	llc_msg = msgb_alloc_headroom(sizeof(*meta_storage) + len, sizeof(*meta_storage), "llc_pdu_queue");
 	OSMO_ASSERT(llc_msg);
-	memcpy(msgb_put(llc_msg, len), llc->frame, len);
 
-	q->queue_size += 1;
-	q->queue_octets += msgb_length(llc_msg);
-
-	meta_storage = (struct MetaInfo *)&llc_msg->cb[0];
+	meta_storage = (struct MetaInfo *)llc_msg->head;
 	memcpy(meta_storage, &llc->meta_info, sizeof(struct MetaInfo));
 
+	memcpy(msgb_put(llc_msg, len), llc->frame, len);
+
 	/* Prepend: */
+	q->queue_size += 1;
+	q->queue_octets += msgb_length(llc_msg);
 	llist_add(&llc_msg->list, &q->pq[llc->prio].queue);
 }
 
@@ -272,7 +283,7 @@ static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_q
 	if (!msg)
 		return NULL;
 
-	meta_storage = (struct MetaInfo *)&msg->cb[0];
+	meta_storage = (struct MetaInfo *)msg->head;
 
 	q->queue_size -= 1;
 	q->queue_octets -= msgb_length(msg);
@@ -305,7 +316,7 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, enum gprs_llc_queue_pri
 	timespecadd(&tv_now, &hyst_delta, &tv_now2);
 
 	while ((msg = llc_queue_pick_msg(q, &prio))) {
-		info = (const struct MetaInfo *)&msg->cb[0];
+		info = (const struct MetaInfo *)msg->head;
 		const struct timespec *tv_disc = &info->expire_time;
 		const struct timespec *tv_recv = &info->recv_time;
 

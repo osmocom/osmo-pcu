@@ -56,21 +56,6 @@ static struct gprs_llc_queue *prepare_queue(void)
 	return ms_llc_queue(ms);
 }
 
-static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
-			 const struct timespec *expire_time)
-{
-	struct timespec *tv;
-	uint8_t *msg_data;
-	struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
-		"llc_pdu_queue");
-
-	msg_data = (uint8_t *)msgb_put(llc_msg, len);
-
-	memcpy(msg_data, data, len);
-
-	llc_queue_enqueue(queue, llc_msg, expire_time);
-}
-
 static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	size_t len, const MetaInfo *exp_info)
 {
@@ -96,7 +81,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 static void enqueue_data(gprs_llc_queue *queue, const char *message,
 			 const struct timespec *expire_time)
 {
-	enqueue_data(queue, (uint8_t *)(message), strlen(message), expire_time);
+	llc_queue_enqueue(queue, (uint8_t *)(message), strlen(message), expire_time);
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,

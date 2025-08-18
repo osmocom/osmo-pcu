@@ -1369,13 +1369,10 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 
 	LOGPMS(ms, DTBFDL, LOGL_DEBUG, "appending %u bytes to DL LLC queue\n", len);
 
-	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
-	if (!llc_msg)
-		return -ENOMEM;
-
 	llc_queue_calc_pdu_lifetime(ms->bts, pdu_delay_csec, &expire_time);
-	memcpy(msgb_put(llc_msg, len), data, len);
-	llc_queue_enqueue(ms_llc_queue(ms), llc_msg, &expire_time);
+	rc = llc_queue_enqueue(ms_llc_queue(ms), data, len, &expire_time);
+	if (rc < 0)
+		return rc;
 	ms_start_llc_timer(ms);
 
 	dl_tbf = ms_dl_tbf(ms);
