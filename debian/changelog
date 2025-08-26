@@ -1,3 +1,25 @@
+osmo-pcu (1.5.2) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * gsm_rlcmac: fix EGPRS BEP Link Quality Measurements Type 2
+  * egprs_rlc_compression: comment out unused arrays
+  * rlc_window_dl: remove unused variable
+  * encoding: comment out unused functions
+  * tests: fix warnings about struct initialization
+
+  [ Pau Espin Pedrol ]
+  * Drop function declaration for non longer existing function
+  * encoding: Use defines to set PAYLOAD_TYPE
+  * checkpath: Exclude csn1 files
+  * csn1: Use enum to select enc/dec direction
+  * llc_queue_merge_prepend(): constify readonly ptr param
+  * llc_queue: Store MetaInfo in msgb headroom instead of cb[]
+
+  [ Oliver Smith ]
+  * src/pcu_vty_functions: fix error on debian 13 i386
+
+ -- Oliver Smith <osmith@sysmocom.de>  Tue, 26 Aug 2025 16:10:58 +0200
+
 osmo-pcu (1.5.1) unstable; urgency=medium
 
   [ Mychaela N. Falconia ]
