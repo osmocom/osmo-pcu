@@ -40,6 +40,7 @@ tests/*/*Test
 tests/*/*_test
 tests/emu/pcu_emu
 tests/testsuite
+tests/testsuite.dir/
 tests/testsuite.log
 
 # git-version-gen magic
