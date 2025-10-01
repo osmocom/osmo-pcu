@@ -271,7 +271,7 @@ struct gprs_rlcmac_bts {
 	struct llist_head ms_list; /* list of struct GprsMs */
 
 	/* List of struct bts_pch_timer for active PCH pagings */
-	struct llist_head pch_timer;
+	struct llist_head pch_timer __attribute__((aligned(8)));
 
 	struct osmo_time_cc all_allocated_pdch;
 
