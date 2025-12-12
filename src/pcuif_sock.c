@@ -120,7 +120,9 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 	if (rc < 0 && errno == EAGAIN)
 		return 0; /* Try again later */
 	if (rc <= 0) {
-		LOGP(DL1IF, LOGL_ERROR, "%s: recv() failed with rc=%d errno=%d\n", __func__, rc, errno);
+		char errbuf[256];
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		LOGP(DL1IF, LOGL_ERROR, "%s: recv() failed with rc=%d errno=%d (%s)\n", __func__, rc, errno, errbuf);
 		pcu_sock_close(1);
 		return -EIO;
 	}
