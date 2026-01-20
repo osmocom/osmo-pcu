@@ -147,17 +147,17 @@ static const struct log_info_cat default_categories[] = {
 static int filter_fn(const struct log_context *ctx,
 		     struct log_target *tar)
 {
-	const struct gprs_nsvc *nsvc = (const struct gprs_nsvc*)ctx->ctx[LOG_CTX_GB_NSVC];
-	const struct gprs_nsvc *bvc = (const struct gprs_nsvc*)ctx->ctx[LOG_CTX_GB_BVC];
+	const struct gprs_nsvc *nsvc = (const struct gprs_nsvc *)log_get_context(ctx, LOG_CTX_GB_NSVC);
+	const struct gprs_nsvc *bvc = (const struct gprs_nsvc *)log_get_context(ctx, LOG_CTX_GB_BVC);
 
 	/* Filter on the NS Virtual Connection */
-	if ((tar->filter_map & (1 << LOG_FLT_GB_NSVC)) != 0
-	    && nsvc && (nsvc == tar->filter_data[LOG_FLT_GB_NSVC]))
+	if (log_get_filter(tar, LOG_FLT_GB_NSVC) &&
+	    nsvc && (nsvc == log_get_filter_data(tar, LOG_FLT_GB_NSVC)))
 		return 1;
 
 	/* Filter on the BVC */
-	if ((tar->filter_map & (1 << LOG_FLT_GB_BVC)) != 0
-	    && bvc && (bvc == tar->filter_data[LOG_FLT_GB_BVC]))
+	if (log_get_filter(tar, LOG_FLT_GB_BVC) &&
+	    bvc && (bvc == log_get_filter_data(tar, LOG_FLT_GB_BVC)))
 		return 1;
 
 	return 0;
