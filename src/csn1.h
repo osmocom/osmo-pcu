@@ -24,6 +24,8 @@
 #ifndef _PACKET_CSN1_H_
 #define _PACKET_CSN1_H_
 
+#include <stddef.h>
+
 #include <osmocom/core/bitvec.h>
 #include "wireshark_compat.h"
 
