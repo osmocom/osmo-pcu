@@ -6,8 +6,8 @@ Build-Depends: debhelper (>= 10),
                dh-autoreconf,
                autotools-dev,
                pkg-config,
-               libosmo-abis-dev (>= 1.6.0),
-               libosmocore-dev (>= 1.10.0),
+               libosmo-abis-dev (>= 2.2.0),
+               libosmocore-dev (>= 1.14.2),
                osmo-gsm-manuals-dev (>= 1.6.0)
 Standards-Version: 3.9.8
 Homepage: http://osmocom.org/projects/osmopcu

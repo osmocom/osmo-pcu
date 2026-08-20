@@ -1,3 +1,11 @@
+osmo-pcu (1.5.3) unstable; urgency=medium
+
+  * pcuif: Log errno str if recv() fails
+  * csn1.h: Fix missing include stddef.h for offsetof()
+  * Avoid accessing struct log_target members directly
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 20 Aug 2026 12:58:53 +0200
+
 osmo-pcu (1.5.2) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]
